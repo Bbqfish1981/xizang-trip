@@ -4,23 +4,27 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#123c63">
-<title>西藏 · 珠峰环线工作台</title>
+<title>西藏·珠峰环线旅行工作台</title>
 
 <!-- ===== 微信 / 社交分享卡片 ===== -->
 <meta name="description" content="9/29 抵藏 → 10/6 离藏 · 8 天 39 站。行程、手绘地图、探店、记账，点开即用。">
+<meta property="og:url" content="https://bbqfish1981.github.io/xizang-trip/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="西藏 · 珠峰环线工作台">
 <meta property="og:title" content="西藏 · 珠峰环线工作台">
 <meta property="og:description" content="9/29 抵藏 → 10/6 离藏 · 8 天 39 站。行程 · 地图 · 探店 · 记账，点开即用。">
-<meta property="og:image" content="cover.png">
+<meta property="og:image" content="https://bbqfish1981.github.io/xizang-trip/cover.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="西藏 · 珠峰环线工作台">
 <meta name="twitter:description" content="9/29 抵藏 → 10/6 离藏 · 8 天 39 站。行程 · 地图 · 探店 · 记账，点开即用。">
-<meta name="twitter:image" content="cover.png">
+<meta name="twitter:image" content="https://bbqfish1981.github.io/xizang-trip/cover.png">
 <link rel="apple-touch-icon" href="cover.png">
 <link rel="icon" href="cover.png">
+<script>
+window.__SYNC_DEFAULT__ = {"owner":"bbqfish1981","repo":"trip-data","branch":"master"};
+</script>
 <script>
 // 微信内点击右上角「···」转发时，自定义卡片标题/描述/图标
 (function(){
@@ -1411,6 +1415,10 @@ input,select,textarea{font-size:16px}
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M8 11l4 4 4-4"/><path d="M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg>
         备份我的修改
       </button>
+      <button class="imp-btn" id="btnCloudSync" style="border-color:#7a8fae;color:#3b6099">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 18a4.5 4.5 0 0 0 .5-8.97A6 6 0 0 0 6.3 9.6A3.75 3.75 0 0 0 7 18"/><path d="M12 13v8"/><path d="M9 16l3-3 3 3"/></svg>
+        云同步
+      </button>
       <div class="tag" id="tripTag">DAY 1 / THU</div>
     </div>
   </div>  </div>
@@ -1614,6 +1622,18 @@ input,select,textarea{font-size:16px}
   </div>
 </div>
 <input type="file" id="fileInput" accept=".docx,.xlsx,.xlsm,.csv,.txt,.md,.json" style="display:none">
+
+<!-- ================= 云同步（码云 / Gitee） ================= -->
+<div class="modal" id="syncModal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h3 class="serif">云同步</h3>
+      <button class="modal-x" id="syncClose">×</button>
+    </div>
+    <div id="syncBody" style="padding:12px 16px 4px;font-size:13px;color:#4a453e;line-height:1.75"></div>
+    <div class="modal-act" id="syncAct"></div>
+  </div>
+</div>
 
 <!-- ================= 通用编辑抽屉 ================= -->
 <div class="modal" id="editModal">
@@ -5288,6 +5308,254 @@ function restoreMyEdits(file){
   }
 })();
 
+/* ============================================================
+   云同步 —— 用码云（Gitee）仓库当云端数据库
+   页面是静态的，电脑 / 手机各自存各自的；这里把数据写进云端仓库，
+   电脑上点「存到云端」，手机打开就会拉到最新版（反之也一样）。
+   仓库必须是「公开」的，这样拉取不需要令牌，朋友也能看到同一版。
+   ============================================================ */
+var LS_SYNC   = 'lxa_sync_cfg_v1';
+var LS_SYNCAT = 'lxa_sync_at_v1';
+var SYNC_FILE = 'data.json';
+/* 页面里可以烧录一个「默认云端仓库」（window.__SYNC_DEFAULT__）：
+   这样任何人打开页面都不用填任何东西，就自动是最新定稿；只有要改的人才填令牌。 */
+var SYNC_DEFAULT = (window.__SYNC_DEFAULT__ && window.__SYNC_DEFAULT__.owner &&
+                    window.__SYNC_DEFAULT__.repo) ? window.__SYNC_DEFAULT__ : null;
+var syncWantForm = false;
+
+function syncCfg(){
+  var c = null;
+  try{ c = JSON.parse(store.getItem(LS_SYNC) || 'null'); }catch(e){ c = null; }
+  if(c && c.owner && c.repo) return c;
+  if(SYNC_DEFAULT){
+    return { owner: SYNC_DEFAULT.owner, repo: SYNC_DEFAULT.repo,
+             branch: SYNC_DEFAULT.branch || 'master', token: '', _ro: true };
+  }
+  return c;
+}
+function syncSaveCfg(c){ try{ store.setItem(LS_SYNC, JSON.stringify(c)); }catch(e){} }
+function b64enc(s){ return btoa(unescape(encodeURIComponent(s))); }
+function b64dec(s){ return decodeURIComponent(escape(atob(s))); }
+function syncBase(){
+  var c = syncCfg(); if(!c) return '';
+  return 'https://gitee.com/api/v5/repos/' + encodeURIComponent(c.owner) + '/' +
+         encodeURIComponent(c.repo) + '/contents/' + SYNC_FILE;
+}
+/* 把码云返回的原始错误翻译成人话 */
+function syncNice(err){
+  if(!err) return err;
+  var s = String(err);
+  if(/40001|登录失效|401|403/i.test(s)) return '令牌不对或权限不够。去码云「设置 → 私人令牌」重新生成一个，生成时勾上 projects，再把这串粘进来。';
+  if(/404/i.test(s)) return '找不到这个仓库。检查用户名、仓库名有没有拼错，仓库是不是「公开」。';
+  if(/branch|分支/i.test(s)) return '仓库里还没有分支。去码云这个仓库点「初始化仓库」，加一个 README，仓库就会多出 master 分支。';
+  return s;
+}
+/* 从云端读：仓库公开时不用令牌也能读 */
+function cloudPull(cb){
+  var c = syncCfg();
+  if(!c || !c.owner || !c.repo){ if(cb) cb({err:'还没配置云同步'}); return; }
+  var u = syncBase() + '?ref=' + encodeURIComponent(c.branch || 'master') +
+          (c.token ? '&access_token=' + encodeURIComponent(c.token) : '') +
+          '&_t=' + Date.now();
+  fetch(u, { cache: 'no-store' }).then(function(r){
+    if(r.status === 404) return { empty: true };
+    if(!r.ok) return { err: '读取失败（HTTP ' + r.status + '）' };
+    return r.json();
+  }).then(function(j){
+    if(!j) return;
+    if(j.err){ if(cb) cb(j); return; }
+    // 码云怪癖：文件不存在时返回的不是 404，而是 200 + 一个空数组 []。
+    // 这里必须一并当作「云端还没数据」，否则第一次上传会被判成「内容读不懂」。
+    if(j.empty || Array.isArray(j) || !j.content){
+      if(cb) cb({ empty: true });
+      return;
+    }
+    try{
+      var data = JSON.parse(b64dec(String(j.content || '').replace(/\s/g, '')));
+      if(cb) cb({ ok: true, data: data, sha: j.sha });
+    }catch(e){ if(cb) cb({ err: '云端内容读不懂' }); }
+  })['catch'](function(e){ if(cb) cb({ err: '连不上网络：' + ((e && e.message) || e) }); });
+}
+/* 写到云端：需要令牌 */
+function cloudPush(cb){
+  var c = syncCfg();
+  if(!c || !c.token){ if(cb) cb({ err: '缺少私人令牌，写不进去' }); return; }
+  cloudPull(function(res){
+    if(res.err){ if(cb) cb(res); return; }
+    var payload = collectMyEdits();
+    payload._at = new Date().toISOString();
+    var body = 'access_token=' + encodeURIComponent(c.token) +
+               '&message=' + encodeURIComponent('行程更新 ' + payload._at) +
+               '&branch=' + encodeURIComponent(c.branch || 'master') +
+               '&content=' + encodeURIComponent(b64enc(JSON.stringify(payload)));
+    if(res.sha) body += '&sha=' + encodeURIComponent(res.sha);
+    function send(method, done){
+      fetch(syncBase(), {
+        method: method,
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: body
+      }).then(function(r){ return r.json(); }).then(function(j){
+        if(j && j.content) done(null, j);
+        else done({ err: (j && (j.message || ('HTTP ' + (j.code || '')))) || '上传失败' }, null);
+      })['catch'](function(e){ done({ err: '连不上网络：' + ((e && e.message) || e) }, null); });
+    }
+    // 文件已存在用 PUT 更新；仓库里还没有这个文件（或仓库还没初始化）时，
+    // PUT 会因缺 sha 被拒，改用 POST 新建（POST 在空仓库里会自动建分支）。
+    send(res.sha ? 'PUT' : 'POST', function(err, j){
+      if(err && !res.sha){
+        send('POST', function(err2){
+          if(err2){ if(cb) cb({ err: err2.err }); return; }
+          try{ store.setItem(LS_SYNCAT, payload._at); }catch(e){}
+          if(cb) cb({ ok: true, at: payload._at });
+        });
+        return;
+      }
+      if(err){ if(cb) cb({ err: err.err }); return; }
+      try{ store.setItem(LS_SYNCAT, payload._at); }catch(e){}
+      if(cb) cb({ ok: true, at: payload._at });
+    });
+  });
+}
+/* 把云端数据搬到本机，然后刷新 */
+function applyCloud(data){
+  var n = 0;
+  Object.keys(data).forEach(function(k){
+    if(k.charAt(0) === '_' || k.indexOf('lxa_') !== 0) return;
+    try{ store.setItem(k, data[k]); n++; }catch(e){}
+  });
+  try{ store.setItem(LS_SYNCAT, data._at || ''); }catch(e){}
+  try{ toast('已同步 ' + n + ' 项，正在刷新'); }catch(e){}
+  setTimeout(function(){
+    try{ location.replace(location.href); }catch(e){}
+    setTimeout(function(){ try{ location.reload(); }catch(e){} }, 80);
+  }, 650);
+}
+/* 开机自动：云端比本机新就静默拉过来 */
+function autoSync(){
+  var c = syncCfg(); if(!c || !c.owner || !c.repo) return;
+  cloudPull(function(res){
+    if(!res.ok) return;
+    var remoteAt = res.data._at || '';
+    var localAt = '';
+    try{ localAt = store.getItem(LS_SYNCAT) || ''; }catch(e){}
+    if(remoteAt && remoteAt > localAt) applyCloud(res.data);
+  });
+}
+
+function syncOpen(){
+  document.getElementById('syncModal').classList.add('on');
+  renderSync();
+}
+function syncShut(){ document.getElementById('syncModal').classList.remove('on'); }
+
+function renderSync(msg){
+  if(msg) msg = syncNice(msg);
+  var body = document.getElementById('syncBody');
+  var act  = document.getElementById('syncAct');
+  var c = syncCfg();
+  var BTN = 'width:100%;padding:11px;border-radius:10px;font-size:14px;cursor:pointer;margin-top:8px;';
+  if(!c || !c.owner || !c.repo || syncWantForm){
+    body.innerHTML =
+      '<div style="background:#f4f7fb;border:1px solid #dbe4f0;border-radius:10px;padding:10px 12px;margin-bottom:12px">' +
+      '在<b>码云 gitee.com</b> 建一个<b>公开</b>仓库当云端数据库。填上用户名和仓库名后：' +
+      '这台设备改完点「存到云端」，别的设备打开就是最新版。<br>' +
+      '<b>要在这台设备改并上传，才需要私人令牌</b>；只是看，留空即可。' +
+      '</div>' +
+      '<div style="margin-bottom:8px"><div style="font-size:12px;color:#8a8377">码云用户名</div>' +
+      '<input id="syncOwner" placeholder="例如 bbqfish1981" style="width:100%;padding:9px 10px;border:1px solid rgba(0,0,0,.15);border-radius:8px;font-size:14px"></div>' +
+      '<div style="margin-bottom:8px"><div style="font-size:12px;color:#8a8377">仓库名</div>' +
+      '<input id="syncRepo" placeholder="例如 trip-data" style="width:100%;padding:9px 10px;border:1px solid rgba(0,0,0,.15);border-radius:8px;font-size:14px"></div>' +
+      '<div style="margin-bottom:4px"><div style="font-size:12px;color:#8a8377">私人令牌（可留空；要在这台设备存数据就必须填）</div>' +
+      '<input id="syncToken" type="password" placeholder="粘贴令牌" style="width:100%;padding:9px 10px;border:1px solid rgba(0,0,0,.15);border-radius:8px;font-size:14px"></div>' +
+      (msg ? '<div style="margin-top:10px;color:#a33;font-size:12.5px">' + msg + '</div>' : '');
+    act.innerHTML = '<button id="syncSaveCfg" style="' + BTN + 'border:1px solid #7a8fae;background:#eef3fa;color:#3b6099">保存并开始同步</button>';
+    var sb = document.getElementById('syncSaveCfg');
+    if(sb) sb.addEventListener('click', function(){
+      var o = (document.getElementById('syncOwner').value || '').trim();
+      var r = (document.getElementById('syncRepo').value || '').trim();
+      var t = (document.getElementById('syncToken').value || '').trim();
+      if(!o || !r){ renderSync('用户名和仓库名都要填'); return; }
+      syncSaveCfg({ owner: o, repo: r, branch: 'master', token: t });
+      syncWantForm = false;
+      renderSync('已连上云端，正在拉最新版…');
+      autoSync();
+    });
+    return;
+  }
+  var at = '';
+  try{ at = store.getItem(LS_SYNCAT) || ''; }catch(e){}
+  if(c._ro){
+    body.innerHTML =
+      '<div style="background:#f4f8f1;border:1px solid #d6e4cd;border-radius:10px;padding:10px 12px;margin-bottom:10px">' +
+      '云端仓库：<b>' + escapeHTML(c.owner) + ' / ' + escapeHTML(c.repo) + '</b><br>' +
+      '上次同步：' + (at ? escapeHTML(at.replace('T', ' ').slice(0, 19)) : '还没有') +
+      '<br><span style="color:#5b7a49">浏览模式：打开这个页面就是最新定稿，不用做任何事</span>' +
+      '</div>' +
+      '<div style="font-size:12px;color:#8a8377;line-height:1.7">' +
+      '想在这台设备上改并同步？点下面的按钮，填上令牌就行。' +
+      '</div>' +
+      (msg ? '<div style="margin-top:10px;color:#a33;font-size:12.5px">' + msg + '</div>' : '');
+    act.innerHTML =
+      '<button id="syncPull" style="' + BTN + 'border:1px solid #d6e4cd;background:#f4f8f1;color:#3f6b2e">⬇ 立即拉取最新版</button>' +
+      '<button id="syncEdit" style="' + BTN + 'border:1px solid #7a8fae;background:#eef3fa;color:#3b6099">在这台设备上修改并同步</button>';
+    var gb0 = document.getElementById('syncPull');
+    if(gb0) gb0.addEventListener('click', function(){
+      gb0.disabled = true; gb0.textContent = '正在读取…';
+      cloudPull(function(res){
+        if(res.ok) applyCloud(res.data);
+        else{ gb0.disabled = false; gb0.textContent = '⬇ 立即拉取最新版'; renderSync(res.err); }
+      });
+    });
+    var eb = document.getElementById('syncEdit');
+    if(eb) eb.addEventListener('click', function(){ syncWantForm = true; renderSync(); });
+    return;
+  }
+  body.innerHTML =
+    '<div style="background:#f4f8f1;border:1px solid #d6e4cd;border-radius:10px;padding:10px 12px;margin-bottom:10px">' +
+    '已连上云端仓库：<b>' + escapeHTML(c.owner) + ' / ' + escapeHTML(c.repo) + '</b><br>' +
+    '上次同步：' + (at ? escapeHTML(at.replace('T', ' ').slice(0, 19)) : '还没有') +
+    (c.token ? '' : '<br><span style="color:#a33">本机没填令牌，只能<b>读</b>不能存</span>') +
+    '</div>' +
+    '<div style="font-size:12px;color:#8a8377;line-height:1.7">' +
+    '在这台设备改完后点「存到云端」；别的设备打开页面会自动拉最新版。' +
+    '</div>' +
+    (msg ? '<div style="margin-top:10px;color:#a33;font-size:12.5px">' + msg + '</div>' : '');
+  act.innerHTML =
+    (c.token ? '<button id="syncPush" style="' + BTN + 'border:1px solid #7a8fae;background:#eef3fa;color:#3b6099">⬆ 存到云端（把这台设备的改动传上去）</button>' : '') +
+    '<button id="syncPull" style="' + BTN + 'border:1px solid #d6e4cd;background:#f4f8f1;color:#3f6b2e">⬇ 从云端拉取（放弃本机改动）</button>' +
+    '<button id="syncUnset" style="' + BTN + 'border:1px solid rgba(0,0,0,.12);background:#fff;color:#999">断开同步</button>';
+  var pb = document.getElementById('syncPush');
+  if(pb) pb.addEventListener('click', function(){
+    pb.disabled = true; pb.textContent = '正在上传…';
+    cloudPush(function(res){
+      if(res.ok){ renderSync('已存到云端'); }
+      else{ renderSync(res.err); }
+    });
+  });
+  var gb = document.getElementById('syncPull');
+  if(gb) gb.addEventListener('click', function(){
+    gb.disabled = true; gb.textContent = '正在读取…';
+    cloudPull(function(res){
+      if(res.ok) applyCloud(res.data);
+      else{ gb.disabled = false; gb.textContent = '⬇ 从云端拉取（放弃本机改动）'; renderSync(res.err); }
+    });
+  });
+  var ub = document.getElementById('syncUnset');
+  if(ub) ub.addEventListener('click', function(){
+    try{ store.removeItem(LS_SYNC); store.removeItem(LS_SYNCAT); }catch(e){}
+    renderSync();
+  });
+}
+
+(function(){
+  var ob = document.getElementById('btnCloudSync');
+  if(ob) ob.addEventListener('click', syncOpen);
+  var cb = document.getElementById('syncClose');
+  if(cb) cb.addEventListener('click', syncShut);
+  var sm = document.getElementById('syncModal');
+  if(sm) sm.addEventListener('click', function(e){ if(e.target.id === 'syncModal') syncShut(); });
+})();
+
 document.getElementById('fileInput').addEventListener('change', async function(){
   const file = this.files && this.files[0];
   this.value = '';
@@ -5706,6 +5974,7 @@ function restorePrompt(){
 window.runPostUnlock = function(){
   try{ selfCheck(); }catch(e){}
   try{ restorePrompt(); }catch(e){}
+  try{ autoSync(); }catch(e){}        // 云端有更新就静默拉过来
   if(window.__BAKED_APPLIED){
     try{ toast('已更新到最新定稿版本'); }catch(e){}
   }
