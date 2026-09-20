@@ -1376,7 +1376,10 @@ input,select,textarea{font-size:16px}
       进 入
     </button>
     <div id="lockErr" style="margin-top:14px;font-size:13px;color:#c0392b;min-height:18px"></div>
-    <div style="margin-top:22px;font-size:11px;color:#b3aa9e;line-height:1.7">
+    <div style="margin-top:8px;text-align:right">
+      <span id="lockToggle" style="font-size:11.5px;color:#8b8177;text-decoration:underline;cursor:pointer">显示密码</span>
+    </div>
+    <div style="margin-top:14px;font-size:11px;color:#b3aa9e;line-height:1.7">
       密码由行程组织者发放 · 输入一次本机记住 30 天
     </div>
   </div>
@@ -2441,8 +2444,27 @@ const BUDGET_CFG = {
   }
   window.__appBanner = banner;
   window.addEventListener('error', function(e){
-    banner((e && e.message) ? e.message : '未知错误');
+    var msg = (e && e.message) ? e.message : '';
+    var src = (e && e.filename) ? e.filename : '';
+    // 「Script error.」是跨域脚本被浏览器抹掉细节后的固定文案，没有文件名也没有行号。
+    // 它不是页面自己的代码出错，绝大多数来自扩展插件、内嵌广告、或外部统计脚本。
+    // 页面本身此时通常是好的 —— 所以这种不要报红吓用户，留个控制台记录即可。
+    if(/^Script error\.?$/i.test(msg) && !src){
+      try{ console.warn('[忽略] 跨域脚本错误（非本站代码，页面功能不受影响）'); }catch(_){}
+      return;
+    }
+    banner(msg || '未知错误');
   });
+  // 资源加载失败（比如某个图片/脚本 404）也会触发 error，但不带 message。
+  // 这类同样不是「脚本坏了」，不该弹红条。
+  window.addEventListener('error', function(e){
+    try{
+      var t = e && e.target;
+      if(t && t !== window && (t.tagName === 'SCRIPT' || t.tagName === 'IMG' || t.tagName === 'LINK')){
+        e.preventDefault && e.preventDefault();
+      }
+    }catch(_){}
+  }, true);
 })();
 
 /* ============================================================
@@ -5853,19 +5875,56 @@ var LOCK_KEY  = 'lxa_pass_ok_v1';
   var input = document.getElementById('lockInput');
   var btn   = document.getElementById('lockBtn');
   var err   = document.getElementById('lockErr');
+  // 输入归一化：中文输入法常敲出全角数字 １２１８，粘贴也可能带空格/全角冒号等噪音。
+  // 不做这层处理的话，明明输对了也会被判错，且看不出原因。
+  function norm(s){
+    s = (s == null ? '' : String(s));
+    // 全角 ０-９ Ａ-Ｚ ａ-ｚ → 半角
+    s = s.replace(/[\uFF10-\uFF19\uFF21-\uFF3A\uFF41-\uFF5A]/g, function(c){
+      return String.fromCharCode(c.charCodeAt(0) - 0xFEE0);
+    });
+    return s.replace(/[^0-9a-zA-Z]/g, '');   // 只留数字字母，去掉空格/标点
+  }
+  var tries = 0;
   function tryPass(){
-    var v = (input && input.value || '').trim();
-    if(v === LOCK_PASS){ unlock(); }
-    else{
-      if(err) err.textContent = '密码不对，再试一次';
-      if(input){ input.value = ''; input.focus(); }
+    var raw = (input && input.value || '');
+    var v = norm(raw);
+    if(v === LOCK_PASS){
+      var el0 = document.getElementById('lockScreen');
+      if(el0) el0.style.display = 'none';     // 先撤锁，哪怕后面 boot 出问题也不会被卡住
+      try{ unlock(); }catch(e){ boot(); }
+      return;
     }
+    tries++;
+    var tip;
+    if(!v) tip = '还没输入密码';
+    else if(tries >= 3){
+      tip = '还是不对。如果点按钮完全没反应、连这行红字都不出现 —— 说明文件没下载完整，请重新下载';
+    }
+    else tip = '密码不对（识别到 ' + v.length + ' 位），再试一次';
+    if(err) err.textContent = tip;
+    if(input){ input.value = ''; input.focus(); }
   }
   if(btn) btn.addEventListener('click', tryPass);
   if(input) input.addEventListener('keydown', function(e){
     if(e.key === 'Enter' || e.keyCode === 13) tryPass();
   });
+  // 明码切换：看不清自己敲的是全角还是半角时，一眼就能确认
+  var tg = document.getElementById('lockToggle');
+  if(tg && input) tg.addEventListener('click', function(){
+    var show = input.getAttribute('type') === 'password';
+    input.setAttribute('type', show ? 'text' : 'password');
+    tg.textContent = show ? '隐藏密码' : '显示密码';
+  });
   setTimeout(function(){ try{ input && input.focus(); }catch(e){} }, 200);
+  // 文件完整性自检：下载中断的文件尾部会被截掉，主脚本压根没跑完，
+  // 表现就是「点按钮完全没反应」。这里主动告诉用户真相，别让人干瞪眼。
+  setTimeout(function(){
+    try{
+      if(window.__TAIL_OK__) return;
+      if(err) err.textContent = '这个文件好像没下载完整（点按钮没反应就是这原因）—— 请重新下载后再打开';
+    }catch(e){}
+  }, 2500);
 })();
 
 /* ============================================================
@@ -6005,5 +6064,6 @@ window.runPostUnlock = function(){
   }
 };
 </script>
+<script>window.__TAIL_OK__ = 1;</script>
 </body>
 </html>
