@@ -882,6 +882,27 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .rcell{background:var(--cream-2);border-radius:12px;padding:13px 14px}
 .rcell b{display:block;color:var(--rust);font-size:13.5px;font-weight:800;margin-bottom:6px;letter-spacing:.02em}
 .rcell span{font-size:12.5px;color:#4a5566;line-height:1.7}
+/* 攻略引用卡片：整块可点跳原帖，右上角小笔改内容 */
+.rcell.rlink{position:relative;padding:0;overflow:hidden}
+.rcell.rlink .rbody{
+  display:block;padding:13px 40px 13px 14px;text-decoration:none;color:inherit;
+  -webkit-tap-highlight-color:transparent;
+}
+.rcell.rlink .rbody:active{background:rgba(0,0,0,.045)}
+.rcell.rlink .rplat{
+  display:inline-block;font-size:10.5px;font-weight:800;letter-spacing:.06em;
+  border:1px solid;border-radius:999px;padding:1px 7px;margin-bottom:7px;
+}
+.rcell.rlink .rjump{
+  display:block;margin-top:7px;font-size:11.5px;color:#3b6099;font-weight:700;
+}
+.rcell.rlink .redit{
+  position:absolute;right:8px;top:8px;width:26px;height:26px;padding:0;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,.9);border:1px solid rgba(0,0,0,.1);
+  border-radius:8px;color:#6b7a8d;cursor:pointer;
+}
+.rcell.rlink .redit svg{width:13px;height:13px}
 
 /* ============ 地图页 ============ */
 .seg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
@@ -2550,7 +2571,8 @@ const ICONS = {
   plus:  SVG('<path d="M12 5.5v13"/><path d="M5.5 12h13"/>'),
   caladd:SVG('<rect x="3.5" y="5" width="17" height="16" rx="2.4"/><path d="M3.5 10h17"/><path d="M8 3.5V6M16 3.5V6"/><path d="M12 13.5v5M9.5 16h5"/>'),
   copy:  SVG('<rect x="8.5" y="8.5" width="12" height="12" rx="2.2"/><path d="M15.5 5.5H5.8a2.3 2.3 0 0 0-2.3 2.3v9.7"/>'),
-  route: SVG('<circle cx="6" cy="6.5" r="2.4"/><circle cx="18" cy="17.5" r="2.4"/><path d="M8.4 6.5H14a3.5 3.5 0 0 1 0 7h-4a3.5 3.5 0 0 0 0 7h3.6"/>')
+  route: SVG('<circle cx="6" cy="6.5" r="2.4"/><circle cx="18" cy="17.5" r="2.4"/><path d="M8.4 6.5H14a3.5 3.5 0 0 1 0 7h-4a3.5 3.5 0 0 0 0 7h3.6"/>'),
+  link:  SVG('<path d="M10.5 13.5a4 4 0 0 0 5.7 0l2.6-2.6a4 4 0 0 0-5.7-5.7l-1.3 1.3"/><path d="M13.5 10.5a4 4 0 0 0-5.7 0l-2.6 2.6a4 4 0 0 0 5.7 5.7l1.3-1.3"/>')
 };
 
 /* ============================================================
@@ -2676,10 +2698,28 @@ function renderTrip(){
     <div class="remind">
       <h4 class="serif">今天的随身提醒</h4>
       <div class="rgrid">
-        ${(d.reminders||[]).map((r,ri)=>`<div class="rcell" data-editremind="${ri}" style="cursor:pointer"><b>${escapeHTML(r.k)}</b><span>${escapeHTML(r.v)}</span></div>`).join('')}
+        ${(d.reminders||[]).map((r,ri)=>{
+          const isLink = r && r.u;
+          const pf = isLink ? platOf(r.u) : null;
+          if(isLink){
+            // 攻略引用：整块可点，直接跳到小红书/抖音那篇帖子；
+            // 右上角笔形角标用来改/删这条（否则没法编辑）。
+            return `<div class="rcell rlink">`+
+              `<a class="rbody" href="${escapeHTML(r.u)}" target="_blank" rel="noopener">`+
+                `${pf?`<span class="rplat" style="color:${pf.color};border-color:${pf.color}">${pf.name}</span>`:''}`+
+                `<b>${escapeHTML(r.k)}</b>`+
+                (r.v?`<span>${escapeHTML(r.v)}</span>`:'')+
+                `<span class="rjump">点击打开原帖 ↗</span>`+
+              `</a>`+
+              `<button class="redit" data-editref="${ri}" aria-label="编辑这条引用">${ICONS.edit}</button>`+
+            `</div>`;
+          }
+          return `<div class="rcell" data-editremind="${ri}" style="cursor:pointer"><b>${escapeHTML(r.k)}</b><span>${escapeHTML(r.v)}</span></div>`;
+        }).join('')}
       </div>
       <div class="addline" style="margin-top:12px">
         <button id="btnAddRemind">${ICONS.plus}<span>加一条今天的提醒</span></button>
+        <button id="btnAddRef" title="加一条小红书/抖音攻略引用">${ICONS.link}<span>加攻略引用</span></button>
       </div>
     </div>`;
 }
@@ -4202,6 +4242,86 @@ function openBlockEditor(bi){
   openEdit();
 }
 
+/* ---- 攻略引用：识别小红书 / 抖音 / B站等平台 ---- */
+function platOf(url){
+  var u = String(url || '').toLowerCase();
+  if(u.indexOf('xiaohongshu.com') >= 0 || u.indexOf('xhslink.com') >= 0)
+    return { name:'小红书', color:'#ff2e4d' };
+  if(u.indexOf('douyin.com') >= 0 || u.indexOf('iesdouyin.com') >= 0)
+    return { name:'抖音', color:'#161823' };
+  if(u.indexOf('bilibili.com') >= 0 || u.indexOf('b23.tv') >= 0)
+    return { name:'B站', color:'#fb7299' };
+  if(u.indexOf('zhihu.com') >= 0)   return { name:'知乎', color:'#0084ff' };
+  if(u.indexOf('weibo.com') >= 0)   return { name:'微博', color:'#e6162d' };
+  if(u.indexOf('dianping.com') >= 0)return { name:'大众点评', color:'#ff6633' };
+  if(u.indexOf('mafengwo.cn') >= 0) return { name:'马蜂窝', color:'#ffb400' };
+  return { name:'链接', color:'#6b7a8d' };
+}
+/* 用户常直接粘「分享文案」：里面带一段网址，还可能带口令。
+   这里把第一个网址抠出来，避免粘错了打不开。 */
+function pickUrl(txt){
+  var s = String(txt || '');
+  var m = s.match(/https?:\/\/[^\s，,。）)】\]"']+/i);
+  if(m) return m[0];
+  // 有些人只粘了 xiaohongshu.com/xxx 这种没协议的
+  m = s.match(/(?:www\.)?(?:xiaohongshu\.com|xhslink\.com|douyin\.com|bilibili\.com|b23\.tv|zhihu\.com|weibo\.com|dianping\.com|mafengwo\.cn)\/[^\s，,。）)】\]"']*/i);
+  return m ? 'https://' + m[0].replace(/^https?:\/\//i,'') : '';
+}
+
+function openRefEditor(ri){
+  const isNew = !(ri >= 0);
+  const d = TRIP_DAYS[curDay];
+  d.reminders = d.reminders || [];
+  const r = isNew ? { k:'', v:'', u:'' } : d.reminders[ri];
+  document.getElementById('edTitle').textContent = isNew ? '加一条攻略引用' : '改这条攻略引用';
+  document.getElementById('edFields').innerHTML = `
+    <div class="ed-f"><label>链接（小红书 / 抖音 / B站…）</label>
+      <input id="edRefU" value="${escapeHTML(r.u||'')}" placeholder="直接粘贴分享链接或整段分享文案"></div>
+    <div class="ed-f"><label>标题</label>
+      <input id="edRefK" value="${escapeHTML(r.k)}" placeholder="如：布宫夜拍机位"></div>
+    <div class="ed-f"><label>大概内容 / 备注</label>
+      <textarea id="edRefV" placeholder="这篇讲了什么，为什么留着它">${escapeHTML(r.v)}</textarea></div>
+    <div id="edRefTip" style="font-size:12.5px;color:#8a8377;line-height:1.6;margin-top:-4px"></div>
+    ${isNew?'':`<button class="ed-danger" id="edRefDel">${ICONS.trash}<span>删除这条</span></button>`}`;
+  document.getElementById('edAct').innerHTML =
+    `<button class="no" id="edCancel">取消</button><button class="ok" id="edSave">保存</button>`;
+  wireEditBase();
+
+  // 边填边提示识别到什么平台，让用户心里有数
+  function refreshTip(){
+    const raw = document.getElementById('edRefU').value;
+    const u = pickUrl(raw);
+    const tip = document.getElementById('edRefTip');
+    if(!u){ tip.textContent = raw.trim() ? '没认出网址，请检查是不是粘全了' : '把分享链接粘进来，保存后就能一键打开原帖'; return; }
+    const pf = platOf(u);
+    tip.innerHTML = '识别为 <b style="color:'+pf.color+'">'+pf.name+'</b> · 保存后点卡片直接跳转';
+    if(!document.getElementById('edRefK').value.trim()){
+      document.getElementById('edRefK').placeholder = pf.name + '攻略';
+    }
+  }
+  const iu = document.getElementById('edRefU');
+  iu.addEventListener('input', refreshTip);
+  iu.addEventListener('paste', function(){ setTimeout(refreshTip, 30); });
+  refreshTip();
+
+  if(!isNew){
+    document.getElementById('edRefDel').onclick = ()=>{
+      d.reminders.splice(ri,1);
+      saveTrip(); closeEdit(); afterTripChange(); toast('已删除');
+    };
+  }
+  document.getElementById('edSave').onclick = ()=>{
+    const u = pickUrl(document.getElementById('edRefU').value);
+    if(!u){ toast('请粘贴一个有效链接'); return; }
+    const k = document.getElementById('edRefK').value.trim() || (platOf(u).name + '攻略');
+    const v = document.getElementById('edRefV').value.trim();
+    if(isNew) d.reminders.push({ k, v, u });
+    else d.reminders[ri] = { k, v, u };
+    saveTrip(); closeEdit(); afterTripChange(); toast('已保存，点卡片可打开原帖');
+  };
+  openEdit();
+}
+
 function openRemindEditor(ri){
   const isNew = !(ri >= 0);
   const d = TRIP_DAYS[curDay];
@@ -4270,6 +4390,8 @@ document.getElementById('dayBody').addEventListener('click', e=>{
   if(eb){ openBlockEditor(+eb.dataset.editblock); return; }
   const rm = g('editremind');
   if(rm){ openRemindEditor(+rm.dataset.editremind); return; }
+  const rfe = g('editref');
+  if(rfe){ openRefEditor(+rfe.dataset.editref); return; }
   const r = g('route');
   if(r){ window.open(googleRouteURL(curDay, +r.dataset.route), '_blank'); return; }
   const m = g('seemap');
@@ -4289,6 +4411,7 @@ document.getElementById('btnAddStop').addEventListener('click', ()=> openStopEdi
 document.getElementById('btnEditDay').addEventListener('click', openDayEditor);
 document.getElementById('dayBody').addEventListener('click', e=>{
   if(e.target.closest('#btnAddRemind')) openRemindEditor(-1);
+  if(e.target.closest('#btnAddRef')) openRefEditor(-1);
 });
 // 顶部那条提示，点一下就能改
 document.getElementById('dayTip').addEventListener('click', openDayEditor);
