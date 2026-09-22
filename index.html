@@ -1333,9 +1333,11 @@ input,select,textarea{font-size:16px}
 }
 .poi-list{margin-top:9px}
 .poi-item{
-  display:flex;align-items:flex-start;gap:10px;padding:11px 12px;
+  display:flex;align-items:center;gap:10px;padding:11px 12px;
   border:1.2px solid var(--line-2);border-radius:12px;background:#fff;margin-bottom:7px;
+  cursor:pointer;-webkit-tap-highlight-color:rgba(0,0,0,.05);
 }
+.poi-item:active{background:var(--cream-2);border-color:var(--line)}
 .poi-main{flex:1;min-width:0}
 .poi-main b{display:block;font-size:14.5px;font-weight:800;color:var(--ink);line-height:1.45}
 .poi-main span{display:block;font-size:11.5px;color:var(--gray-2);font-weight:600;margin-top:2px}
@@ -1343,8 +1345,8 @@ input,select,textarea{font-size:16px}
 .poi-pick{
   flex:0 0 auto;padding:8px 13px;border-radius:9px;border:0;
   background:var(--ink);color:#fff;font-size:12.5px;font-weight:800;font-family:inherit;
+  pointer-events:none;white-space:nowrap;
 }
-.poi-pick:active{opacity:.75}
 .poi-none{font-size:12px;color:var(--gray-2);padding:10px 2px;line-height:1.6}
 .poi-acts{display:flex;gap:8px;margin-top:9px}
 .poi-map{
@@ -1538,13 +1540,13 @@ body.unlocked #appVer{display:block}
       密码由行程组织者发放 · 输入一次本机记住 7 天
     </div>
     <div id="lockVer" style="margin-top:6px;font-size:10.5px;color:#c0b7ab;letter-spacing:.04em">
-      版本 2026.09.22 · 自动海拔 · 单价×数量 · 酒店平摊
+      版本 2026.09.22 · 海拔自动 · 单价×数量 · 酒店平摊 · 点名字选中
     </div>
   </div>
 </div>
 
 <!-- 进内页后也常驻一个小版本号：一眼判断手机上看的是不是新版 -->
-<div id="appVer">版本 2026.09.22 · 自动海拔 · 单价×数量 · 酒店平摊</div>
+<div id="appVer">版本 2026.09.22 · 海拔自动 · 单价×数量 · 酒店平摊 · 点名字选中</div>
 
 <!-- ================= HERO ================= -->
 <header class="hero">
@@ -1786,7 +1788,7 @@ body.unlocked #appVer{display:block}
 </section>
 
 <!-- ================= 底部导航 ================= -->
-<footer class="verbar">西藏 · 珠峰环线工作台　<b>v3</b> · 2026-09-22 · 自动海拔 / 单价×数量 / 酒店平摊</footer>
+<footer class="verbar">西藏 · 珠峰环线工作台　<b>v3</b> · 2026-09-22 · 海拔自动 / 单价×数量 / 酒店平摊 / 点名字选中</footer>
 <nav class="nav">
   <button class="on" data-view="overview">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6.2 9.2 4l5.6 2.6L20 4.6v13.2L14.8 20l-5.6-2.6L4 19.4z"/><path d="M9.2 4v13.4M14.8 6.6V20"/></svg>总览</button>
@@ -4618,18 +4620,22 @@ function openStopEditor(bi, si){
   cityEl.addEventListener('change', runPoi);
   /* 悄悄要一次定位：拿到就把候选按离你多远重排一遍（拒绝授权也无所谓，不影响用） */
   ensureGeo(()=>{ if(qEl.value) runPoi(); });
-  listEl.addEventListener('click', (ev)=>{
-    let node = ev.target;
-    while(node && node !== listEl && !(node.dataset && node.dataset.pick !== undefined)) node = node.parentNode;
-    if(!node || node === listEl) return;
-    const r = (listEl.__data || [])[+node.dataset.pick];
+  /* 点候选：整行都能点（以前只有右边小按钮能点，点名字没反应） */
+  const pickPoi = function(r){
     if(!r) return;
     t2.value = r.name;
     edPosBuf = { lat:r.lat, lng:r.lng, alt:r.alt||0 };
     if(altEl){ const a = altForTitle(r.name); altEl.textContent = a.alt ? ('已匹配 ' + (a.src||'地点') + ' ' + a.alt + ' m') : '未匹配到海拔'; }
     if(r.intro && !g('edDesc').value) g('edDesc').value = r.intro;
-    toast('已填入「' + r.name + '」');
+    listEl.innerHTML = ''; listEl.__data = [];
+    toast('已选择「' + r.name + '」');
     setTimeout(()=>{ if(!g('edRoute').value) recalcPreview(bi, si); }, 60);
+  };
+  listEl.addEventListener('click', (ev)=>{
+    let node = ev.target;
+    while(node && node !== listEl && !(node.dataset && node.dataset.pick !== undefined)) node = node.parentNode;
+    if(!node || node === listEl) return;
+    pickPoi((listEl.__data || [])[+node.dataset.pick]);
   });
 
   g('edRematch').onclick = ()=>{
@@ -6065,14 +6071,14 @@ function renderPoiList(box, q, city){
   let html = '';
   if(list.length){
     html += list.map((r,i)=>`
-      <div class="poi-item" data-poi="${i}">
+      <div class="poi-item" data-pick="${i}" role="button" tabindex="0" title="点这一行就选中它">
         <div class="poi-main">
           <b>${escapeHTML(r.name)}</b>
           <span>${escapeHTML([r.city, r.kind, r.alt ? '海拔 ' + r.alt + ' m' : '',
                               r.dist != null ? '距你' + fmtDist(r.dist) : ''].filter(Boolean).join(' · '))}</span>
           ${r.intro?`<em>${escapeHTML(r.intro)}</em>`:''}
         </div>
-        <button class="poi-pick" data-pick="${i}">用它</button>
+        <span class="poi-pick">选择</span>
       </div>`).join('');
   } else {
     html += `<div class="poi-none">内置库里没收录这个词，直接在地图 App 里搜最准 ↓</div>`;
