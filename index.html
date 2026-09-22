@@ -888,6 +888,41 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
   border-radius:999px;padding:3px 10px;font-size:11.5px}
 .scost-cat{color:#8a6d3b;font-weight:800;letter-spacing:.04em}
 .scost b{color:#6b4f22;font-weight:900;font-size:12.5px}
+/* 点一下切换「待支付 ↔ 已付」 */
+.scost.clk{cursor:pointer;-webkit-tap-highlight-color:transparent}
+.scost .spay{font-size:10.5px;font-weight:800;padding:1px 6px;border-radius:999px;
+  background:#6b4f22;color:#fff;letter-spacing:.03em}
+.scost.todo{background:rgba(201,100,42,.12);border-color:rgba(201,100,42,.4)}
+.scost.todo .scost-cat{color:#a2562a}
+.scost.todo b{color:#8f451f}
+.scost.todo .spay{background:#c9642a;color:#fff}
+/* 每天的花费汇总条 */
+.daycost{display:flex;align-items:center;gap:9px;flex-wrap:wrap;
+  row-gap:8px;padding:13px 16px}
+.daycost .dc-lab{font-size:12.5px;font-weight:800;color:var(--gray);flex:0 0 auto}
+.daycost .dc-tot{font-size:16px;font-weight:900;color:#6b4f22;flex:0 0 auto}
+.daycost .dc-sub{font-size:11.5px;color:var(--gray);font-weight:700;flex:1 1 auto;min-width:0}
+.daycost .dc-todo{color:#c9642a}
+/* 窄屏别把按钮挤成一竖行 —— 撑满一行、文字不折 */
+.daycost .dc-btn{flex:0 0 auto;margin-left:auto;white-space:nowrap}
+@media (max-width:430px){
+  .daycost .dc-sub{flex:1 1 100%;order:3}
+  .daycost .dc-btn{order:2;margin-left:auto}
+}
+/* 支付状态分段控件（编辑弹窗 / 记一笔） */
+.payseg{display:flex;gap:6px}
+.payseg button{flex:1;padding:9px 6px;border-radius:10px;font-size:12.5px;font-weight:800;
+  border:1px solid rgba(120,90,50,.3);background:#fff;color:var(--gray);cursor:pointer}
+.payseg button.on{background:#6b4f22;border-color:#6b4f22;color:#fff}
+.payseg button.on.todo{background:#c9642a;border-color:#c9642a}
+/* 流水里的待付标记 */
+.blpay{font-size:10px;font-weight:800;padding:1px 5px;border-radius:999px;
+  background:#c9642a;color:#fff;margin-left:5px;cursor:pointer}
+.blpay.done{background:rgba(107,79,34,.5)}
+.bud-paid{color:#6b4f22;font-weight:800}
+.bud-todo{color:#c9642a;font-weight:800}
+.sk-dayamt{font-size:11.5px;font-weight:800;color:#6b4f22;margin-left:2px}
+.sk-dayamt.todo{color:#c9642a}
 /* 攻略引用卡片：整块可点跳原帖，右上角小笔改内容 */
 .rcell.rlink{position:relative;padding:0;overflow:hidden}
 .rcell.rlink .rbody{
@@ -1284,6 +1319,74 @@ input,select,textarea{font-size:16px}
 .pick-day.on{border-color:var(--ink);background:var(--ink);color:#fff}
 .pick-day.on small,.pick-day.on .pn{color:rgba(255,255,255,.75)}
 
+/* ---- 关键词搜索候选（编辑弹窗里） ---- */
+.poi-bar{display:flex;gap:8px;margin-top:9px}
+.poi-bar select{
+  flex:0 0 auto;max-width:98px;padding:11px 6px;border-radius:11px;
+  border:1.2px solid var(--line-2);background:#fff;color:var(--ink);
+  font-size:13.5px;font-weight:700;font-family:inherit;
+}
+.poi-bar input{
+  flex:1;min-width:0;padding:11px 13px;border-radius:11px;
+  border:1.2px solid var(--line-2);background:#fff;color:var(--ink);
+  font-size:14px;font-family:inherit;
+}
+.poi-list{margin-top:9px}
+.poi-item{
+  display:flex;align-items:flex-start;gap:10px;padding:11px 12px;
+  border:1.2px solid var(--line-2);border-radius:12px;background:#fff;margin-bottom:7px;
+}
+.poi-main{flex:1;min-width:0}
+.poi-main b{display:block;font-size:14.5px;font-weight:800;color:var(--ink);line-height:1.45}
+.poi-main span{display:block;font-size:11.5px;color:var(--gray-2);font-weight:600;margin-top:2px}
+.poi-main em{display:block;font-style:normal;font-size:12px;color:var(--gray);line-height:1.6;margin-top:5px}
+.poi-pick{
+  flex:0 0 auto;padding:8px 13px;border-radius:9px;border:0;
+  background:var(--ink);color:#fff;font-size:12.5px;font-weight:800;font-family:inherit;
+}
+.poi-pick:active{opacity:.75}
+.poi-none{font-size:12px;color:var(--gray-2);padding:10px 2px;line-height:1.6}
+.poi-acts{display:flex;gap:8px;margin-top:9px}
+.poi-map{
+  flex:1;text-align:center;text-decoration:none;padding:11px 8px;border-radius:11px;
+  background:var(--cream-2);border:1.2px solid var(--line-2);color:var(--ink);
+  font-size:12.5px;font-weight:800;
+}
+.poi-map.baidu{background:#eef3fb;border-color:#d3e0f2}
+.poi-map:active{opacity:.7}
+
+/* ---- 地点名可点：导航 ---- */
+.stitle.navable{cursor:pointer;text-decoration:none;border-bottom:1px dashed rgba(13,92,71,.35)}
+.stitle.navable:active{opacity:.6}
+.snav{display:flex;gap:6px;margin-top:6px}
+.snav a{
+  text-decoration:none;font-size:11.5px;font-weight:800;padding:5px 10px;border-radius:8px;
+  background:var(--cream-2);border:1px solid var(--line-2);color:var(--ink);
+}
+.snav a:active{opacity:.65}
+.salt{font-size:11.5px;font-weight:800;color:#2f7fa8;margin-top:6px}
+
+/* ---- 景点推荐（探店页） ---- */
+.sight-city{display:flex;gap:7px;overflow-x:auto;padding:2px 0 4px;-webkit-overflow-scrolling:touch}
+.sight-city button{
+  flex:0 0 auto;padding:7px 13px;border-radius:20px;border:1.2px solid var(--line-2);
+  background:#fff;color:var(--gray);font-size:12.5px;font-weight:800;font-family:inherit;
+}
+.sight-city button.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.sight-item{
+  display:flex;align-items:flex-start;gap:11px;padding:13px 0;border-bottom:1px solid var(--line);
+}
+.sight-item:last-child{border-bottom:0}
+.sight-item h4{font-size:15px;font-weight:800;color:var(--ink);margin:0}
+.sight-item .smeta{font-size:11.5px;color:var(--gray-2);font-weight:700;margin-top:2px}
+.sight-item p{font-size:12.5px;color:var(--gray);line-height:1.7;margin:6px 0 0}
+.sight-add{
+  flex:0 0 auto;width:36px;height:36px;border-radius:50%;border:0;
+  background:var(--ink);color:#fff;font-size:19px;font-weight:700;line-height:1;
+  display:flex;align-items:center;justify-content:center;font-family:inherit;
+}
+.sight-add:active{opacity:.75}
+
 /* ============================================================
    可增 / 可改的列表项操作
    ============================================================ */
@@ -1416,13 +1519,13 @@ body.unlocked #appVer{display:block}
       密码由行程组织者发放 · 输入一次本机记住 7 天
     </div>
     <div id="lockVer" style="margin-top:6px;font-size:10.5px;color:#c0b7ab;letter-spacing:.04em">
-      版本 2026.09.21 · 金额录入已上线
+      版本 2026.09.22 · 待支付 · 已付 · 天汇总
     </div>
   </div>
 </div>
 
 <!-- 进内页后也常驻一个小版本号：一眼判断手机上看的是不是新版 -->
-<div id="appVer">版本 2026.09.21 · 金额录入已上线</div>
+<div id="appVer">版本 2026.09.22 · 找店 · 景点 · 待支付 · 天汇总</div>
 
 <!-- ================= HERO ================= -->
 <header class="hero">
@@ -1516,7 +1619,7 @@ body.unlocked #appVer{display:block}
         <div class="rcell" data-txt="mapTip1"><b>城中圈</b><span>八廓街、布达拉宫、色拉寺与市区酒店在红色「拉萨市内」范围内。</span></div>
         <div class="rcell" data-txt="mapTip2"><b>城外圈</b><span>羊湖、普莫雍错、珠峰、佩枯错等在橙色「珠峰环线」范围内，全程包车。</span></div>
         <div class="rcell" data-txt="mapTip3"><b>路线标签</b><span>虚线旁显示「距离 · 预计通勤」；实际受雨天和堵车影响。</span></div>
-        <div class="rcell" data-txt="mapTip4"><b>导航</b><span>点开每个标记即可跳转 Google Maps，出发前复核营业状态。</span></div>
+        <div class="rcell" data-txt="mapTip4"><b>导航</b><span>点开每个标记即可跳转高德地图，出发前复核营业状态。</span></div>
       </div>
     </div>
   </div>
@@ -1534,6 +1637,20 @@ body.unlocked #appVer{display:block}
   </div>
   <div class="cat-tabs" id="catTabs"></div>
   <div id="spotList"></div>
+
+  <!-- 景点推荐：按城市挑，点 + 选哪一天 -->
+  <div class="mcard" style="margin-top:22px">
+    <div style="padding:17px 18px">
+      <h3 class="serif" style="font-size:17px;margin-bottom:6px">景点推荐</h3>
+      <p style="margin:0 0 12px;font-size:12.5px;color:var(--gray);line-height:1.7">
+        选一个城市，看这条线上还有什么值得停的地方。点右边的 <b>+</b> 选加进哪一天 ——
+        景点名、海拔和简介会一起带进行程，加完还能在行程页拖动排序。
+      </p>
+      <div class="sight-city" id="sightCities"></div>
+      <div id="sightList"></div>
+    </div>
+  </div>
+
   <div class="remind" style="margin-top:22px">
     <h4 class="serif" id="tKitH4" data-txt="kitH4">高原随身清单</h4>
     <div class="rgrid" id="rainKit"></div>
@@ -1631,6 +1748,10 @@ body.unlocked #appVer{display:block}
         <select id="fDay"></select>
         <input type="text" id="fNote" placeholder="备注，如：粘粘瀑布门票">
         <input type="number" id="fAmt" inputmode="decimal" placeholder="金额 ¥">
+        <select id="fPay" style="grid-column:1/-1">
+          <option value="1">已付 · 钱已经付了</option>
+          <option value="0">待支付 · 还没付，先记上（照样算进总花费）</option>
+        </select>
         <button class="btn-solid" id="btnAdd">记下这笔</button>
       </div>
     </div>
@@ -1646,7 +1767,7 @@ body.unlocked #appVer{display:block}
 </section>
 
 <!-- ================= 底部导航 ================= -->
-<footer class="verbar">西藏 · 珠峰环线工作台　<b>v3</b> · 2026-09-19 · 总览 + 导出 Excel</footer>
+<footer class="verbar">西藏 · 珠峰环线工作台　<b>v3</b> · 2026-09-22 · 找店 / 景点 / 待支付 / 天汇总</footer>
 <nav class="nav">
   <button class="on" data-view="overview">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6.2 9.2 4l5.6 2.6L20 4.6v13.2L14.8 20l-5.6-2.6L4 19.4z"/><path d="M9.2 4v13.4M14.8 6.6V20"/></svg>总览</button>
@@ -2312,47 +2433,144 @@ const RAIN_KIT = [
    地点坐标库（导入 Word/Excel 时自动补经纬度）
    ============================================================ */
 const PLACES = [
-  { n:['北京中路亚朵','北京中路','布达拉宫广场亚朵'], lat:29.6550, lng:91.1300, z:'city' },
-  { n:['滨河路亚朵','西藏大学滨河路'], lat:29.6420, lng:91.1060, z:'city' },
-  { n:['八廓街','八角街'], lat:29.6528, lng:91.1320, z:'city' },
-  { n:['大昭寺'], lat:29.6528, lng:91.1319, z:'city' },
-  { n:['布达拉宫','布宫'], lat:29.6577, lng:91.1170, z:'city' },
-  { n:['药王山'], lat:29.6560, lng:91.1180, z:'city' },
-  { n:['色拉寺'], lat:29.7000, lng:91.1330, z:'city' },
-  { n:['哲蚌寺'], lat:29.6740, lng:91.0530, z:'city' },
-  { n:['罗布林卡'], lat:29.6540, lng:91.1000, z:'city' },
-  { n:['小昭寺'], lat:29.6570, lng:91.1360, z:'city' },
-  { n:['创意园','旱地拔葱'], lat:29.6450, lng:91.1180, z:'city' },
-  { n:['贡嘎机场','拉萨机场','贡嘎'], lat:29.2978, lng:90.9119, z:'city' },
-  { n:['羊卓雍措','羊湖'], lat:29.0000, lng:90.7000, z:'out' },
-  { n:['普莫雍错','普莫雍措'], lat:28.5600, lng:90.4000, z:'out' },
-  { n:['康马'], lat:28.5700, lng:89.6800, z:'out' },
-  { n:['冲巴雍错','冲巴雍措'], lat:28.2500, lng:89.5500, z:'out' },
-  { n:['桌木拉日','卓木拉日'], lat:28.2000, lng:89.1000, z:'out' },
-  { n:['定结'], lat:28.3700, lng:87.7700, z:'out' },
-  { n:['阿马直米'], lat:28.4000, lng:87.3000, z:'out' },
-  { n:['宗错湖','宗错'], lat:28.3500, lng:86.9000, z:'out' },
-  { n:['珠穆朗玛','珠峰'], lat:28.2000, lng:86.7000, z:'out' },
-  { n:['岗嘎'], lat:28.5700, lng:86.8000, z:'out' },
-  { n:['佩枯错','佩枯措'], lat:28.8500, lng:85.6000, z:'out' },
-  { n:['希夏邦马'], lat:28.3500, lng:85.7800, z:'out' },
-  { n:['拉普村'], lat:28.6500, lng:86.1000, z:'out' },
-  { n:['定日'], lat:28.6600, lng:87.1200, z:'out' },
-  { n:['萨迦寺','萨迦'], lat:28.9000, lng:88.0200, z:'out' },
-  { n:['日喀则'], lat:29.2700, lng:88.8800, z:'out' },
-  { n:['梅林深处'], lat:29.6560, lng:91.1250, z:'city' },
-  { n:['菌彩'], lat:29.6570, lng:91.1245, z:'city' },
-  { n:['DK咖啡素餐','DK咖啡'], lat:29.6530, lng:91.1240, z:'city' },
-  { n:['极地之谜'], lat:29.6520, lng:91.1260, z:'city' },
-  { n:['北京路'], lat:29.6560, lng:91.1250, z:'city' },
-  // 「出发 · 返回拉萨」这类没写地名的点，兜到当天起点，不至于标成待定
-  { n:['出发 · 司导青峰接驾','出发 · 沿边境线西行','出发 · 前往珠峰方向'], lat:29.6550, lng:91.1300, z:'city' },
-  { n:['出发 · 沿佩枯错方向'], lat:28.5700, lng:86.8000, z:'out' },
-  { n:['出发 · 返回拉萨'], lat:28.6600, lng:87.1200, z:'out' },
-  { n:['重庆'], lat:29.7192, lng:106.6417, z:'out' },
-  { n:['北京首都','首都T3','北京'], lat:40.0799, lng:116.6031, z:'out' },
-  { n:['广州'], lat:23.3924, lng:113.2988, z:'out' }
+  /* —— 拉萨 · 住宿 —— */
+  { n:['北京中路亚朵','北京中路','布达拉宫广场亚朵'], t:['酒店','住宿','亚朵'], city:'拉萨', kind:'酒店', lat:29.6550, lng:91.1300, alt:3650, z:'city', fuzzy:1 },
+  { n:['滨河路亚朵','西藏大学滨河路'], t:['酒店','住宿','亚朵'], city:'拉萨', kind:'酒店', lat:29.6420, lng:91.1060, alt:3650, z:'city', fuzzy:1 },
+  /* —— 拉萨 · 寺庙与地标 —— */
+  { n:['八廓街','八角街'], city:'拉萨', kind:'街区', lat:29.6528, lng:91.1320, alt:3650, z:'city' },
+  { n:['大昭寺'], city:'拉萨', kind:'寺庙', lat:29.6528, lng:91.1319, alt:3650, z:'city' },
+  { n:['布达拉宫','布宫'], city:'拉萨', kind:'宫殿', lat:29.6577, lng:91.1170, alt:3700, z:'city' },
+  { n:['药王山','观景台'], city:'拉萨', kind:'观景台', lat:29.6560, lng:91.1180, alt:3650, z:'city' },
+  { n:['色拉寺'], city:'拉萨', kind:'寺庙', lat:29.7000, lng:91.1330, alt:3700, z:'city' },
+  { n:['哲蚌寺'], city:'拉萨', kind:'寺庙', lat:29.6740, lng:91.0530, alt:3800, z:'city' },
+  { n:['罗布林卡'], city:'拉萨', kind:'园林', lat:29.6540, lng:91.1000, alt:3650, z:'city' },
+  { n:['小昭寺'], city:'拉萨', kind:'寺庙', lat:29.6570, lng:91.1360, alt:3650, z:'city' },
+  { n:['西藏博物馆'], city:'拉萨', kind:'博物馆', lat:29.6530, lng:91.1050, alt:3650, z:'city' },
+  { n:['拉萨河'], city:'拉萨', kind:'河', lat:29.6300, lng:91.1300, alt:3640, z:'city' },
+  { n:['创意园','旱地拔葱'], city:'拉萨', kind:'街区', lat:29.6450, lng:91.1180, alt:3650, z:'city' },
+  { n:['贡嘎机场','拉萨机场','贡嘎'], city:'贡嘎', kind:'机场', lat:29.2978, lng:90.9119, alt:3570, z:'city' },
+  /* —— 拉萨 · 吃 —— */
+  { n:['梅林深处'], t:['餐厅','藏餐','吃饭'], city:'拉萨', kind:'餐厅', lat:29.6560, lng:91.1250, alt:3650, z:'city', fuzzy:1 },
+  { n:['菌彩'], t:['餐厅','藏餐','吃饭'], city:'拉萨', kind:'餐厅', lat:29.6570, lng:91.1245, alt:3650, z:'city', fuzzy:1 },
+  { n:['DK咖啡素餐','DK咖啡'], t:['咖啡','素餐'], city:'拉萨', kind:'咖啡', lat:29.6530, lng:91.1240, alt:3650, z:'city', fuzzy:1 },
+  { n:['极地之谜'], t:['餐厅','藏餐','吃饭'], city:'拉萨', kind:'餐厅', lat:29.6520, lng:91.1260, alt:3650, z:'city', fuzzy:1 },
+  { n:['北京路'], city:'拉萨', kind:'街区', lat:29.6560, lng:91.1250, alt:3650, z:'city' },
+  { n:['光明港琼甜茶馆','光明甜茶馆','老光明甜茶馆'], t:['藏茶','茶馆','甜茶','甜茶馆'], city:'拉萨', kind:'茶馆', lat:29.6553, lng:91.1310, alt:3650, z:'city', fuzzy:1 },
+  { n:['仓姑寺甜茶馆','仓姑寺'], t:['藏茶','茶馆','甜茶','甜茶馆'], city:'拉萨', kind:'茶馆', lat:29.6505, lng:91.1330, alt:3650, z:'city', fuzzy:1 },
+  { n:['玛吉阿米'], t:['藏餐','餐厅','甜茶'], city:'拉萨', kind:'餐厅', lat:29.6527, lng:91.1327, alt:3650, z:'city', fuzzy:1 },
+  /* —— 环线 · 湖 —— */
+  { n:['羊卓雍措','羊湖'], city:'浪卡子', kind:'湖泊', lat:29.0000, lng:90.7000, alt:4441, z:'out' },
+  { n:['普莫雍错','普莫雍措'], city:'浪卡子', kind:'湖泊', lat:28.5600, lng:90.4000, alt:5010, z:'out' },
+  { n:['冲巴雍错','冲巴雍措'], city:'康马', kind:'湖泊', lat:28.2500, lng:89.5500, alt:4570, z:'out' },
+  { n:['多庆措','多情措'], city:'康马', kind:'湖泊', lat:28.2000, lng:89.4000, alt:4400, z:'out' },
+  { n:['宗错湖','宗错'], city:'定结', kind:'湖泊', lat:28.3500, lng:86.9000, alt:4700, z:'out' },
+  { n:['佩枯错','佩枯措'], city:'定日', kind:'湖泊', lat:28.8500, lng:85.6000, alt:4590, z:'out' },
+  /* —— 环线 · 雪山 —— */
+  { n:['桌木拉日','卓木拉日'], city:'康马', kind:'雪山', lat:28.2000, lng:89.1000, alt:7326, z:'out' },
+  { n:['阿马直米'], city:'定结', kind:'雪山', lat:28.4000, lng:87.3000, alt:6858, z:'out' },
+  { n:['珠穆朗玛','珠峰'], city:'定日', kind:'雪山', lat:28.2000, lng:86.7000, alt:8848, z:'out' },
+  { n:['希夏邦马'], city:'定日', kind:'雪山', lat:28.3500, lng:85.7800, alt:8027, z:'out' },
+  /* —— 环线 · 城镇 —— */
+  { n:['康马'], city:'康马', kind:'县城', lat:28.5700, lng:89.6800, alt:4300, z:'out' },
+  { n:['定结'], city:'定结', kind:'县城', lat:28.3700, lng:87.7700, alt:4300, z:'out' },
+  { n:['岗嘎'], city:'定日', kind:'镇', lat:28.5700, lng:86.8000, alt:4400, z:'out' },
+  { n:['拉普村'], city:'定日', kind:'村', lat:28.6500, lng:86.1000, alt:4600, z:'out' },
+  { n:['定日'], city:'定日', kind:'县城', lat:28.6600, lng:87.1200, alt:4300, z:'out' },
+  { n:['萨迦寺','萨迦'], city:'萨迦', kind:'寺庙', lat:28.9000, lng:88.0200, alt:4316, z:'out' },
+  { n:['日喀则'], city:'日喀则', kind:'城市', lat:29.2700, lng:88.8800, alt:3840, z:'out' },
+  /* 「出发 · 返回拉萨」这类没写地名的点，兜到当天起点，不至于标成待定 */
+  { n:['出发 · 司导青峰接驾','出发 · 沿边境线西行','出发 · 前往珠峰方向'], city:'拉萨', kind:'出发', lat:29.6550, lng:91.1300, alt:3650, z:'city' },
+  { n:['出发 · 沿佩枯错方向'], city:'定日', kind:'出发', lat:28.5700, lng:86.8000, alt:4400, z:'out' },
+  { n:['出发 · 返回拉萨'], city:'定日', kind:'出发', lat:28.6600, lng:87.1200, alt:4300, z:'out' },
+  /* —— 进出藏城市（只用于地图示意） —— */
+  { n:['重庆'], city:'重庆', kind:'城市', lat:29.7192, lng:106.6417, alt:244, z:'out' },
+  { n:['北京首都','首都T3','北京'], city:'北京', kind:'城市', lat:40.0799, lng:116.6031, alt:44, z:'out' },
+  { n:['广州'], city:'广州', kind:'城市', lat:23.3924, lng:113.2988, alt:21, z:'out' }
 ];
+
+/* ============================================================
+   景点库：按城市归拢，每个景点带坐标、海拔与不超过 80 字的简介
+   用于「添加景点」：选城市 → 挑景点 → 点加号选这一天
+   ============================================================ */
+const SIGHT_CITIES = ['拉萨','浪卡子','江孜','康马','定结','定日','萨迦','日喀则','尼木','当雄'];
+
+const SIGHTS = [
+  /* —— 拉萨 —— */
+  { city:'拉萨', name:'布达拉宫', alt:3700, lat:29.6577, lng:91.1170, icon:'temple',
+    intro:'世界文化遗产，松赞干布始建、五世达赖扩建。红宫白宫依山而建，宫内壁画与灵塔是精华，需提前预约。' },
+  { city:'拉萨', name:'大昭寺', alt:3650, lat:29.6528, lng:91.1319, icon:'temple',
+    intro:'藏传佛教信仰中心，供奉释迦牟尼十二岁等身像。门前青石被磕长头的信众磨得发亮，早晚酥油灯最旺。' },
+  { city:'拉萨', name:'八廓街', alt:3650, lat:29.6528, lng:91.1320, icon:'market',
+    intro:'环绕大昭寺的千年转经道，顺时针走一圈约二十分钟。商铺、甜茶馆都在这条街上，傍晚人流最密。' },
+  { city:'拉萨', name:'色拉寺', alt:3700, lat:29.7000, lng:91.1330, icon:'temple',
+    intro:'格鲁派三大寺之一。下午的辩经是拉萨最值得看的场面，僧人击掌问答，气氛热烈，殿内壁画保存完好。' },
+  { city:'拉萨', name:'哲蚌寺', alt:3800, lat:29.6740, lng:91.0530, icon:'temple',
+    intro:'格鲁派最大寺院，依山而建的白色建筑群铺满山坡。雪顿节晒佛所在地，登顶可俯瞰拉萨河谷全景。' },
+  { city:'拉萨', name:'罗布林卡', alt:3650, lat:29.6540, lng:91.1000, icon:'temple',
+    intro:'历代达赖的夏宫与园林，藏式宫殿配汉式亭台，院内古树成荫。适合午后慢逛，人比布宫少很多。' },
+  { city:'拉萨', name:'小昭寺', alt:3650, lat:29.6570, lng:91.1360, icon:'temple',
+    intro:'与大昭寺同期修建，供奉释迦牟尼八岁等身像。规模小、游客少、氛围安静，就在八廓街北侧，顺路可去。' },
+  { city:'拉萨', name:'药王山观景台', alt:3650, lat:29.6560, lng:91.1180, icon:'camera',
+    intro:'拍布达拉宫正面全景的经典机位，也是五十元人民币的取景处。傍晚亮灯后最出片，上平台需买票。' },
+  { city:'拉萨', name:'西藏博物馆', alt:3650, lat:29.6530, lng:91.1050, icon:'shop',
+    intro:'了解西藏历史、民俗与宗教最快的入口，佛像、唐卡、藏文典籍馆藏丰富。免费预约，可与罗布林卡连着看。' },
+  /* —— 浪卡子（羊湖一线） —— */
+  { city:'浪卡子', name:'羊卓雍措', alt:4441, lat:29.0000, lng:90.7000, icon:'temple',
+    intro:'西藏三大圣湖之一，湖形如珊瑚枝，颜色随光线从碧绿变深蓝。岗巴拉山口是俯瞰全景的第一机位。' },
+  { city:'浪卡子', name:'岗巴拉山口', alt:4990, lat:28.9500, lng:90.6500, icon:'camera',
+    intro:'拉萨到羊湖的必经垭口，海拔约四千九百九十米。停车即见羊湖全景，是环线第一个高海拔打卡点。' },
+  { city:'浪卡子', name:'卡若拉冰川', alt:5045, lat:28.8500, lng:90.1800, icon:'temple',
+    intro:'紧贴公路的冰川，冰舌几乎触手可及，是西藏最容易抵达的冰川。《红河谷》取景地，注意落石与保暖。' },
+  { city:'浪卡子', name:'普莫雍错', alt:5010, lat:28.5600, lng:90.4000, icon:'temple',
+    intro:'海拔五千米以上的大湖，冬季蓝冰闻名。湖边推瓦村是世界海拔最高的行政村之一，风大、光照强。' },
+  /* —— 江孜 —— */
+  { city:'江孜', name:'白居寺', alt:3900, lat:28.9200, lng:89.6000, icon:'temple',
+    intro:'藏传佛教各派共处的寺院，标志是十万佛塔（白居塔），塔内壁画与佛殿层层叠叠，登塔可看江孜全城。' },
+  { city:'江孜', name:'宗山古堡', alt:3900, lat:28.9150, lng:89.5950, icon:'temple',
+    intro:'一九〇四年江孜抗英遗址，古堡立在城中心山丘上。登顶可俯瞰年楚河谷与白居寺，台阶多、海拔高，慢走。' },
+  { city:'江孜', name:'帕拉庄园', alt:3900, lat:28.8800, lng:89.5300, icon:'temple',
+    intro:'西藏保存最完整的贵族庄园，三层楼里主仆生活的对比十分鲜明。距江孜县城约四公里，参观约一小时。' },
+  /* —— 康马 —— */
+  { city:'康马', name:'冲巴雍错', alt:4570, lat:28.2500, lng:89.5500, icon:'temple',
+    intro:'少有人去的高山湖，湖水蓝得发暗，背后是不丹方向的雪山。清晨无风时倒影最完整，路况一般需包车。' },
+  { city:'康马', name:'多庆措', alt:4400, lat:28.2000, lng:89.4000, icon:'temple',
+    intro:'又称多情措，湖面倒映桌木拉日雪山，是边境线上低调的大景。海拔高风大，注意预防高反。' },
+  { city:'康马', name:'桌木拉日雪山', alt:7326, lat:28.2000, lng:89.1000, icon:'camera',
+    intro:'不丹方向的神山，海拔七千三百二十六米。清晨日照金山最壮观，山形尖锐。观景处风大温低，需厚衣。' },
+  /* —— 定结 —— */
+  { city:'定结', name:'定结湿地', alt:4400, lat:28.3700, lng:87.7700, icon:'camera',
+    intro:'珠峰北侧的高原湿地，水草与雪山同框，秋季是黑颈鹤越冬地。适合拍日出，路边即可取景。' },
+  { city:'定结', name:'阿马直米雪山', alt:6858, lat:28.4000, lng:87.3000, icon:'camera',
+    intro:'定结方向的雪山群主峰，清晨第一缕光打在雪面上最漂亮。沿途为土路，需越野车与经验司导。' },
+  /* —— 定日（珠峰） —— */
+  { city:'定日', name:'加乌拉山口', alt:5210, lat:28.4200, lng:86.8300, icon:'camera',
+    intro:'公认最震撼的雪山观景台，天气好时能同时看到五座八千米级雪山，珠峰在正前方。海拔高别久留。' },
+  { city:'定日', name:'珠峰大本营', alt:5200, lat:28.2000, lng:86.8500, icon:'camera',
+    intro:'北坡大本营，正对珠峰，可见绒布冰川，夜里星空极佳。需办边防证与环保车换乘，住宿条件简单。' },
+  { city:'定日', name:'绒布寺', alt:5000, lat:28.2000, lng:86.8300, icon:'temple',
+    intro:'世界海拔最高的寺庙之一，是观珠峰北坡的好位置。寺庙不大，可住宿、有简单餐饮，风大寒冷。' },
+  { city:'定日', name:'佩枯错', alt:4590, lat:28.8500, lng:85.6000, icon:'temple',
+    intro:'与希夏邦马峰同框的湖泊，环线上最经典的雪山倒影机位。湖水偏蓝绿，风小时最出片。' },
+  { city:'定日', name:'希夏邦马峰', alt:8027, lat:28.3500, lng:85.7800, icon:'camera',
+    intro:'唯一完全在中国境内的八千米级山峰。配佩枯错同框最经典，日落前后光线最好，注意高原风。' },
+  /* —— 萨迦 —— */
+  { city:'萨迦', name:'萨迦寺', alt:4316, lat:28.9000, lng:88.0200, icon:'temple',
+    intro:'花教（萨迦派）祖寺，因藏经墙与海量经卷被称为第二敦煌。南寺外墙红白灰三色是萨迦派的标志。' },
+  /* —— 日喀则 —— */
+  { city:'日喀则', name:'扎什伦布寺', alt:3840, lat:29.2700, lng:88.8800, icon:'temple',
+    intro:'班禅驻锡地，格鲁派六大寺之一。强巴佛殿内鎏金铜佛高二十六米，是必看；寺前广场可看日喀则全景。' },
+  { city:'日喀则', name:'日喀则宗山', alt:3840, lat:29.2750, lng:88.8700, icon:'camera',
+    intro:'日喀则老城中心的宗山遗址，与江孜宗山同为抗英历史见证。可俯拍扎什伦布寺与年楚河谷。' },
+  /* —— 尼木 —— */
+  { city:'尼木', name:'尼木吞巴藏香', alt:3800, lat:29.2600, lng:90.1600, icon:'shop',
+    intro:'尼木县吞巴村是藏香发源地，手工制香技艺沿用千年。可看制香流程、买手工藏香，顺路一游。' },
+  /* —— 当雄 —— */
+  { city:'当雄', name:'纳木错', alt:4718, lat:30.7400, lng:90.6000, icon:'temple',
+    intro:'西藏三大圣湖之一，与念青唐古拉山相依。扎西半岛的玛尼堆与湖景最出片，海拔高气温低注意高反。' },
+  { city:'当雄', name:'念青唐古拉山', alt:7162, lat:30.3900, lng:90.5700, icon:'camera',
+    intro:'纳木错南岸的雪山主峰，海拔七千一百六十二米。沿途观景台可远观，雪线随季节变化。' }
+];
+
 
 /* ============================================================
    手绘路线地图
@@ -2657,6 +2875,21 @@ function dayScrollHTML(active, target){
   }).join('');
 }
 
+/* 这一天的花费汇总：待支付也算进合计，标记已付后只是从「待支付」挪到「已付」 */
+function dayCostBar(di){
+  const c = dayCost(di);
+  if(!(c.total > 0)) return '';
+  return `<div class="mcard">
+    <div class="daycost">
+      <span class="dc-lab">今天花费</span>
+      <span class="dc-tot">${money(c.total)}</span>
+      <span class="dc-sub">已付 ${money(c.paid)}`
+      + (c.todo > 0 ? ` · <span class="dc-todo">待支付 ${money(c.todo)}</span>` : '')
+      + `</span>`
+      + (c.todo > 0 ? `<button class="btn-soft dc-btn" data-daypaid="${di}">这天全部标记已付</button>` : '')
+      + `</div></div>`;
+}
+
 function renderTrip(){
   const d = TRIP_DAYS[curDay];
   document.getElementById('dayScroll').innerHTML = dayScrollHTML(curDay,'trip');
@@ -2689,14 +2922,19 @@ function renderTrip(){
               <div class="stop-top">
                 <div style="flex:1;min-width:0">
                   ${s.time?`<div class="stop-time">${escapeHTML(s.time)}</div>`:''}
-                  <div class="stitle">${escapeHTML(s.title)}</div>
+                  <div class="stitle navable" data-nav="${si}">${escapeHTML(s.title)}</div>
                 </div>
                 <button class="check" data-check="${id}" aria-label="打卡">✓</button>
               </div>
+              ${s.alt>0?`<div class="salt">海拔 ${s.alt} m</div>`:''}
               ${s.desc?`<p class="sdesc">${escapeHTML(s.desc)}</p>`:''}
-              ${s.cost>0?`<div class="scost"><span class="scost-cat">${escapeHTML(costCatName(s.costCat))}</span><b>${money(s.cost)}</b></div>`:''}
+              ${s.cost>0?`<div class="scost clk${isPaid(s)?'':' todo'}" data-pay="${si}" title="点一下在「待支付 / 已付」之间切换"><span class="scost-cat">${escapeHTML(costCatName(s.costCat))}</span><b>${money(s.cost)}</b><span class="spay">${payWord(s)}</span></div>`:''}
               ${s.hours?`<div class="shours">${escapeHTML(s.hours)}</div>`:''}
               ${s.route?`<div class="sroute ${s.routeAuto?'auto':''}">${s.routeAuto?'<span class="route-tag">自动算</span>':''}${escapeHTML(s.route)}</div>`:''}
+              <div class="snav">
+                <a href="${amapNavUrl(s)}" target="_blank" rel="noopener">高德导航</a>
+                <a href="${baiduNavUrl(s)}" target="_blank" rel="noopener">百度地图</a>
+              </div>
               <div class="stop-tools">
                 <button class="stool grip" data-drag="${si}" aria-label="长按拖动排序">${ICONS.grip}</button>
                 <button class="stool primary" data-editstop="${si}">${ICONS.edit}<span>编辑</span></button>
@@ -2710,14 +2948,14 @@ function renderTrip(){
         }).join('')}
       </div>
       <div class="mcard-foot">
-        <button class="btn-solid" data-route="${bi}">${ICONS.pin}<span>在 Google Maps 打开路线</span></button>
+        <button class="btn-solid" data-route="${bi}">${ICONS.pin}<span>在高德打开今日路线导航</span></button>
         <button class="btn-soft" data-seemap="${bi}">查看距离地图</button>
       </div>
       <div class="mcard-foot" style="padding-top:0">
         <button class="btn-soft" data-recalc="${bi}">↻ 重算这天交通</button>
         <button class="btn-soft" data-restoreroute="${bi}">恢复原描述</button>
       </div>
-    </div>`).join('') + `
+    </div>`).join('') + dayCostBar(curDay) + `
     <div class="remind">
       <h4 class="serif">今天的随身提醒</h4>
       <div class="rgrid">
@@ -2747,20 +2985,7 @@ function renderTrip(){
     </div>`;
 }
 
-function googleRouteURL(dayIdx, blockIdx){
-  const b = TRIP_DAYS[dayIdx].blocks[blockIdx];
-  const stops = b.stops;
-  if(stops.length < 2) {
-    const s = stops[0];
-    return `https://www.google.com/maps/search/?api=1&query=${s.lat},${s.lng}`;
-  }
-  const origin = `${stops[0].lat},${stops[0].lng}`;
-  const dest = `${stops[stops.length-1].lat},${stops[stops.length-1].lng}`;
-  const way = stops.slice(1,-1).map(s=>`${s.lat},${s.lng}`).join('|');
-  let url = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${dest}&travelmode=driving`;
-  if(way) url += `&waypoints=${encodeURIComponent(way)}`;
-  return url;
-}
+/* 旧的 Google Maps 路线链接已废弃（国内打不开），统一走上面的 amapRouteUrl */
 
 /* ============================================================
    地图页
@@ -2887,7 +3112,7 @@ function drawMap(){
     const m = L.marker([s.lat,s.lng], {icon:numIcon(n, s.zone==='out')}).addTo(layerGroup);
     m.bindPopup(
       `<b>${n}. ${s.title}</b><br><span style="color:#7d7666">${s.time}${s.route?' · '+s.route.split('·')[0].trim():''}</span><br>`+
-      `<a href="https://www.google.com/maps/search/?api=1&query=${s.lat},${s.lng}" target="_blank" style="color:#c9642a;font-weight:700">在 Google Maps 打开 →</a>`
+      `<a href="${amapNavUrl(s)}" target="_blank" style="color:#c9642a;font-weight:700">在高德地图打开 →</a>`
     );
     addPt(s);
     return m;
@@ -2992,7 +3217,7 @@ function drawMap(){
     }
     renderMapStats(d);
     document.getElementById('mapLegend').innerHTML =
-      `<span class="chip hl">D${mapDay+1} 路线</span><span class="chip">编号 = 当日顺序</span><span class="chip">点击点位 → Google Maps</span>`;
+      `<span class="chip hl">D${mapDay+1} 路线</span><span class="chip">编号 = 当日顺序</span><span class="chip">点击点位 → 高德导航</span>`;
   }
 }
 
@@ -3104,6 +3329,107 @@ function renderSpots(){
   const kit = document.getElementById('rainKit');
   if(kit) kit.innerHTML = myKit().map((r,ri)=>
     `<div class="rcell" data-editkit="${ri}" style="cursor:pointer"><b>${escapeHTML(r.k)}</b><span>${escapeHTML(r.v)}</span></div>`).join('');
+}
+
+/* ============================================================
+   景点推荐：按城市列内置景点库 → 点 + → 选加进哪一天
+   ============================================================ */
+let curSightCity = '拉萨';
+let sightPickedDay = 0;   // 首次点 + 时再从本地记忆里读一次（LS_PICKDAY 定义在本段之后）
+
+function renderSights(){
+  const cityBox = document.getElementById('sightCities');
+  const listBox = document.getElementById('sightList');
+  if(!cityBox || !listBox) return;
+  cityBox.innerHTML = SIGHT_CITIES.map(c=>
+    `<button data-scity="${c}" class="${c===curSightCity?'on':''}">${c} ${SIGHTS.filter(s=>s.city===c).length}</button>`
+  ).join('');
+  const items = SIGHTS.filter(s=>s.city===curSightCity);
+  listBox.innerHTML = items.length ? items.map(g=>{
+    const gi = SIGHTS.indexOf(g);
+    return `<div class="sight-item">
+      <div style="flex:1;min-width:0">
+        <h4>${escapeHTML(g.name)}</h4>
+        <div class="smeta">${escapeHTML(g.city)} · 海拔 ${g.alt} m</div>
+        <p>${escapeHTML(g.intro)}</p>
+      </div>
+      <button class="sight-add" data-sightadd="${gi}" aria-label="加进某一天">${ICONS.plus}</button>
+    </div>`;
+  }).join('') : `<div class="genempty">这个城市还没有收录景点。</div>`;
+}
+
+function buildStopFromSight(g){
+  const st = stopsOf(TRIP_DAYS[sightPickedDay]);
+  let time = '';
+  for(let i = st.length-1; i >= 0; i--){
+    const m = String(st[i].time||'').match(/^(\d{1,2}):(\d{2})/);
+    if(m){
+      let mins = (+m[1])*60 + (+m[2]) + 90;
+      if(mins > 23*60+59) mins = 23*60+30;
+      time = String(Math.floor(mins/60)).padStart(2,'0') + ':' + String(mins%60).padStart(2,'0');
+      break;
+    }
+  }
+  return {
+    time, icon: g.icon || 'temple', title: g.name, desc: g.intro || '',
+    hours: '', route: '', alt: g.alt || 0,
+    lat: g.lat, lng: g.lng,
+    zone: g.lat < 29.2 ? 'out' : 'city'
+  };
+}
+
+function addSightToDay(gi, dayIdx){
+  const g = SIGHTS[gi];
+  if(!g) return;
+  const d = TRIP_DAYS[dayIdx];
+  const prev = sightPickedDay;
+  sightPickedDay = dayIdx;
+  const blk = d.blocks[d.blocks.length - 1];
+  blk.stops.push(buildStopFromSight(g));
+  sightPickedDay = prev;
+  autoFillDay(dayIdx);
+  saveTrip(); afterTripChange();
+  toast(`已把「${g.name}」加进 ${d.date} 行程`);
+}
+
+function openSightDayPicker(gi){
+  const g = SIGHTS[gi];
+  if(!g) return;
+  try{
+    const v = +store.getItem(LS_PICKDAY);
+    if(v >= 0 && v < TRIP_DAYS.length) sightPickedDay = v;
+  }catch(e){}
+  sightPickedDay = Math.min(sightPickedDay, TRIP_DAYS.length - 1);
+  document.getElementById('edTitle').textContent = '加进哪一天';
+  document.getElementById('edFields').innerHTML = `
+    <div class="ed-note" style="margin:0 0 13px">
+      <b style="font-size:14.5px">${escapeHTML(g.name)}</b>
+      <span style="color:var(--gray-2)"> · ${escapeHTML(g.city)} · 海拔 ${g.alt} m</span><br>
+      ${escapeHTML(g.intro)}
+    </div>
+    ${TRIP_DAYS.map((d,i)=>`
+      <button class="pick-day ${i===sightPickedDay?'on':''}" data-sd="${i}">
+        <div>
+          <b>Day ${i+1} · ${escapeHTML(d.date)}</b>
+          <small>${escapeHTML(d.tag||'')} · ${escapeHTML(d.blocks[0] ? d.blocks[0].title : '')}</small>
+        </div>
+        <span class="pn">${dayStationCount(i)} 站</span>
+      </button>`).join('')}`;
+  document.getElementById('edAct').innerHTML =
+    `<button class="no" id="edCancel">取消</button><button class="ok" id="edSave">加入 ${escapeHTML(TRIP_DAYS[sightPickedDay].date)}</button>`;
+  wireEditBase();
+  document.getElementById('edSave').onclick = ()=>{ addSightToDay(gi, sightPickedDay); closeEdit(); };
+  document.getElementById('edFields').querySelectorAll('[data-sd]').forEach(b=>{
+    b.onclick = ()=>{
+      sightPickedDay = +b.dataset.sd;
+      try{ store.setItem(LS_PICKDAY, String(sightPickedDay)); }catch(e){}
+      document.getElementById('edFields').querySelectorAll('[data-sd]')
+        .forEach(x=>x.classList.toggle('on', x === b));
+      const ok = document.getElementById('edSave');
+      if(ok) ok.textContent = `加入 ${TRIP_DAYS[sightPickedDay].date}`;
+    };
+  });
+  openEdit();
 }
 
 /* ---- 加入行程：挑一天 ---- */
@@ -3307,7 +3633,7 @@ const TEXT_DEFAULT = {
   mapTip1:'城中圈||八廓街、布达拉宫、色拉寺与市区酒店在红色「拉萨市内」范围内。',
   mapTip2:'城外圈||羊湖、普莫雍错、珠峰、佩枯错等在橙色「珠峰环线」范围内，全程包车。',
   mapTip3:'路线标签||虚线旁显示「距离 · 预计通勤」；实际受雨天和堵车影响。',
-  mapTip4:'导航||点开每个标记即可跳转 Google Maps，出发前复核营业状态。'
+  mapTip4:'导航||点开每个标记即可跳转高德地图，出发前复核营业状态。'
 };
 const TEXT_LABEL = {
   heroCity:'左上角代号', heroRange:'日期区间', heroBadge:'右上角徽章',
@@ -3648,10 +3974,12 @@ function daySumEdited(di){ return DAY_SUM[di] != null && DAY_SUM[di] !== ''; }
 
 function skDayRow(di, d){
   const edited = daySumEdited(di);
+  const c = dayCost(di);
   return `<div class="sk-day" data-daysum="${di}">
     <span class="sk-daytag">D${di + 1}</span>
     <span class="sk-daydate">${escapeHTML(d.date)}</span>
     <span class="sk-daytxt">${escapeHTML(autoDaySum(di))}</span>
+    ${c.total > 0 ? `<span class="sk-dayamt${c.todo > 0 ? ' todo' : ''}">¥${Math.round(c.total).toLocaleString('en-US')}</span>` : ''}
     <span class="sk-daypen">✎</span>
   </div>`;
 }
@@ -4109,12 +4437,24 @@ document.getElementById('editModal').addEventListener('click', e=>{
 });
 wireEditBase();
 
+/* 编辑弹窗里「当前选中的位置」——刻意不给用户看，标题变了就自动重匹配 */
+let edPosBuf = null;
+
 function openStopEditor(bi, si){
   const isNew = !(si >= 0);
   const d = TRIP_DAYS[curDay];
+  const arrAll = d.blocks[bi].stops;
+  const prevStop = isNew ? arrAll[arrAll.length - 1] : arrAll[si - 1];
+  const baseLat = prevStop ? prevStop.lat : 29.6550;   // 新建点贴着上一站，地图上不会飞走
+  const baseLng = prevStop ? prevStop.lng : 91.1300;
   const s = isNew
-    ? { time:'', icon:'pin', title:'', desc:'', hours:'', route:'', lat:29.6550, lng:91.1300, zone:'city' }
+    ? { time:'', icon:'pin', title:'', desc:'', hours:'', route:'', alt:0,
+        lat:baseLat, lng:baseLng, zone:'city' }
     : d.blocks[bi].stops[si];
+  // 支付状态：老数据没这个字段就按「已付」；新填的一站默认「待支付」
+  const payInit = (s && (s.pay === 0 || s.pay === 1)) ? s.pay : (isNew ? 0 : 1);
+  const cityGuess = curCityGuess();
+  edPosBuf = isNew ? null : { lat:s.lat, lng:s.lng, alt:s.alt||0 };
   document.getElementById('edTitle').textContent = isNew ? '加一个地点' : '改这一站';
   document.getElementById('edFields').innerHTML = `
     <div class="ed-row2">
@@ -4126,7 +4466,19 @@ function openStopEditor(bi, si){
         </select>
       </div>
     </div>
-    <div class="ed-f"><label>标题</label><input id="edTitle2" value="${escapeHTML(s.title||'')}" placeholder="如 八廓街约拍"></div>
+    <div class="ed-f"><label>标题</label><input id="edTitle2" value="${escapeHTML(s.title||'')}" placeholder="如 拉萨北京中路亚朵"></div>
+    <div class="ed-f">
+      <label>找地方 · 输关键词出候选</label>
+      <div class="poi-bar">
+        <select id="edPoiCity">
+          ${SIGHT_CITIES.map(c=>`<option value="${c}"${c===cityGuess?' selected':''}>${c}</option>`).join('')}
+        </select>
+        <input id="edPoiQ" placeholder="如 亚朵 / 藏茶 / 甜茶馆">
+      </div>
+      <div id="edPoiList" class="poi-list"></div>
+      <p class="ed-note">内置库能直接出候选（带海拔）；库里没有的词，点下面的按钮跳到高德 / 百度，
+      地图会按你当前位置从近到远列出来。</p>
+    </div>
     <div class="ed-f"><label>说明</label><textarea id="edDesc" placeholder="做什么、注意什么">${escapeHTML(s.desc||'')}</textarea></div>
     <div class="ed-f"><label>开放 / 门票信息</label><input id="edHours" value="${escapeHTML(s.hours||'')}" placeholder="如 门票 200 元 / 开放 09:00-17:00"></div>
     <div class="ed-row2">
@@ -4140,6 +4492,14 @@ function openStopEditor(bi, si){
             .map(([v,t])=>`<option value="${v}"${(s.costCat||'other')===v?' selected':''}>${t}</option>`).join('')}
         </select></div>
     </div>
+    <div class="ed-f">
+      <label>这笔钱付了吗</label>
+      <div class="payseg" id="edPaySeg">
+        <button type="button" class="todo${payInit === 0 ? ' on' : ''}" data-v="0">待支付</button>
+        <button type="button"${payInit === 1 ? ' class="on"' : ''} data-v="1">已付</button>
+      </div>
+      <p class="ed-note">选哪个都一样会算进<b>当天汇总和总花费</b>；标「已付」只是把它从待支付挪到已付那一格。</p>
+    </div>
     <p class="ed-note">填的是<b>这一站的总价</b>：机票就填两个人加起来实际付的钱，别填单价 —— 页面不会替你乘人数。
     保存后自动进「记账」，改了跟着改，清空了自动撤掉。吃饭、买东西也能填。</p>
     <div class="ed-f">
@@ -4147,12 +4507,12 @@ function openStopEditor(bi, si){
       <input id="edRoute" value="${escapeHTML(s.route||'')}" placeholder="留空＝自动算">
       <p class="ed-note">留空保存后，会按前后两站的距离自动写一段（包车日按包车算、市区按打车算）。</p>
     </div>
-    <div class="ed-row2">
-      <div class="ed-f"><label>纬度 lat</label><input id="edLat" inputmode="decimal" value="${s.lat}"></div>
-      <div class="ed-f"><label>经度 lng</label><input id="edLng" inputmode="decimal" value="${s.lng}"></div>
+    <div class="ed-f">
+      <label>海拔（米）</label>
+      <input id="edAlt" inputmode="numeric" value="${s.alt>0?s.alt:''}" placeholder="如 3650，不确定可留空">
+      <p class="ed-note">地图定位、距离计算都由页面自己处理，不用你填坐标 —— 这里只留一个海拔给你记。</p>
     </div>
-    <p class="ed-note" style="margin-bottom:13px">坐标用来画地图和算距离。改完标题后，可点下面的按钮从坐标库重新匹配一次。</p>
-    <button class="ed-sub" id="edRematch">${ICONS.pin}<span>按标题重匹配坐标 / 自动算一段路</span></button>
+    <button class="ed-sub" id="edRematch">${ICONS.pin}<span>自动匹配位置 / 算一段路</span></button>
     ${isNew?'':`<button class="ed-danger" id="edDel">${ICONS.trash}<span>删除这一站</span></button>`}`;
   document.getElementById('edAct').innerHTML =
     `<button class="no" id="edCancel">取消</button><button class="ok" id="edSave">保存</button>`;
@@ -4160,18 +4520,55 @@ function openStopEditor(bi, si){
 
   const g = id => document.getElementById(id);
   const t2 = g('edTitle2');
-  const latEl = g('edLat'), lngEl = g('edLng');
+  const altEl = g('edAlt');
+  let edPayVal = payInit;
+  const seg = g('edPaySeg');
+  if(seg) seg.addEventListener('click', ev=>{
+    const b = ev.target.closest('button[data-v]');
+    if(!b) return;
+    edPayVal = +b.dataset.v;
+    seg.querySelectorAll('button[data-v]').forEach(x=>
+      x.classList.toggle('on', +x.dataset.v === edPayVal));
+  });
+
+  /* 标题变化 → 悄悄匹配位置，并把海拔带出来（位置不显示给用户） */
   t2.addEventListener('input', ()=>{
     const pos = guessPlace(t2.value);
-    if(pos){ latEl.value = pos.lat; lngEl.value = pos.lng; }
+    if(!pos) return;
+    edPosBuf = { lat:pos.lat, lng:pos.lng, alt:pos.alt||0 };
+    if(pos.alt && !altEl.value) altEl.value = pos.alt;
   });
+
+  /* 关键词搜索：本地库即时出候选，命不中给一键跳地图 */
+  const qEl = g('edPoiQ'), listEl = g('edPoiList'), cityEl = g('edPoiCity');
+  let poiTimer = null;
+  const runPoi = ()=> renderPoiList(listEl, qEl.value, cityEl.value);
+  qEl.addEventListener('input', ()=>{ clearTimeout(poiTimer); poiTimer = setTimeout(runPoi, 220); });
+  cityEl.addEventListener('change', runPoi);
+  /* 悄悄要一次定位：拿到就把候选按离你多远重排一遍（拒绝授权也无所谓，不影响用） */
+  ensureGeo(()=>{ if(qEl.value) runPoi(); });
+  listEl.addEventListener('click', (ev)=>{
+    let node = ev.target;
+    while(node && node !== listEl && !(node.dataset && node.dataset.pick !== undefined)) node = node.parentNode;
+    if(!node || node === listEl) return;
+    const r = (listEl.__data || [])[+node.dataset.pick];
+    if(!r) return;
+    t2.value = r.name;
+    edPosBuf = { lat:r.lat, lng:r.lng, alt:r.alt||0 };
+    if(r.alt) altEl.value = r.alt;
+    if(r.intro && !g('edDesc').value) g('edDesc').value = r.intro;
+    toast('已填入「' + r.name + '」');
+    setTimeout(()=>{ if(!g('edRoute').value) recalcPreview(bi, si); }, 60);
+  });
+
   g('edRematch').onclick = ()=>{
     const pos = guessPlace(t2.value);
     if(pos){
-      latEl.value = pos.lat; lngEl.value = pos.lng;
-      toast('已从坐标库匹配');
+      edPosBuf = { lat:pos.lat, lng:pos.lng, alt:pos.alt||0 };
+      if(pos.alt) altEl.value = pos.alt;
+      toast('已匹配：' + ((pos.city||'') + (pos.kind?(' · ' + pos.kind):'')));
     } else {
-      toast('坐标库没收录，沿用当前坐标');
+      toast('内置库没收录，沿用上一站位置');
     }
     setTimeout(()=>{ if(!g('edRoute').value) recalcPreview(bi, si); }, 60);
   };
@@ -4180,6 +4577,10 @@ function openStopEditor(bi, si){
   g('edSave').onclick = ()=>{
     const title = t2.value.trim();
     if(!title){ toast('请填写标题'); return; }
+    const pos = edPosBuf || guessPlace(title);
+    const lat = (pos && pos.lat) ? pos.lat : baseLat;
+    const lng = (pos && pos.lng) ? pos.lng : baseLng;
+    const altIn = parseInt(g('edAlt').value, 10);
     const obj = {
       time: g('edTime').value.trim(),
       icon: g('edIcon').value,
@@ -4188,10 +4589,11 @@ function openStopEditor(bi, si){
       hours: g('edHours').value.trim(),
       cost: (function(){ const n = parseFloat(g('edCost').value); return (isNaN(n)||n<=0) ? 0 : Math.round(n); })(),
       costCat: g('edCostCat').value,
+      pay: edPayVal,
       route: g('edRoute').value.trim(),
-      lat: parseFloat(latEl.value) || 29.6550,
-      lng: parseFloat(lngEl.value) || 91.1300,
-      zone: (parseFloat(latEl.value) || 29.655) < 29.2 ? 'out' : 'city'
+      alt: (isNaN(altIn) || altIn <= 0) ? ((pos && pos.alt) ? pos.alt : 0) : altIn,
+      lat, lng,
+      zone: (pos && pos.z) ? pos.z : (lat < 29.2 ? 'out' : 'city')
     };
     if(isNew){
       const arr = d.blocks[bi].stops;
@@ -4221,8 +4623,8 @@ function recalcPreview(bi, si){
   const prev = arr[idx-1];
   const el = document.getElementById('edRoute');
   if(!prev || !el) return;
-  const lat = parseFloat(document.getElementById('edLat').value) || prev.lat;
-  const lng = parseFloat(document.getElementById('edLng').value) || prev.lng;
+  const lat = (edPosBuf && edPosBuf.lat) ? edPosBuf.lat : prev.lat;
+  const lng = (edPosBuf && edPosBuf.lng) ? edPosBuf.lng : prev.lng;
   const fake = { title: document.getElementById('edTitle2').value || '新站点', lat, lng, icon: document.getElementById('edIcon').value, zone:'city' };
   if(prev.lat === fake.lat && prev.lng === fake.lng) return;
   const t = dayTransit(d, prev, fake);
@@ -4285,6 +4687,93 @@ function openBlockEditor(bi){
 function costCatName(c){
   return ({ flight:'机票', traffic:'交通', stay:'住宿', ticket:'门票',
             shoot:'约拍', food:'餐饮', shop:'手信', other:'其他' })[c] || '其他';
+}
+
+/* ============================================================
+   支付状态：待支付 ↔ 已付
+   —— 站点金额和记账都带一个 pay 字段：
+      pay === 0  待支付（钱还没付，但已经算进当天和总花费）
+      其他 / 没这个字段  已付（老数据默认按已付，不会把以前的账翻成待付）
+   标记已付只是换个格子待着，金额始终算在总花费里。
+   ============================================================ */
+function isPaid(x){ return !(x && x.pay === 0); }
+function payWord(x){ return isPaid(x) ? '已付' : '待支付'; }
+
+/* 某一天的花费：分「已付 / 待支付」，合计 = 两者相加 */
+function dayCost(di){
+  var paid = 0, todo = 0;
+  var list = (budget && Array.isArray(budget.expenses)) ? budget.expenses : [];
+  list.forEach(function(e){
+    if(!e || +e.day !== di) return;
+    var a = +e.amt || 0;
+    if(e.pay === 0) todo += a; else paid += a;
+  });
+  return { paid: paid, todo: todo, total: paid + todo };
+}
+/* 全程花费：同样拆成已付 / 待支付 */
+function costSplit(){
+  var paid = 0, todo = 0;
+  var list = (budget && Array.isArray(budget.expenses)) ? budget.expenses : [];
+  list.forEach(function(e){
+    if(!e) return;
+    var a = +e.amt || 0;
+    if(e.pay === 0) todo += a; else paid += a;
+  });
+  return { paid: paid, todo: todo, total: paid + todo };
+}
+
+/* 站点的支付状态翻面（待支付 → 已付 / 已付 → 待支付） */
+function toggleStopPay(di, bi, si){
+  var d = TRIP_DAYS[di];
+  if(!d || !d.blocks[bi] || !d.blocks[bi].stops[si]) return;
+  var s = d.blocks[bi].stops[si];
+  if(!(s.cost > 0)) return;
+  s.pay = isPaid(s) ? 0 : 1;
+  saveTrip();
+  afterTripChange();
+  toast(isPaid(s) ? '已标记「已付」' : '已改回「待支付」');
+}
+/* 把这一整天还没付的，一次性全标成已付 */
+function markDayPaid(di){
+  var d = TRIP_DAYS[di];
+  if(!d) return;
+  var n = 0;
+  d.blocks.forEach(function(b){
+    b.stops.forEach(function(s){ if((s.cost > 0) && !isPaid(s)){ s.pay = 1; n++; } });
+  });
+  var list = (budget && Array.isArray(budget.expenses)) ? budget.expenses : [];
+  list.forEach(function(e){
+    if(e && +e.day === di && e.pay === 0 && !e.src){ e.pay = 1; n++; }
+  });
+  if(!n){ toast('这天没有待支付的钱'); return; }
+  saveTrip(); saveBudget();
+  afterTripChange();
+  toast('已把 ' + n + ' 笔标记为已付');
+}
+/* 流水里单独一笔翻面 */
+function toggleExpensePay(id){
+  var list = (budget && Array.isArray(budget.expenses)) ? budget.expenses : [];
+  var hit = null;
+  list.forEach(function(e){ if(e && e.id === id) hit = e; });
+  if(!hit) return;
+  // 来自行程的那笔，改站点本身，免得下次同步又被行程覆盖回去
+  if(hit.src){
+    TRIP_DAYS.forEach(function(d, di){
+      d.blocks.forEach(function(b){
+        b.stops.forEach(function(s){
+          if(s._cid === hit.src){ s.pay = isPaid(hit) ? 0 : 1; }
+        });
+      });
+    });
+    saveTrip();
+  } else {
+    hit.pay = isPaid(hit) ? 0 : 1;
+  }
+  saveBudget();
+  afterTripChange();
+  var now = null;
+  list.forEach(function(e){ if(e && e.id === id) now = e; });
+  toast(now ? ('已' + (isPaid(now) ? '标记「已付」' : '改回「待支付」')) : '已更新');
 }
 
 /* ---- 攻略引用：识别小红书 / 抖音 / B站等平台 ---- */
@@ -4401,6 +4890,9 @@ function openRemindEditor(ri){
 document.getElementById('dayBody').addEventListener('click', e=>{
   const g = k => e.target.closest(`[data-${k}]`);
 
+  // 「高德 / 百度」是原生链接，交给浏览器打开，别顺带把编辑弹窗也拉起来
+  if(e.target.closest('.snav a')) return;
+
   const c = g('check');
   if(c){
     const id = c.dataset.check;
@@ -4411,6 +4903,17 @@ document.getElementById('dayBody').addEventListener('click', e=>{
     else toast(checked.has(id) ? '已打卡 ✓' : '已取消');
     return;
   }
+  // 点金额标签 → 在「待支付 / 已付」之间切换（别顺手打开编辑弹窗）
+  const pe = g('pay');
+  if(pe){
+    const bi = +pe.closest('.stops').dataset.bi;
+    toggleStopPay(curDay, bi, +pe.dataset.pay);
+    return;
+  }
+  // 天汇总条上的「这天全部标记已付」
+  const dp = g('daypaid');
+  if(dp){ markDayPaid(+dp.dataset.daypaid); return; }
+
   const ed = g('editstop');
   if(ed){ const bi = +ed.closest('.stops').dataset.bi; openStopEditor(bi, +ed.dataset.editstop); return; }
   const up = g('up');
@@ -4438,9 +4941,13 @@ document.getElementById('dayBody').addEventListener('click', e=>{
   const rfe = g('editref');
   if(rfe){ openRefEditor(+rfe.dataset.editref); return; }
   const r = g('route');
-  if(r){ window.open(googleRouteURL(curDay, +r.dataset.route), '_blank'); return; }
+  if(r){ window.open(amapRouteUrl(+r.dataset.route), '_blank'); return; }
   const m = g('seemap');
   if(m){ document.querySelector('.nav button[data-view="map"]').click(); return; }
+
+  // 点地名 / 酒店名 / 餐厅名 → 直接去高德导航
+  const nv = g('nav');
+  if(nv){ const bi = +nv.closest('.stops').dataset.bi; openNavFor(bi, +nv.dataset.nav); return; }
 
   // 点站点任意位置（标题、说明、空白都算）都能进编辑 —— 不用去找那个小按钮
   const st = e.target.closest('.stop');
@@ -4567,9 +5074,28 @@ document.getElementById('spotList').addEventListener('click', e=>{
     return;
   }
   const mp = g('spotmap');
-  if(mp){ window.open('https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(SPOTS[+mp.dataset.spotmap].q), '_blank'); return; }
+  if(mp){ window.open(amapSearchUrl(SPOTS[+mp.dataset.spotmap].q || SPOTS[+mp.dataset.spotmap].name, '拉萨'), '_blank'); return; }
 });
 document.getElementById('btnAddSpot').addEventListener('click', ()=> openSpotEditor(-1));
+
+/* 景点推荐：切城市 / 点加号 */
+(function bindSights(){
+  const cb = document.getElementById('sightCities');
+  const lb = document.getElementById('sightList');
+  if(cb) cb.addEventListener('click', e=>{
+    const b = e.target.closest('[data-scity]');
+    if(!b) return;
+    curSightCity = b.dataset.scity;
+    renderSights();
+    try{ store.setItem('lxa_sight_city_v1', curSightCity); }catch(err){}
+  });
+  if(lb) lb.addEventListener('click', e=>{
+    const b = e.target.closest('[data-sightadd]');
+    if(!b) return;
+    openSightDayPicker(+b.dataset.sightadd);
+  });
+  try{ const c = store.getItem('lxa_sight_city_v1'); if(c && SIGHT_CITIES.indexOf(c) >= 0) curSightCity = c; }catch(err){}
+})();
 document.getElementById('rainKit').addEventListener('click', e=>{
   const k = e.target.closest('[data-editkit]'); if(!k) return;
   openKitEditor(+k.dataset.editkit);
@@ -4616,7 +5142,8 @@ function syncStopCosts(){
           amt: Math.round(s.cost),
           day: di,
           note: s.costNote || costNoteOf(s, di),
-          icon: COST_CAT_ICON[s.costCat || 'other'] || 'shop'
+          icon: COST_CAT_ICON[s.costCat || 'other'] || 'shop',
+          pay: isPaid(s) ? 1 : 0
         };
       });
     });
@@ -4632,15 +5159,15 @@ function syncStopCosts(){
     if(!hit.length){
       budget.expenses.push({
         id: 'sc' + cid, src: cid, cat: w.cat, day: w.day,
-        note: w.note, amt: w.amt, icon: w.icon, ts: Date.now()
+        note: w.note, amt: w.amt, icon: w.icon, pay: w.pay, ts: Date.now()
       });
       added++;
     } else {
       // ② 改动：金额 / 分类 / 日期 / 标题 变了就跟着改（多条只留第一条，其余清掉）
       const e = hit[0];
-      if(e.amt !== w.amt || e.cat !== w.cat || e.day !== w.day || e.note !== w.note){
+      if(e.amt !== w.amt || e.cat !== w.cat || e.day !== w.day || e.note !== w.note || e.pay !== w.pay){
         e.amt = w.amt; e.cat = w.cat; e.day = w.day;
-        e.note = w.note; e.icon = w.icon;
+        e.note = w.note; e.icon = w.icon; e.pay = w.pay;
         upd++;
       }
       if(hit.length > 1){
@@ -4691,10 +5218,13 @@ function renderBudget(){
   const { map, total } = budSum();
   const people = Math.max(1, budget.people|0);
 
-  // 顶部数字
-  document.getElementById('budTotal').textContent = money(total);
+  // 顶部数字：合计里已经含「待支付」，下面再把两块拆开
+  const sp = costSplit();
+  document.getElementById('budTotal').textContent = money(sp.total);
   document.getElementById('budPerHead').innerHTML =
-    `人均 ${money(total/people)} · ${budget.expenses.length} 笔`;
+    `人均 ${money(sp.total/people)} · <span id="budCount">${budget.expenses.length}</span> 笔`
+    + ` · <span class="bud-paid">已付 ${money(sp.paid)}</span>`
+    + (sp.todo > 0 ? ` · <span class="bud-todo">待支付 ${money(sp.todo)}</span>` : '');
 
   // 预算进度
   const cap = Math.max(0, budget.cap|0);
@@ -4743,6 +5273,8 @@ function renderBudget(){
       </div>
       <div class="blamt">
         <b>${money(e.amt)}</b>
+        <span class="blpay${e.pay===0?'':' done'}" data-payid="${e.id}"
+              title="点一下在「待支付 / 已付」之间切换">${e.pay===0?'待支付':'已付'}</span>
         <button data-del="${e.id}">删除</button>
       </div></div>`;
   }).join('') : `<div class="genempty">还没有记录。上面「记一笔」随手填，或用「从行程自动生成」先看一份预计清单。</div>`;
@@ -4946,7 +5478,9 @@ document.getElementById('btnAdd').addEventListener('click', ()=>{
   const note = document.getElementById('fNote').value.trim();
   const day = +document.getElementById('fDay').value;
   const icon = cat==='traffic'?'car' : cat==='ticket'?'temple' : cat==='food'?'food' : cat==='shop'?'shop' : 'pin';
-  budget.expenses.push({ id:'e'+Date.now(), cat, day, note, amt:Math.round(amt), ts:Date.now(), icon });
+  const payEl = document.getElementById('fPay');
+  const pay = payEl ? (payEl.value === '0' ? 0 : 1) : 1;
+  budget.expenses.push({ id:'e'+Date.now(), cat, day, note, amt:Math.round(amt), ts:Date.now(), icon, pay });
   saveBudget(); renderBudget();
   document.getElementById('fAmt').value = '';
   document.getElementById('fNote').value = '';
@@ -4954,6 +5488,8 @@ document.getElementById('btnAdd').addEventListener('click', ()=>{
 });
 
 document.getElementById('budList').addEventListener('click', e=>{
+  const p = e.target.closest('[data-payid]');
+  if(p){ toggleExpensePay(p.dataset.payid); return; }
   const b = e.target.closest('[data-del]'); if(!b) return;
   const id = b.dataset.del;
   budget.expenses = budget.expenses.filter(x=>x.id !== id);
@@ -5103,13 +5639,204 @@ const WEEK_CN = ['周日','周一','周二','周三','周四','周五','周六']
 const WEEK_MAP = {'四':'周四','五':'周五','六':'周六','日':'周日','一':'周一','二':'周二','三':'周三'};
 
 function guessPlace(title){
+  return placeOf(title);
+}
+
+/* 按标题找坐标库条目：取「最长命中」，避免「北京」抢在「北京中路」前面 */
+function placeOf(title){
   const t = String(title||'');
+  let best = null, bestLen = 0;
   for(const p of PLACES){
     for(const key of p.n){
-      if(key && t.includes(key)) return p;
+      if(key && t.indexOf(key) >= 0 && key.length > bestLen){ best = p; bestLen = key.length; }
     }
   }
-  return null;
+  return best;
+}
+function cityOfStop(s){
+  const p = placeOf(s && s.title);
+  if(p && p.city) return p.city;
+  return '';
+}
+
+/* ============================================================
+   地图跳转：国内用高德 / 百度（Google Maps 在国内打不开）
+   ============================================================ */
+function amapSearchUrl(kw, city){
+  let u = 'https://uri.amap.com/search?keyword=' + encodeURIComponent(String(kw||'')) +
+          '&view=map&src=xizang-trip';
+  if(city) u += '&city=' + encodeURIComponent(city);
+  return u;
+}
+function baiduSearchUrl(kw){
+  return 'https://map.baidu.com/search/' + encodeURIComponent(String(kw||''));
+}
+/* 地标类直接用坐标定位（手机上会唤起高德 App）；
+   店铺类（酒店 / 餐厅 / 茶馆）坐标是估的，改用名字搜，让高德自己找准确门店 */
+function amapNavUrl(s){
+  const name = encodeURIComponent((s && s.title) || '');
+  const p = placeOf(s && s.title);
+  if(p && p.fuzzy) return amapSearchUrl((s && s.title) || '', p.city || cityOfStop(s));
+  if(s && inTibet(s))
+    return 'https://uri.amap.com/marker?position=' + s.lng + ',' + s.lat +
+           '&name=' + name + '&src=xizang-trip';
+  return amapSearchUrl((s && s.title) || '', cityOfStop(s));
+}
+function baiduNavUrl(s){
+  const c = cityOfStop(s);
+  return baiduSearchUrl((c ? c + ' ' : '') + ((s && s.title) || ''));
+}
+function openNavFor(bi, si){
+  const d = TRIP_DAYS[curDay];
+  const s = d && d.blocks[bi] && d.blocks[bi].stops[si];
+  if(!s) return;
+  window.open(amapNavUrl(s), '_blank');
+}
+/* 一天整条路线丢给高德做驾车导航 */
+function amapRouteUrl(dayIdx){
+  const d = TRIP_DAYS[dayIdx];
+  if(!d) return amapSearchUrl('拉萨');
+  const stops = [];
+  d.blocks.forEach(b=>b.stops.forEach(s=>{ if(inTibet(s)) stops.push(s); }));
+  if(stops.length < 2) return amapSearchUrl('拉萨');
+  const f = stops[0], t = stops[stops.length - 1];
+  return 'https://uri.amap.com/navigation?from=' + f.lng + ',' + f.lat + ',' +
+         encodeURIComponent(f.title||'起点') + '&to=' + t.lng + ',' + t.lat + ',' +
+         encodeURIComponent(t.title||'终点') + '&mode=car&policy=1&src=xizang-trip';
+}
+
+/* ============================================================
+   关键词搜索：先查内置库（坐标库 + 景点库），命中不了的给一键跳地图
+   ============================================================ */
+function poiTokens(q){
+  const out = [], n = q.length;
+  for(let L = Math.min(4, n); L >= 2; L--)
+    for(let i = 0; i + L <= n; i++) out.push(q.substr(i, L));
+  return out;
+}
+function poiNameScore(q, names){
+  let sc = 0;
+  const toks = poiTokens(q);
+  for(let i = 0; i < names.length; i++){
+    const nm = names[i];
+    if(!nm) continue;
+    if(nm === q){ sc = Math.max(sc, 100); continue; }
+    if(nm.indexOf(q) >= 0 || q.indexOf(nm) >= 0){ sc = Math.max(sc, 80); continue; }
+    for(let j = 0; j < toks.length; j++){
+      if(nm.indexOf(toks[j]) >= 0) sc = Math.max(sc, 40 + toks[j].length * 4);
+    }
+  }
+  return sc;
+}
+/* 「拉萨亚朵」要出亚朵、不能把整个拉萨都倒出来：
+   把城市名摘掉，剩下的实词命中才算强信号，城市名本身只是小加成 */
+function poiScore(q, names, city){
+  let sc = poiNameScore(q, names);
+  let rest = q;
+  if(city && q.indexOf(city) >= 0) rest = q.split(city).join('');
+  if(rest && rest !== q){
+    const rsc = poiNameScore(rest, names);
+    if(rsc > 0) sc = Math.max(sc, rsc + 30);
+  }
+  if(sc > 0 && city && q.indexOf(city) >= 0) sc += 12;
+  return sc;
+}
+/* 用户当前位置：拿到了就把候选按「离你多远」排，拿不到就按匹配度排 */
+let USER_GEO = null;
+function distKm(la1, lo1, la2, lo2){
+  const R = 6371, rad = Math.PI / 180;
+  const dLa = (la2 - la1) * rad, dLo = (lo2 - lo1) * rad;
+  const a = Math.sin(dLa/2) * Math.sin(dLa/2) +
+            Math.cos(la1*rad) * Math.cos(la2*rad) * Math.sin(dLo/2) * Math.sin(dLo/2);
+  return 2 * R * Math.asin(Math.min(1, Math.sqrt(a)));
+}
+function ensureGeo(cb){
+  if(USER_GEO){ if(cb) cb(); return; }
+  if(!navigator.geolocation) return;
+  try{
+    navigator.geolocation.getCurrentPosition(function(p){
+      USER_GEO = { lat:p.coords.latitude, lng:p.coords.longitude };
+      if(cb) cb();
+    }, function(){}, { timeout:8000, maximumAge:300000 });
+  }catch(e){}
+}
+function fmtDist(km){
+  if(km == null) return '';
+  return km < 1 ? '约 ' + Math.round(km * 1000) + ' m' : '约 ' + km.toFixed(1) + ' km';
+}
+function searchPoi(q){
+  q = String(q||'').replace(/\s+/g, '').trim();
+  if(!q) return [];
+  const res = [];
+  const cityHit = SIGHT_CITIES.indexOf(q) >= 0;      // 关键词本身就是城市名
+  PLACES.forEach(p=>{
+    if(/^出发/.test(p.n[0])) return;          // 「出发 · …」是兜底定位，不当搜索候选
+    let sc = poiScore(q, (p.n || []).concat(p.t || []), p.city);
+    if(!sc && cityHit && p.city === q) sc = 30;      // 直接搜城市名 → 把这座城的点都列出来
+    if(sc > 0) res.push({ sc, name:p.n[0], city:p.city||'', kind:p.kind||'',
+                          lat:p.lat, lng:p.lng, alt:p.alt||0, place:p });
+  });
+  SIGHTS.forEach(g=>{
+    let sc = poiScore(q, [g.name].concat(g.t || []), g.city);
+    if(!sc && cityHit && g.city === q) sc = 30;
+    if(sc > 0) res.push({ sc: sc + 3, name:g.name, city:g.city, kind:'景点', icon:g.icon,
+                          lat:g.lat, lng:g.lng, alt:g.alt, intro:g.intro, sigth:g });
+  });
+  res.sort((a,b)=> b.sc - a.sc);
+  const seen = {}, out = [];
+  res.forEach(r=>{ const k = r.name + '|' + r.city; if(!seen[k]){ seen[k] = 1; out.push(r); } });
+  /* 有明显强命中时，把「只是蹭到城市名」的弱候选丢掉：
+     搜「拉萨亚朵」就该只出亚朵，别把拉萨河、贡嘎机场一起倒出来 */
+  const top = out.length ? out[0].sc : 0;
+  const cut = cityHit ? 0 : Math.max(38, Math.round(top * 0.72));
+  return out.filter(r=> r.sc >= cut).slice(0, 10);
+}
+/* 当前这一天大概在哪个城市 —— 给搜索一个合理的默认城市 */
+function curCityGuess(){
+  const d = TRIP_DAYS[curDay];
+  if(d){
+    const all = [];
+    d.blocks.forEach(b=>b.stops.forEach(s=>all.push(s)));
+    for(let i = all.length - 1; i >= 0; i--){
+      const c = cityOfStop(all[i]);
+      if(c && ['拉萨','浪卡子','江孜','康马','定结','定日','萨迦','日喀则','尼木','当雄'].indexOf(c) >= 0) return c;
+    }
+  }
+  return '拉萨';
+}
+function renderPoiList(box, q, city){
+  q = String(q||'').trim();
+  if(!q){ box.innerHTML = ''; box.__data = []; return; }
+  const list = searchPoi(q);
+  /* 有定位就同分内按距离排（近的在前），并显示离你多远 */
+  if(USER_GEO){
+    list.forEach(r=>{ r.dist = distKm(USER_GEO.lat, USER_GEO.lng, r.lat, r.lng); });
+    list.sort((a,b)=> (b.sc - a.sc) || (a.dist - b.dist));
+  }
+  let html = '';
+  if(list.length){
+    html += list.map((r,i)=>`
+      <div class="poi-item" data-poi="${i}">
+        <div class="poi-main">
+          <b>${escapeHTML(r.name)}</b>
+          <span>${escapeHTML([r.city, r.kind, r.alt ? '海拔 ' + r.alt + ' m' : '',
+                              r.dist != null ? '距你' + fmtDist(r.dist) : ''].filter(Boolean).join(' · '))}</span>
+          ${r.intro?`<em>${escapeHTML(r.intro)}</em>`:''}
+        </div>
+        <button class="poi-pick" data-pick="${i}">用它</button>
+      </div>`).join('');
+  } else {
+    html += `<div class="poi-none">内置库里没收录这个词，直接在地图 App 里搜最准 ↓</div>`;
+  }
+  // 查询里已经写了城市名就别再加一遍，免得搜「拉萨 拉萨亚朵」
+  const kw = (city && q.indexOf(city) < 0) ? city + ' ' + q : q;
+  html += `
+    <div class="poi-acts">
+      <a class="poi-map" target="_blank" rel="noopener" href="${amapSearchUrl(kw, city)}">高德搜「${escapeHTML(kw)}」</a>
+      <a class="poi-map baidu" target="_blank" rel="noopener" href="${baiduSearchUrl(kw)}">百度地图</a>
+    </div>`;
+  box.innerHTML = html;
+  box.__data = list;
 }
 function guessIcon(title){
   const t = String(title||'');
@@ -5453,20 +6180,23 @@ function xlsxData(){
   const sheets = [];
 
   /* ① 行程总览（就是手绘地图下面那 8 行） */
-  const s1 = { name:'行程总览', cols:[7,10,20,46,9,54], rows:[['天','日期','星期 / 主题','经过地点','站点数','当日提示']] };
+  const s1 = { name:'行程总览', cols:[7,10,20,42,9,13,54], rows:[['天','日期','星期 / 主题','经过地点','站点数','当天花费 ¥','当日提示']] };
   TRIP_DAYS.forEach((d, i)=>{
     const cnt = d.blocks.reduce((a, b)=>a + b.stops.length, 0);
+    const dc = dayCost(i);
     s1.rows.push([
       { v:`D${i + 1}`, s:5 }, d.date || '',
       [d.weekday, d.tag].filter(Boolean).join(' · '),
-      { v:autoDaySum(i), s:5 }, cnt, d.tip || ''
+      { v:autoDaySum(i), s:5 }, cnt,
+      { v:Math.round(dc.total), s:4 },
+      d.tip || ''
     ]);
   });
   sheets.push(s1);
 
   /* ② 每日行程明细 */
-  const s2 = { name:'每日行程', cols:[7,9,26,9,30,46,24,42,11,9],
-               rows:[['天','日期','时段','时间','地点','说明','停留 / 营业','交通衔接','费用 ¥','已打卡']] };
+  const s2 = { name:'每日行程', cols:[7,9,26,9,30,46,24,42,11,10,9],
+               rows:[['天','日期','时段','时间','地点','说明','停留 / 营业','交通衔接','费用 ¥','支付状态','已打卡']] };
   TRIP_DAYS.forEach((d, di)=>{
     d.blocks.forEach((b, bi)=>{
       b.stops.forEach((s, si)=>{
@@ -5474,6 +6204,7 @@ function xlsxData(){
           `D${di + 1}`, d.date || '', b.title || '', s.time || '',
           { v:s.title || '', s:5 }, s.desc || '', s.hours || '', s.route || '',
           s.cost > 0 ? Math.round(s.cost) : '',
+          s.cost > 0 ? (isPaid(s) ? '已付' : '待支付') : '',
           checked.has(sid(di, bi, si)) ? '✓' : ''
         ]);
       });
@@ -5483,6 +6214,7 @@ function xlsxData(){
 
   /* ③ 预算汇总 */
   const { map, total } = budSum();
+  const sp3 = costSplit();
   const people = Math.max(1, budget.people | 0);
   const e = genEstimate();
   const s3 = { name:'预算汇总', cols:[14,16,16,16,30], filter:false,
@@ -5504,11 +6236,12 @@ function xlsxData(){
     { v:Math.round(total), s:5 },
     { v:Math.round((e.totalAll || 0) - total), s:5 },
     `总预算 ¥${Math.round(budget.cap).toLocaleString('en-US')} · ${people} 人 · 人均已花 ¥${Math.round(total / people).toLocaleString('en-US')}`
+    + ` · 已付 ¥${Math.round(sp3.paid).toLocaleString('en-US')} · 待支付 ¥${Math.round(sp3.todo).toLocaleString('en-US')}`
   ]);
   sheets.push(s3);
 
   /* ④ 支出流水 */
-  const s4 = { name:'支出流水', cols:[7,9,12,46,12,20], rows:[['#','天','分类','说明','金额 ¥','记录时间']] };
+  const s4 = { name:'支出流水', cols:[7,9,12,42,12,10,20], rows:[['#','天','分类','说明','金额 ¥','状态','记录时间']] };
   [...budget.expenses].sort((a, b)=>(a.ts || 0) - (b.ts || 0)).forEach((x, i)=>{
     const dt = x.ts ? new Date(x.ts) : null;
     s4.rows.push([
@@ -5516,11 +6249,12 @@ function xlsxData(){
       (x.day != null && TRIP_DAYS[x.day]) ? `D${x.day + 1} ${TRIP_DAYS[x.day].date}` : '',
       catOf(x.cat).name,
       x.note || '',
-      Math.round(x.amt || 0),
+      { v: Math.round(x.amt || 0), s:4 },
+      x.pay === 0 ? '待支付' : '已付',
       dt ? `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}-${String(dt.getDate()).padStart(2,'0')} ${String(dt.getHours()).padStart(2,'0')}:${String(dt.getMinutes()).padStart(2,'0')}` : ''
     ]);
   });
-  if(!budget.expenses.length) s4.rows.push(['', '', '', '还没有记账，去「预算 · 花费」页点自动生成或手动记一笔', '', '']);
+  if(!budget.expenses.length) s4.rows.push(['', '', '', '还没有记账，去「预算 · 花费」页点自动生成或手动记一笔', '', '', '']);
   sheets.push(s4);
 
   /* ⑤ 探店清单 */
@@ -6124,10 +6858,10 @@ function boot(){
   // 先对齐一次「行程金额 → 记账」，避免云同步刚拉回来的数据少记或漏记
   try{ syncStopCosts(); }catch(e){ console.error('[启动] 行程金额同步失败', e); }
   var steps = ['renderTexts','renderSketch','renderProgress','renderTrip',
-               'renderMapDayCards','renderSpots','renderBudget'];
+               'renderMapDayCards','renderSpots','renderSights','renderBudget'];
   var fns = { renderTexts:renderTexts, renderSketch:renderSketch, renderProgress:renderProgress,
               renderTrip:renderTrip, renderMapDayCards:renderMapDayCards,
-              renderSpots:renderSpots, renderBudget:renderBudget };
+              renderSpots:renderSpots, renderSights:renderSights, renderBudget:renderBudget };
   steps.forEach(function(name){
     try{ fns[name](); }
     catch(err){
