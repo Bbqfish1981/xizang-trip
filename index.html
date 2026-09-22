@@ -1355,16 +1355,35 @@ input,select,textarea{font-size:16px}
 .poi-map.baidu{background:#eef3fb;border-color:#d3e0f2}
 .poi-map:active{opacity:.7}
 
-/* ---- 地点名可点：导航 ---- */
-.stitle.navable{cursor:pointer;text-decoration:none;border-bottom:1px dashed rgba(13,92,71,.35)}
-.stitle.navable:active{opacity:.6}
-.snav{display:flex;gap:6px;margin-top:6px}
-.snav a{
-  text-decoration:none;font-size:11.5px;font-weight:800;padding:5px 10px;border-radius:8px;
-  background:var(--cream-2);border:1px solid var(--line-2);color:var(--ink);
+/* ---- 地点名可点：一键唤起导航（弹出选地图面板） ---- */
+.stitle.navable{cursor:pointer}
+.stitle.navable::after{
+  content:'导航';display:inline-block;margin-left:7px;vertical-align:middle;
+  font-size:10.5px;font-weight:800;letter-spacing:.02em;
+  color:var(--ink-3);background:var(--mint);
+  border:1px solid var(--line);border-radius:999px;padding:1px 7px;
 }
-.snav a:active{opacity:.65}
+.stitle.navable:active{opacity:.6}
 .salt{font-size:11.5px;font-weight:800;color:#2f7fa8;margin-top:6px}
+
+/* 选地图面板（复用编辑弹窗外壳） */
+.nav-hd{font-size:13px;color:var(--gray);font-weight:700;line-height:1.5;margin:0 0 13px}
+.nav-hd b{color:var(--ink);font-weight:900;font-size:15px}
+.nav-opt{
+  display:flex;align-items:center;gap:12px;width:100%;text-align:left;
+  padding:12px 14px;border-radius:12px;margin-bottom:9px;
+  border:1.5px solid var(--line-2);background:var(--paper);
+  font-family:inherit;font-weight:800;font-size:15px;color:var(--ink);
+}
+.nav-opt:active{background:var(--cream-2)}
+.nav-opt .ni{
+  width:32px;height:32px;flex:0 0 auto;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:14px;font-weight:900;letter-spacing:0;
+}
+.nav-opt .nt{flex:1;min-width:0}
+.nav-opt .nt small{display:block;font-size:11.5px;color:var(--gray-2);font-weight:600;margin-top:2px}
+.nav-opt .go{font-size:11.5px;color:var(--gray-2);font-weight:800;white-space:nowrap}
 
 /* ---- 景点推荐（探店页） ---- */
 .sight-city{display:flex;gap:7px;overflow-x:auto;padding:2px 0 4px;-webkit-overflow-scrolling:touch}
@@ -1519,13 +1538,13 @@ body.unlocked #appVer{display:block}
       密码由行程组织者发放 · 输入一次本机记住 7 天
     </div>
     <div id="lockVer" style="margin-top:6px;font-size:10.5px;color:#c0b7ab;letter-spacing:.04em">
-      版本 2026.09.22 · 待支付 · 已付 · 天汇总
+      版本 2026.09.22 · 选地图导航 · 找店 · 景点 · 待支付
     </div>
   </div>
 </div>
 
 <!-- 进内页后也常驻一个小版本号：一眼判断手机上看的是不是新版 -->
-<div id="appVer">版本 2026.09.22 · 找店 · 景点 · 待支付 · 天汇总</div>
+<div id="appVer">版本 2026.09.22 · 选地图导航 · 找店 · 景点 · 待支付</div>
 
 <!-- ================= HERO ================= -->
 <header class="hero">
@@ -1619,7 +1638,7 @@ body.unlocked #appVer{display:block}
         <div class="rcell" data-txt="mapTip1"><b>城中圈</b><span>八廓街、布达拉宫、色拉寺与市区酒店在红色「拉萨市内」范围内。</span></div>
         <div class="rcell" data-txt="mapTip2"><b>城外圈</b><span>羊湖、普莫雍错、珠峰、佩枯错等在橙色「珠峰环线」范围内，全程包车。</span></div>
         <div class="rcell" data-txt="mapTip3"><b>路线标签</b><span>虚线旁显示「距离 · 预计通勤」；实际受雨天和堵车影响。</span></div>
-        <div class="rcell" data-txt="mapTip4"><b>导航</b><span>点开每个标记即可跳转高德地图，出发前复核营业状态。</span></div>
+        <div class="rcell" data-txt="mapTip4"><b>导航</b><span>点开标记可导航，苹果 / 高德 / 百度 / 腾讯地图任选；出发前复核营业状态。</span></div>
       </div>
     </div>
   </div>
@@ -1767,7 +1786,7 @@ body.unlocked #appVer{display:block}
 </section>
 
 <!-- ================= 底部导航 ================= -->
-<footer class="verbar">西藏 · 珠峰环线工作台　<b>v3</b> · 2026-09-22 · 找店 / 景点 / 待支付 / 天汇总</footer>
+<footer class="verbar">西藏 · 珠峰环线工作台　<b>v3</b> · 2026-09-22 · 选地图 / 找店 / 景点 / 待支付</footer>
 <nav class="nav">
   <button class="on" data-view="overview">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6.2 9.2 4l5.6 2.6L20 4.6v13.2L14.8 20l-5.6-2.6L4 19.4z"/><path d="M9.2 4v13.4M14.8 6.6V20"/></svg>总览</button>
@@ -2931,10 +2950,6 @@ function renderTrip(){
               ${s.cost>0?`<div class="scost clk${isPaid(s)?'':' todo'}" data-pay="${si}" title="点一下在「待支付 / 已付」之间切换"><span class="scost-cat">${escapeHTML(costCatName(s.costCat))}</span><b>${money(s.cost)}</b><span class="spay">${payWord(s)}</span></div>`:''}
               ${s.hours?`<div class="shours">${escapeHTML(s.hours)}</div>`:''}
               ${s.route?`<div class="sroute ${s.routeAuto?'auto':''}">${s.routeAuto?'<span class="route-tag">自动算</span>':''}${escapeHTML(s.route)}</div>`:''}
-              <div class="snav">
-                <a href="${amapNavUrl(s)}" target="_blank" rel="noopener">高德导航</a>
-                <a href="${baiduNavUrl(s)}" target="_blank" rel="noopener">百度地图</a>
-              </div>
               <div class="stop-tools">
                 <button class="stool grip" data-drag="${si}" aria-label="长按拖动排序">${ICONS.grip}</button>
                 <button class="stool primary" data-editstop="${si}">${ICONS.edit}<span>编辑</span></button>
@@ -3105,14 +3120,16 @@ function drawFallbackBase(){
 function drawMap(){
   initMap();
   layerGroup.clearLayers();
+  NAV_POPUPS = [];
 
   const pts = [];   // 视野用：全部藏区内的点
   const addPt = s => { if(inTibet(s)) pts.push([s.lat,s.lng]); };
   const addStop = (s, n) => {
     const m = L.marker([s.lat,s.lng], {icon:numIcon(n, s.zone==='out')}).addTo(layerGroup);
+    NAV_POPUPS.push(s);
     m.bindPopup(
       `<b>${n}. ${s.title}</b><br><span style="color:#7d7666">${s.time}${s.route?' · '+s.route.split('·')[0].trim():''}</span><br>`+
-      `<a href="${amapNavUrl(s)}" target="_blank" style="color:#c9642a;font-weight:700">在高德地图打开 →</a>`
+      `<a href="javascript:void(0)" onclick="navFromPopup(${NAV_POPUPS.length-1});return false;" style="color:#c9642a;font-weight:700">选地图打开 →</a>`
     );
     addPt(s);
     return m;
@@ -3217,7 +3234,7 @@ function drawMap(){
     }
     renderMapStats(d);
     document.getElementById('mapLegend').innerHTML =
-      `<span class="chip hl">D${mapDay+1} 路线</span><span class="chip">编号 = 当日顺序</span><span class="chip">点击点位 → 高德导航</span>`;
+      `<span class="chip hl">D${mapDay+1} 路线</span><span class="chip">编号 = 当日顺序</span><span class="chip">点击点位 → 选地图导航</span>`;
   }
 }
 
@@ -3633,7 +3650,7 @@ const TEXT_DEFAULT = {
   mapTip1:'城中圈||八廓街、布达拉宫、色拉寺与市区酒店在红色「拉萨市内」范围内。',
   mapTip2:'城外圈||羊湖、普莫雍错、珠峰、佩枯错等在橙色「珠峰环线」范围内，全程包车。',
   mapTip3:'路线标签||虚线旁显示「距离 · 预计通勤」；实际受雨天和堵车影响。',
-  mapTip4:'导航||点开每个标记即可跳转高德地图，出发前复核营业状态。'
+  mapTip4:'导航||点开标记可导航，苹果 / 高德 / 百度 / 腾讯地图任选；出发前复核营业状态。'
 };
 const TEXT_LABEL = {
   heroCity:'左上角代号', heroRange:'日期区间', heroBadge:'右上角徽章',
@@ -4890,9 +4907,6 @@ function openRemindEditor(ri){
 document.getElementById('dayBody').addEventListener('click', e=>{
   const g = k => e.target.closest(`[data-${k}]`);
 
-  // 「高德 / 百度」是原生链接，交给浏览器打开，别顺带把编辑弹窗也拉起来
-  if(e.target.closest('.snav a')) return;
-
   const c = g('check');
   if(c){
     const id = c.dataset.check;
@@ -4945,9 +4959,9 @@ document.getElementById('dayBody').addEventListener('click', e=>{
   const m = g('seemap');
   if(m){ document.querySelector('.nav button[data-view="map"]').click(); return; }
 
-  // 点地名 / 酒店名 / 餐厅名 → 直接去高德导航
+  // 点地名 / 酒店名 / 餐厅名 → 弹出「选哪个地图」面板（苹果/高德/百度/腾讯）
   const nv = g('nav');
-  if(nv){ const bi = +nv.closest('.stops').dataset.bi; openNavFor(bi, +nv.dataset.nav); return; }
+  if(nv){ const bi = +nv.closest('.stops').dataset.bi; openNavPicker(bi, +nv.dataset.nav); return; }
 
   // 点站点任意位置（标题、说明、空白都算）都能进编辑 —— 不用去找那个小按钮
   const st = e.target.closest('.stop');
@@ -5686,12 +5700,128 @@ function baiduNavUrl(s){
   const c = cityOfStop(s);
   return baiduSearchUrl((c ? c + ' ' : '') + ((s && s.title) || ''));
 }
-function openNavFor(bi, si){
+
+/* ============================================================
+   点地名 → 先问「用哪个地图打开」（不再写死高德）
+   纯网页唤不出 iOS 那个系统面板（那是 App 用原生弹的，图三那种），
+   所以这里自己弹一个等效的；「苹果地图」那条在 iPhone 上会交给系统处理。
+   ============================================================ */
+function isIOS(){
+  return /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+         (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+}
+function isAndroid(){ return /Android/i.test(navigator.userAgent); }
+
+/* mode: 'ios' | 'android' | 'web'，不传按当前设备判断 */
+function navOptions(s, mode){
+  const m = mode || (isIOS() ? 'ios' : (isAndroid() ? 'android' : 'web'));
+  const ios = m === 'ios', andr = m === 'android', mob = ios || andr;
+
+  const title = String((s && s.title) || '');
+  const p = placeOf(title) || null;
+  const city = (p && p.city) || cityOfStop(s) || '';
+  // 地标走坐标精确定位；酒店餐厅茶馆坐标是估的，走名字搜
+  const landmark = !!(s && inTibet(s)) && !(p && p.fuzzy);
+  const shop = !!(p && p.fuzzy);            // 酒店 / 餐厅 / 茶馆（坐标是估的）
+  const subCoord = '按坐标精确导航';
+  const subName = shop ? '按名字搜门店' : '按名字搜';
+  const lat = s ? s.lat : '', lng = s ? s.lng : '';
+  const nm = encodeURIComponent(title);
+  const kw = encodeURIComponent((city && title.indexOf(city) < 0) ? city + ' ' + title : title);
+  const rgn = encodeURIComponent(city);
+  const out = [];
+
+  // 1) 苹果地图
+  out.push({ n:'苹果地图', c:'#3d6ff0', sub:'系统自带 · iPhone / iPad 上最省事',
+    u: landmark ? 'https://maps.apple.com/?q=' + nm + '&ll=' + lat + ',' + lng + '&z=16'
+                : 'https://maps.apple.com/?q=' + kw, fb:'' });
+
+  // 2) 高德
+  out.push({ n:'高德地图', c:'#2f7fe0', sub: landmark ? subCoord : subName,
+    u: ios
+      ? (landmark ? 'iosamap://navi?sourceApplication=xizang-trip&lat=' + lat + '&lon=' + lng + '&name=' + nm + '&dev=0&style=2'
+                  : 'iosamap://poi?sourceApplication=xizang-trip&name=' + kw + '&dev=0')
+      : andr
+      ? (landmark ? 'androidamap://navi?sourceApplication=xizang-trip&lat=' + lat + '&lon=' + lng + '&dev=0&style=2'
+                  : 'androidamap://poi?sourceApplication=xizang-trip&keywords=' + kw + '&dev=0')
+      : amapNavUrl(s),
+    fb: amapNavUrl(s) });
+
+  // 3) 百度
+  out.push({ n:'百度地图', c:'#e0452f', sub: landmark ? subCoord : subName,
+    u: mob
+      ? (landmark ? 'baidumap://map/direction?destination=latlng:' + lat + ',' + lng + '|name:' + nm + '&mode=driving&coord_type=gcj02&src=xizang-trip'
+                  : 'baidumap://map/place/search?query=' + kw + '&region=' + rgn + '&src=xizang-trip')
+      : baiduSearchUrl((city ? city + ' ' : '') + title),
+    fb: amapNavUrl(s) });
+
+  // 4) 腾讯（官方 URI 链接：装了开 App，没装自动落网页）
+  out.push({ n:'腾讯地图', c:'#0aa06e', sub: landmark ? '按坐标定位' : subName,
+    u: landmark
+      ? 'https://apis.map.qq.com/uri/v1/marker?marker=coord%3A' + lat + ',' + lng + '%3Btitle%3A' + nm + '%3Baddr%3A' + rgn + '&referer=xizang-trip'
+      : 'https://apis.map.qq.com/uri/v1/search?keyword=' + kw + '&region=' + rgn + '&referer=xizang-trip',
+    fb:'' });
+
+  // 5) 手机上没装对应 App 的兜底
+  if(mob) out.push({ n:'高德网页版', c:'#8a94a6', sub:'没装 App 也能看位置', u: amapNavUrl(s) });
+
+  return out;
+}
+
+function openExternal(u, fb){
+  if(!u) return;
+  // 桌面：开新页，别把工作台顶掉
+  if(!(isIOS() || isAndroid())){ window.open(u, '_blank', 'noopener'); return; }
+  // App 深链：跳不动就自动落回网页版（免得用户卡在一个空白页上）
+  if(/^(iosamap|androidamap|baidumap|qqmap):/i.test(u) && fb){
+    let away = false;
+    const mark = ()=>{ if(document.hidden || document.webkitHidden) away = true; };
+    document.addEventListener('visibilitychange', mark);
+    window.addEventListener('pagehide', mark);
+    window.location.href = u;
+    setTimeout(()=>{
+      document.removeEventListener('visibilitychange', mark);
+      window.removeEventListener('pagehide', mark);
+      if(!away && !document.hidden && !document.webkitHidden) window.location.href = fb;
+    }, 1500);
+    return;
+  }
+  window.location.href = u;
+}
+
+let NAV_POPUPS = [];
+function navFromPopup(i){ openNavPickerForStop(NAV_POPUPS[i]); }
+
+function openNavPickerForStop(s){
+  if(!s) return;
+  const opts = navOptions(s);
+  const p = placeOf(s.title) || null;
+  document.getElementById('edTitle').textContent = '用哪个地图打开';
+  document.getElementById('edFields').innerHTML =
+    `<div class="nav-hd">导航到 <b>${escapeHTML(s.title || '')}</b>` +
+      (p && p.city ? `　<span>${escapeHTML(p.city)}</span>` : '') +
+      `<br>点一下，直接用那个地图打开。</div>` +
+    opts.map((o, i)=>`
+      <button class="nav-opt" data-navi="${i}">
+        <span class="ni" style="background:${o.c}">${escapeHTML(o.n.charAt(0))}</span>
+        <span class="nt">${escapeHTML(o.n)}<small>${escapeHTML(o.sub)}</small></span>
+        <span class="go">打开 ›</span>
+      </button>`).join('');
+  document.getElementById('edAct').innerHTML = `<button class="no" id="edCancel">取消</button>`;
+  wireEditBase();
+  const box = document.getElementById('edFields');
+  Array.prototype.forEach.call(box.querySelectorAll('[data-navi]'), b=>{
+    b.onclick = ()=>{ const o = opts[+b.dataset.navi]; closeEdit(); openExternal(o.u, o.fb); };
+  });
+  openEdit();
+}
+function openNavPicker(bi, si){
   const d = TRIP_DAYS[curDay];
   const s = d && d.blocks[bi] && d.blocks[bi].stops[si];
-  if(!s) return;
-  window.open(amapNavUrl(s), '_blank');
+  openNavPickerForStop(s);
 }
+/* 兼容旧调用 */
+function openNavFor(bi, si){ openNavPicker(bi, si); }
 /* 一天整条路线丢给高德做驾车导航 */
 function amapRouteUrl(dayIdx){
   const d = TRIP_DAYS[dayIdx];
