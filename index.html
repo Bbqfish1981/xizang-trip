@@ -1538,13 +1538,13 @@ body.unlocked #appVer{display:block}
       密码由行程组织者发放 · 输入一次本机记住 7 天
     </div>
     <div id="lockVer" style="margin-top:6px;font-size:10.5px;color:#c0b7ab;letter-spacing:.04em">
-      版本 2026.09.22 · 选地图导航 · 找店 · 景点 · 待支付
+      版本 2026.09.22 · 自动海拔 · 单价×数量 · 酒店平摊
     </div>
   </div>
 </div>
 
 <!-- 进内页后也常驻一个小版本号：一眼判断手机上看的是不是新版 -->
-<div id="appVer">版本 2026.09.22 · 选地图导航 · 找店 · 景点 · 待支付</div>
+<div id="appVer">版本 2026.09.22 · 自动海拔 · 单价×数量 · 酒店平摊</div>
 
 <!-- ================= HERO ================= -->
 <header class="hero">
@@ -1786,7 +1786,7 @@ body.unlocked #appVer{display:block}
 </section>
 
 <!-- ================= 底部导航 ================= -->
-<footer class="verbar">西藏 · 珠峰环线工作台　<b>v3</b> · 2026-09-22 · 选地图 / 找店 / 景点 / 待支付</footer>
+<footer class="verbar">西藏 · 珠峰环线工作台　<b>v3</b> · 2026-09-22 · 自动海拔 / 单价×数量 / 酒店平摊</footer>
 <nav class="nav">
   <button class="on" data-view="overview">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6.2 9.2 4l5.6 2.6L20 4.6v13.2L14.8 20l-5.6-2.6L4 19.4z"/><path d="M9.2 4v13.4M14.8 6.6V20"/></svg>总览</button>
@@ -2895,6 +2895,34 @@ function dayScrollHTML(active, target){
 }
 
 /* 这一天的花费汇总：待支付也算进合计，标记已付后只是从「待支付」挪到「已付」 */
+function staySharesForDay(di){
+  const out = [];
+  TRIP_DAYS.forEach(function(d){
+    d.blocks.forEach(function(b){
+      b.stops.forEach(function(s){
+        if((s.costCat||'')!=='stay') return;
+        if(typeof s.checkin!=='number' || typeof s.checkout!=='number') return;
+        if(di>=s.checkin && di<s.checkout && s.cost>0){
+          const nights = s.checkout - s.checkin;
+          out.push({ title:s.title, amt: Math.round(s.cost/nights), pay: isPaid(s)?1:0 });
+        }
+      });
+    });
+  });
+  return out;
+}
+function staySharesHTML(di){
+  const list = staySharesForDay(di);
+  if(!list.length) return '';
+  return '<div class="stayshare">'+list.map(function(x){
+    return '<div class="stop share">'+
+      '<div class="sicon">'+(ICONS.pin||'📍')+'</div>'+
+      '<div class="sbody"><div class="stop-top"><div style="flex:1">'+
+      '<div class="stitle">'+escapeHTML(x.title)+'</div></div></div>'+
+      '<div class="scost '+(x.pay?'':'todo')+'"><span class="scost-cat">住宿 · 平摊</span><b>'+money(x.amt)+'</b>'+
+      '<span class="spay">'+(x.pay?'已付':'待支付')+'</span></div></div></div>';
+  }).join('')+'</div>';
+}
 function dayCostBar(di){
   const c = dayCost(di);
   if(!(c.total > 0)) return '';
@@ -2947,7 +2975,7 @@ function renderTrip(){
               </div>
               ${s.alt>0?`<div class="salt">海拔 ${s.alt} m</div>`:''}
               ${s.desc?`<p class="sdesc">${escapeHTML(s.desc)}</p>`:''}
-              ${s.cost>0?`<div class="scost clk${isPaid(s)?'':' todo'}" data-pay="${si}" title="点一下在「待支付 / 已付」之间切换"><span class="scost-cat">${escapeHTML(costCatName(s.costCat))}</span><b>${money(s.cost)}</b><span class="spay">${payWord(s)}</span></div>`:''}
+              ${(s.cost>0 && !((s.costCat==='stay') && typeof s.checkin==='number' && typeof s.checkout==='number' && s.checkout>s.checkin))?`<div class="scost clk${isPaid(s)?'':' todo'}" data-pay="${si}" title="点一下在「待支付 / 已付」之间切换"><span class="scost-cat">${escapeHTML(costCatName(s.costCat))}</span><b>${money(s.cost)}</b>${s.costUnit&&s.costQty?`<small>¥${s.costUnit}×${s.costQty}</small>`:''}<span class="spay">${payWord(s)}</span></div>`:''}
               ${s.hours?`<div class="shours">${escapeHTML(s.hours)}</div>`:''}
               ${s.route?`<div class="sroute ${s.routeAuto?'auto':''}">${s.routeAuto?'<span class="route-tag">自动算</span>':''}${escapeHTML(s.route)}</div>`:''}
               <div class="stop-tools">
@@ -2970,7 +2998,7 @@ function renderTrip(){
         <button class="btn-soft" data-recalc="${bi}">↻ 重算这天交通</button>
         <button class="btn-soft" data-restoreroute="${bi}">恢复原描述</button>
       </div>
-    </div>`).join('') + dayCostBar(curDay) + `
+    </div>`).join('') + staySharesHTML(curDay) + dayCostBar(curDay) + `
     <div class="remind">
       <h4 class="serif">今天的随身提醒</h4>
       <div class="rgrid">
@@ -4472,6 +4500,20 @@ function openStopEditor(bi, si){
   const payInit = (s && (s.pay === 0 || s.pay === 1)) ? s.pay : (isNew ? 0 : 1);
   const cityGuess = curCityGuess();
   edPosBuf = isNew ? null : { lat:s.lat, lng:s.lng, alt:s.alt||0 };
+  const UNIT_CAT = {
+    flight: { u:'票价（元）', q:'人数' },
+    stay:   { u:'每晚（元）', q:'住几晚' },
+    ticket: { u:'票价（元）', q:'张数' }
+  };
+  const _uc = UNIT_CAT[s.costCat || 'other'] || null;
+  const unitShow = !!_uc;
+  const unitLabel = _uc ? _uc.q : '数量';
+  const unitPriceLabel = _uc ? _uc.u : '单价（元）';
+  function dayOpts(v){
+    return TRIP_DAYS.map(function(d,i){
+      return '<option value="'+i+'"'+(i===v?' selected':'')+'>'+(d.date||('Day '+(i+1)))+'</option>';
+    }).join('');
+  }
   document.getElementById('edTitle').textContent = isNew ? '加一个地点' : '改这一站';
   document.getElementById('edFields').innerHTML = `
     <div class="ed-row2">
@@ -4509,6 +4551,18 @@ function openStopEditor(bi, si){
             .map(([v,t])=>`<option value="${v}"${(s.costCat||'other')===v?' selected':''}>${t}</option>`).join('')}
         </select></div>
     </div>
+    <div class="ed-row2" id="edUnitRow" style="display:${unitShow?'flex':'none'}">
+      <div class="ed-f"><label id="edUnitLab">${unitPriceLabel}</label>
+        <input id="edUnit" inputmode="decimal" value="${s.costUnit>0?s.costUnit:''}" placeholder="单价，如 1380"></div>
+      <div class="ed-f"><label id="edQtyLab">${unitLabel}</label>
+        <input id="edQty" inputmode="numeric" value="${s.costQty>0?s.costQty:''}" placeholder="如 2"></div>
+    </div>
+    <p class="ed-note" id="edUnitNote" style="display:${unitShow?'block':'none'}">总价按「单价 × ${unitLabel}」自动算（机票填人数、门票填张数）。想直接填总价就留空单价 / 数量。</p>
+    <div class="ed-row2" id="edStayRow" style="display:${s.costCat==='stay'?'flex':'none'}">
+      <div class="ed-f"><label>入住日</label><select id="edCheckin">${dayOpts(typeof s.checkin==='number'?s.checkin:curDay)}</select></div>
+      <div class="ed-f"><label>离店日</label><select id="edCheckout">${dayOpts(typeof s.checkout==='number'?s.checkout:curDay+1)}</select></div>
+    </div>
+    <p class="ed-note" id="edStayNote" style="display:${s.costCat==='stay'?'block':'none'}">填入住 / 离店日 + 总价，系统自动把每晚平摊到对应那几天，并在那几天行程里自动记上住宿。</p>
     <div class="ed-f">
       <label>这笔钱付了吗</label>
       <div class="payseg" id="edPaySeg">
@@ -4525,9 +4579,9 @@ function openStopEditor(bi, si){
       <p class="ed-note">留空保存后，会按前后两站的距离自动写一段（包车日按包车算、市区按打车算）。</p>
     </div>
     <div class="ed-f">
-      <label>海拔（米）</label>
-      <input id="edAlt" inputmode="numeric" value="${s.alt>0?s.alt:''}" placeholder="如 3650，不确定可留空">
-      <p class="ed-note">地图定位、距离计算都由页面自己处理，不用你填坐标 —— 这里只留一个海拔给你记。</p>
+      <label>海拔（自动匹配，不用填）</label>
+      <div id="edAltShow" class="ed-ro" style="font-weight:700;color:var(--ink-1)">${s.alt>0 ? ('已记录 '+s.alt+' m') : '录入地点后自动识别'}</div>
+      <p class="ed-note">海拔按你录入的地点或到达城市自动匹配（如拉萨 3650m），地名写清楚即可，不用手填坐标。</p>
     </div>
     <button class="ed-sub" id="edRematch">${ICONS.pin}<span>自动匹配位置 / 算一段路</span></button>
     ${isNew?'':`<button class="ed-danger" id="edDel">${ICONS.trash}<span>删除这一站</span></button>`}`;
@@ -4537,7 +4591,7 @@ function openStopEditor(bi, si){
 
   const g = id => document.getElementById(id);
   const t2 = g('edTitle2');
-  const altEl = g('edAlt');
+  const altEl = g('edAltShow');
   let edPayVal = payInit;
   const seg = g('edPaySeg');
   if(seg) seg.addEventListener('click', ev=>{
@@ -4553,7 +4607,7 @@ function openStopEditor(bi, si){
     const pos = guessPlace(t2.value);
     if(!pos) return;
     edPosBuf = { lat:pos.lat, lng:pos.lng, alt:pos.alt||0 };
-    if(pos.alt && !altEl.value) altEl.value = pos.alt;
+    if(altEl){ const a = altForTitle(t2.value); altEl.textContent = a.alt ? ('已匹配 ' + (a.src||'地点') + ' ' + a.alt + ' m') : '未匹配到海拔（地名再具体点）'; }
   });
 
   /* 关键词搜索：本地库即时出候选，命不中给一键跳地图 */
@@ -4572,7 +4626,7 @@ function openStopEditor(bi, si){
     if(!r) return;
     t2.value = r.name;
     edPosBuf = { lat:r.lat, lng:r.lng, alt:r.alt||0 };
-    if(r.alt) altEl.value = r.alt;
+    if(altEl){ const a = altForTitle(r.name); altEl.textContent = a.alt ? ('已匹配 ' + (a.src||'地点') + ' ' + a.alt + ' m') : '未匹配到海拔'; }
     if(r.intro && !g('edDesc').value) g('edDesc').value = r.intro;
     toast('已填入「' + r.name + '」');
     setTimeout(()=>{ if(!g('edRoute').value) recalcPreview(bi, si); }, 60);
@@ -4582,13 +4636,34 @@ function openStopEditor(bi, si){
     const pos = guessPlace(t2.value);
     if(pos){
       edPosBuf = { lat:pos.lat, lng:pos.lng, alt:pos.alt||0 };
-      if(pos.alt) altEl.value = pos.alt;
+      if(altEl){ const a = altForTitle(t2.value); altEl.textContent = a.alt ? ('已匹配 ' + (a.src||'地点') + ' ' + a.alt + ' m') : '未匹配到海拔'; }
       toast('已匹配：' + ((pos.city||'') + (pos.kind?(' · ' + pos.kind):'')));
     } else {
       toast('内置库没收录，沿用上一站位置');
     }
     setTimeout(()=>{ if(!g('edRoute').value) recalcPreview(bi, si); }, 60);
   };
+  /* 单价 × 数量：切换分类时显隐，输入时自动算总价 */
+  const catEl = g('edCostCat');
+  if(catEl) catEl.addEventListener('change', function(){
+    const c = catEl.value, show = !!UNIT_CAT[c];
+    const row = g('edUnitRow'), note = g('edUnitNote'), lab = g('edUnitLab');
+    if(row) row.style.display = show ? 'flex' : 'none';
+    if(note) note.style.display = show ? 'block' : 'none';
+    if(lab) lab.textContent = UNIT_CAT[c] ? UNIT_CAT[c].u : '单价（元）';
+    const qlab = g('edQtyLab');
+    if(qlab) qlab.textContent = UNIT_CAT[c] ? UNIT_CAT[c].q : '数量';
+    const stayRow = g('edStayRow'), stayNote = g('edStayNote');
+    if(stayRow) stayRow.style.display = (c==='stay') ? 'flex' : 'none';
+    if(stayNote) stayNote.style.display = (c==='stay') ? 'block' : 'none';
+  });
+  const unitI = g('edUnit'), qtyI = g('edQty'), costI = g('edCost');
+  const calcTotal = function(){
+    const u = parseFloat(unitI.value), q = parseFloat(qtyI.value);
+    if(u>0 && q>0) costI.value = Math.round(u*q);
+  };
+  if(unitI) unitI.addEventListener('input', calcTotal);
+  if(qtyI) qtyI.addEventListener('input', calcTotal);
   g('edDel') && (g('edDel').onclick = ()=>{ closeEdit(); delStop(curDay, bi, si); });
 
   g('edSave').onclick = ()=>{
@@ -4597,18 +4672,27 @@ function openStopEditor(bi, si){
     const pos = edPosBuf || guessPlace(title);
     const lat = (pos && pos.lat) ? pos.lat : baseLat;
     const lng = (pos && pos.lng) ? pos.lng : baseLng;
-    const altIn = parseInt(g('edAlt').value, 10);
+    const aInfo = altForTitle(title);
     const obj = {
       time: g('edTime').value.trim(),
       icon: g('edIcon').value,
       title,
       desc: g('edDesc').value.trim(),
       hours: g('edHours').value.trim(),
-      cost: (function(){ const n = parseFloat(g('edCost').value); return (isNaN(n)||n<=0) ? 0 : Math.round(n); })(),
+      cost: (function(){
+        const u = parseFloat(g('edUnit').value), q = parseFloat(g('edQty').value);
+        if(u>0 && q>0) return Math.round(u*q);
+        const n = parseFloat(g('edCost').value);
+        return (isNaN(n)||n<=0) ? 0 : Math.round(n);
+      })(),
+      costUnit: (function(){ const u=parseFloat(g('edUnit').value), q=parseFloat(g('edQty').value); return (u>0&&q>0)?Math.round(u):0; })(),
+      costQty: (function(){ const u=parseFloat(g('edUnit').value), q=parseFloat(g('edQty').value); return (u>0&&q>0)?Math.round(q):0; })(),
       costCat: g('edCostCat').value,
       pay: edPayVal,
+      checkin: (g('edCostCat').value==='stay') ? (+g('edCheckin').value) : 0,
+      checkout: (g('edCostCat').value==='stay') ? (+g('edCheckout').value) : 0,
       route: g('edRoute').value.trim(),
-      alt: (isNaN(altIn) || altIn <= 0) ? ((pos && pos.alt) ? pos.alt : 0) : altIn,
+      alt: aInfo.alt || (pos && pos.alt) || 0,
       lat, lng,
       zone: (pos && pos.z) ? pos.z : (lat < 29.2 ? 'out' : 'city')
     };
@@ -5139,7 +5223,8 @@ const COST_CAT_ICON = { flight:'plane', traffic:'car', stay:'pin',
 function costNoteOf(s, di){
   const head = String(s.title || '').split(/[ ·（(]/)[0].trim() || '行程支出';
   const d = TRIP_DAYS[di];
-  return head + (d ? ' · ' + d.date : '');
+  const tail = (s.costUnit && s.costQty) ? (' ¥'+s.costUnit+'×'+s.costQty) : '';
+  return head + tail + (d ? ' · ' + d.date : '');
 }
 
 function syncStopCosts(){
@@ -5151,12 +5236,32 @@ function syncStopCosts(){
         // 没填金额、或金额填 0 —— 当作没这笔钱
         if(!(s.cost > 0)) return;
         if(!s._cid) s._cid = uid();
+        const cat = s.costCat || 'other';
+        const isStay = cat === 'stay';
+        const ci = (isStay && typeof s.checkin === 'number') ? s.checkin : -1;
+        const co = (isStay && typeof s.checkout === 'number') ? s.checkout : -1;
+        // 多晚住宿：按每晚平摊，每晚独立一笔流水（src 带当天索引，便于单独标记 / 删除）
+        if(ci >= 0 && co > ci){
+          const nights = co - ci;
+          const per = Math.round(s.cost / nights);
+          const head = String(s.title || '').split(/[ ·（(]/)[0].trim() || '住宿';
+          for(let k = ci; k < co; k++){
+            if(k < 0 || k >= TRIP_DAYS.length) continue;
+            const dayName = (TRIP_DAYS[k] && TRIP_DAYS[k].date) || ('Day ' + (k + 1));
+            want[s._cid + '#' + k] = {
+              cat: 'stay', amt: per, day: k,
+              note: head + ' · 住' + nights + '晚平摊 · ' + dayName,
+              icon: 'pin', pay: isPaid(s) ? 1 : 0
+            };
+          }
+          return;
+        }
         want[s._cid] = {
-          cat: s.costCat || 'other',
+          cat: cat,
           amt: Math.round(s.cost),
           day: di,
           note: s.costNote || costNoteOf(s, di),
-          icon: COST_CAT_ICON[s.costCat || 'other'] || 'shop',
+          icon: COST_CAT_ICON[cat] || 'shop',
           pay: isPaid(s) ? 1 : 0
         };
       });
@@ -5666,6 +5771,20 @@ function placeOf(title){
     }
   }
   return best;
+}
+/* 城市默认海拔：从 PLACES 给每个城市取第一个带海拔的点 */
+const CITY_ALT = {};
+try{
+  PLACES.forEach(function(p){
+    if(p.city && p.alt && !CITY_ALT[p.city]) CITY_ALT[p.city] = p.alt;
+  });
+}catch(e){}
+/* 按标题自动匹配海拔：优先地点自带海拔，其次到达城市默认海拔 */
+function altForTitle(title){
+  const p = placeOf(title);
+  if(p && p.alt) return { alt: p.alt, src: '地点' };
+  if(p && p.city && CITY_ALT[p.city]) return { alt: CITY_ALT[p.city], src: p.city };
+  return { alt: 0, src: '' };
 }
 function cityOfStop(s){
   const p = placeOf(s && s.title);
