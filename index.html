@@ -8,23 +8,19 @@
 
 <!-- ===== 微信 / 社交分享卡片 ===== -->
 <meta name="description" content="9/29 抵藏 → 10/6 离藏 · 8 天 39 站。行程、手绘地图、探店、记账，点开即用。">
-<meta property="og:url" content="https://bbqfish1981.github.io/xizang-trip/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="西藏 · 喜马拉雅边境线">
 <meta property="og:title" content="西藏 · 喜马拉雅边境线 · 旅行工作台">
 <meta property="og:description" content="9/29 抵藏 → 10/6 离藏 · 8 天 39 站。行程 · 地图 · 探店 · 记账，点开即用。">
-<meta property="og:image" content="https://bbqfish1981.github.io/xizang-trip/cover.png">
+<meta property="og:image" content="cover.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="西藏 · 喜马拉雅边境线 · 旅行工作台">
 <meta name="twitter:description" content="9/29 抵藏 → 10/6 离藏 · 8 天 39 站。行程 · 地图 · 探店 · 记账，点开即用。">
-<meta name="twitter:image" content="https://bbqfish1981.github.io/xizang-trip/cover.png">
+<meta name="twitter:image" content="cover.png">
 <link rel="apple-touch-icon" href="cover.png">
 <link rel="icon" href="cover.png">
-<script>
-window.__SYNC_DEFAULT__ = {"owner":"bbqfish1981","repo":"trip-data","branch":"master"};
-</script>
 <script>
 // 微信内点击右上角「···」转发时，自定义卡片标题/描述/图标
 (function(){
@@ -855,6 +851,8 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .stop.done .sicon{background:#e8f1fb;border-color:#c3d6ea}
 .stitle{font-size:16.5px;font-weight:800;line-height:1.42;margin:3px 0 0;letter-spacing:.01em}
 .sdesc{margin:8px 0 0;font-size:13px;color:var(--gray);line-height:1.7}
+.sintro{margin:8px 0 0;font-size:13px;line-height:1.7;color:#1f3a52;background:#eef6fb;border-radius:9px;padding:8px 11px;border-left:3px solid #2f7fd1}
+.sintro-tag{display:inline-block;font-size:11px;font-weight:800;color:#2f7fd1;background:#dbeafa;border-radius:5px;padding:1px 6px;margin-right:7px;vertical-align:1px}
 .shours{
   display:inline-block;margin:10px 0 0;
   background:#fdf3d8;border-radius:7px;padding:6px 11px;
@@ -956,7 +954,20 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
   height:min(64vh,520px);border-radius:var(--r);overflow:hidden;
   border:1.5px solid var(--line-2);box-shadow:var(--shadow);background:#dde7f2;
 }
+/* 让地图高度自适应：尽量在一屏内完整显示，避免点位被底部导航挡住 */
+#map{height:clamp(280px, calc(100vh - 566px), 520px)}
 .leaflet-container{font-family:inherit}
+#map{background:#e9eef3}
+/* 底图切换条 */
+.basebar{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin:0 0 12px}
+.basebar .bl{font-size:12px;font-weight:800;color:var(--gray-2);margin-right:2px}
+.basebar .bb{
+  flex:1;min-width:54px;border:1.5px solid var(--line-2);background:var(--paper);
+  border-radius:10px;padding:8px 6px;font-size:12.5px;font-weight:800;color:var(--ink);
+  cursor:pointer;transition:.15s;
+}
+.basebar .bb:hover{border-color:var(--ink)}
+.basebar .bb.on{background:var(--ink);border-color:var(--ink);color:#fff}
 .leaflet-popup-content-wrapper{border-radius:12px}
 .leaflet-popup-content{margin:12px 14px;font-size:13px;line-height:1.6;color:#14375c}
 .leaflet-popup-content b{font-size:14px}
@@ -1540,13 +1551,13 @@ body.unlocked #appVer{display:block}
       密码由行程组织者发放 · 输入一次本机记住 7 天
     </div>
     <div id="lockVer" style="margin-top:6px;font-size:10.5px;color:#c0b7ab;letter-spacing:.04em">
-      版本 2026.09.22 · 海拔自动 · 单价×数量 · 酒店平摊 · 点名字选中
+      版本 2026.09.26 · 高德街道图(瓦片修复) · 拉萨聚焦 · 自适应视野 · 离线兜底 · 坐标对齐 · 城市筛选 · 模糊搜 · 景点特点≤80字 · 海拔自动 · 单价×数量
     </div>
   </div>
 </div>
 
 <!-- 进内页后也常驻一个小版本号：一眼判断手机上看的是不是新版 -->
-<div id="appVer">版本 2026.09.22 · 海拔自动 · 单价×数量 · 酒店平摊 · 点名字选中</div>
+<div id="appVer">版本 2026.09.26 · 高德街道图(瓦片修复) · 拉萨聚焦 · 自适应视野 · 离线兜底 · 坐标对齐 · 城市筛选 · 模糊搜 · 景点特点≤80字 · 海拔自动 · 单价×数量</div>
 
 <!-- ================= HERO ================= -->
 <header class="hero">
@@ -1624,6 +1635,14 @@ body.unlocked #appVer{display:block}
     <button id="segDay">单日路线 · 距离 / 时间</button>
   </div>
   <div class="dayscroll" id="dayScroll2"></div>
+  <div class="basebar" id="baseBar">
+    <span class="bl">底图</span>
+    <button class="bb on" data-base="amap">高德</button>
+    <button class="bb" data-base="amapSat">卫星</button>
+    <button class="bb" data-base="tencent">腾讯</button>
+    <button class="bb" data-base="osm">OSM</button>
+    <button class="bb" data-base="offline">离线</button>
+  </div>
   <div id="map"></div>
   <div class="map-legend" id="mapLegend"></div>
   <div class="mcard" style="margin-top:16px">
@@ -1788,7 +1807,7 @@ body.unlocked #appVer{display:block}
 </section>
 
 <!-- ================= 底部导航 ================= -->
-<footer class="verbar">西藏 · 珠峰环线工作台　<b>v3</b> · 2026-09-22 · 海拔自动 / 单价×数量 / 酒店平摊 / 点名字选中</footer>
+<footer class="verbar">西藏 · 珠峰环线工作台　<b>v3</b> · 2026-09-24 · 真实地图(高德/腾讯) / 拉萨聚焦 / 离线街道图 / 坐标对齐 / 城市筛选 / 模糊搜 / 景点特点≤80字 / 海拔自动 / 单价×数量</footer>
 <nav class="nav">
   <button class="on" data-view="overview">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6.2 9.2 4l5.6 2.6L20 4.6v13.2L14.8 20l-5.6-2.6L4 19.4z"/><path d="M9.2 4v13.4M14.8 6.6V20"/></svg>总览</button>
@@ -2976,6 +2995,7 @@ function renderTrip(){
                 <button class="check" data-check="${id}" aria-label="打卡">✓</button>
               </div>
               ${s.alt>0?`<div class="salt">海拔 ${s.alt} m</div>`:''}
+              ${s.intro?`<p class="sintro"><span class="sintro-tag">特点</span>${escapeHTML(s.intro)}</p>`:''}
               ${s.desc?`<p class="sdesc">${escapeHTML(s.desc)}</p>`:''}
               ${(s.cost>0 && !((s.costCat==='stay') && typeof s.checkin==='number' && typeof s.checkout==='number' && s.checkout>s.checkin))?`<div class="scost clk${isPaid(s)?'':' todo'}" data-pay="${si}" title="点一下在「待支付 / 已付」之间切换"><span class="scost-cat">${escapeHTML(costCatName(s.costCat))}</span><b>${money(s.cost)}</b>${s.costUnit&&s.costQty?`<small>¥${s.costUnit}×${s.costQty}</small>`:''}<span class="spay">${payWord(s)}</span></div>`:''}
               ${s.hours?`<div class="shours">${escapeHTML(s.hours)}</div>`:''}
@@ -3036,36 +3056,135 @@ function renderTrip(){
    地图页
    ============================================================ */
 let map, layerGroup, mapReady = false;
+let baseLayer = null;        // 当前真实底图瓦片层
+let fbLayer = null;          // 离线矢量兜底层
+let baseMode = 'amap';       // amap(高德路网) | amapSat(高德卫星) | tencent(腾讯) | osm | offline
+let usingFallback = false;   // 瓦片加载失败 → 退化到内置矢量
+
+/* ============================================================
+   坐标系转换：国内地图全用偏移坐标
+   - GPS / 苹果 / Google 用 WGS-84
+   - 高德 / 腾讯 用 GCJ-02（火星坐标）
+   - 百度 用 BD-09
+   数据里存的是 GPS(WGS-84)，渲染前按底图坐标系转换，点位才能对齐。
+   ============================================================ */
+function _outChina(lat, lng){
+  return !(lng > 73.66 && lng < 135.05 && lat > 3.86 && lat < 53.55);
+}
+function _tfLat(x, y){
+  let r = -100.0 + 2.0*x + 3.0*y + 0.2*y*y + 0.1*x*y + 0.2*Math.sqrt(Math.abs(x));
+  r += (20.0*Math.sin(6.0*x*Math.PI) + 20.0*Math.sin(2.0*x*Math.PI)) * 2.0/3.0;
+  r += (20.0*Math.sin(y*Math.PI) + 40.0*Math.sin(y/3.0*Math.PI)) * 2.0/3.0;
+  r += (160.0*Math.sin(y/12.0*Math.PI) + 320.0*Math.sin(y*Math.PI/30.0)) * 2.0/3.0;
+  return r;
+}
+function _tfLng(x, y){
+  let r = 300.0 + x + 2.0*y + 0.1*x*x + 0.1*x*y + 0.1*Math.sqrt(Math.abs(x));
+  r += (20.0*Math.sin(6.0*x*Math.PI) + 20.0*Math.sin(2.0*x*Math.PI)) * 2.0/3.0;
+  r += (20.0*Math.sin(x*Math.PI) + 40.0*Math.sin(x/3.0*Math.PI)) * 2.0/3.0;
+  r += (150.0*Math.sin(x/12.0*Math.PI) + 300.0*Math.sin(x/30.0*Math.PI)) * 2.0/3.0;
+  return r;
+}
+function wgs2gcj(lat, lng){
+  if(_outChina(lat, lng)) return [lat, lng];
+  let dlat = _tfLat(lng - 105.0, lat - 35.0);
+  let dlng = _tfLng(lng - 105.0, lat - 35.0);
+  const radlat = lat / 180.0 * Math.PI;
+  let magic = Math.sin(radlat);
+  magic = 1 - 0.00669342162296594323 * magic * magic;
+  const sqrtmagic = Math.sqrt(magic);
+  dlat = (dlat * 180.0) / ((6378245.0 * (1 - 0.00669342162296594323)) / (magic * sqrtmagic) * Math.PI);
+  dlng = (dlng * 180.0) / (6378245.0 / sqrtmagic * Math.cos(radlat) * Math.PI);
+  return [lat + dlat, lng + dlng];
+}
+function gcj2bd(lat, lng){
+  const x = lng, y = lat;
+  const z = Math.sqrt(x*x + y*y) + 0.00002*Math.sin(y*Math.PI*3000.0/180.0);
+  const theta = Math.atan2(y, x) + 0.000003*Math.cos(x*Math.PI*3000.0/180.0);
+  return [z*Math.sin(theta) + 0.006, z*Math.cos(theta) + 0.0065];
+}
+/* 给 stop 对象用：返回 [lat,lng] */
+function stopGcj(s){ return wgs2gcj(s.lat, s.lng); }                 // 高德/腾讯
+function stopBd(s){ const g = wgs2gcj(s.lat, s.lng); return gcj2bd(g[0], g[1]); } // 百度
+
+/* 当前底图坐标系下的点位坐标：
+   - 离线矢量兜底图是 WGS-84 近似手绘，必须用 WGS-84 才不会和手绘轮廓错位
+   - 高德/腾讯类用 GCJ-02，OSM 用 WGS-84 */
+function mapLL(s){
+  if(usingFallback) return [s.lat, s.lng];
+  if(baseMode === 'tencent' || baseMode === 'amap' || baseMode === 'amapSat'){
+    const r = wgs2gcj(s.lat, s.lng);
+    return [r[0], r[1]];
+  }
+  return [s.lat, s.lng];
+}
+/* 经纬度字面量也按当前底图转换（用于默认视野等） */
+function vLL(lat, lng){
+  if(usingFallback || baseMode === 'osm' || baseMode === 'offline') return [lat, lng];
+  const r = wgs2gcj(lat, lng);
+  return [r[0], r[1]];
+}
+
+/* 各底图瓦片层（高德/腾讯免 key） */
+function getTileLayer(mode){
+  if(mode === 'tencent')
+    return L.tileLayer('https://rt{s}.map.gtimg.com/tile?z={z}&x={x}&y={y}&type=vector',
+      {subdomains:'0123', maxZoom:18, attribution:'© 腾讯地图'});
+  if(mode === 'amapSat')
+    return L.tileLayer('https://webst0{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=6&x={x}&y={y}&z={z}',
+      {subdomains:['1','2','3','4'], maxZoom:18, attribution:'© 高德卫星'});
+  if(mode === 'amap')
+    return L.tileLayer('https://wprd0{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=7&x={x}&y={y}&z={z}',
+      {subdomains:['1','2','3','4'], maxZoom:18, attribution:'© 高德地图'});
+  return L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+      {maxZoom:19, attribution:'&copy; OpenStreetMap'});
+}
+/* 切底图：换瓦片 + 探测可达性；失败退化到离线矢量 */
+function applyBase(mode, rerender){
+  baseMode = mode;
+  syncBaseBar();
+  if(baseLayer){ try{ map.removeLayer(baseLayer); }catch(e){} baseLayer = null; }
+  if(fbLayer){ try{ map.removeLayer(fbLayer); }catch(e){} fbLayer = null; }
+  if(mode === 'offline'){
+    usingFallback = true; drawFallbackBase();
+    if(rerender) drawMap();
+    return;
+  }
+  usingFallback = false;
+  const layer = getTileLayer(mode);
+  layer.addTo(map); baseLayer = layer;
+  if(rerender) drawMap();
+  // 用瓦片自身加载事件判断联网是否成功（比单张探测图更准，避免误判回退到纯色兜底）
+  let loaded = false, settled = false, errs = 0;
+  const onLoad = ()=>{ loaded = true; };
+  const onErr = ()=>{
+    errs++;
+    // 连续多张瓦片都失败且一张都没成功 -> 立即兜底，别让用户看白板
+    if(!loaded && errs >= 4) goFallback();
+  };
+  const goFallback = ()=>{
+    if(settled) return; settled = true;
+    layer.off('tileload', onLoad); layer.off('tileerror', onErr);
+    try{ map.removeLayer(layer); }catch(e){} baseLayer = null;
+    usingFallback = true; drawFallbackBase();
+    syncBaseBar();
+    if(rerender) drawMap();
+  };
+  layer.on('tileload', onLoad);
+  layer.on('tileerror', onErr);
+  setTimeout(()=>{
+    if(settled) return;
+    if(loaded){ settled = true; layer.off('tileerror', onErr); return; }
+    goFallback();
+  }, 4000);
+}
 
 function initMap(){
   if(mapReady) return;
   map = L.map('map', { zoomControl:true, attributionControl:true, scrollWheelZoom:true });
-  // 底图：OpenStreetMap 官方瓦片（免 key）
-  const osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{
-    maxZoom:19,
-    attribution:'&copy; OpenStreetMap contributors'
-  });
-  osm.addTo(map);
   layerGroup = L.layerGroup().addTo(map);
   mapReady = true;
-
-  // 预探测瓦片是否可达；不可达则叠加内置矢量底图
-  probeTiles('/9/375/223.png', osm);
-}
-
-/* 探测一张瓦片；失败则启用矢量兜底底图 */
-function probeTiles(path, osmLayer){
-  const probe = new Image();
-  let settled = false;
-  const fail = ()=>{
-    if(settled) return; settled = true;
-    try{ map.removeLayer(osmLayer); }catch(e){}
-    drawFallbackBase();
-  };
-  probe.onload = ()=>{ settled = true; };
-  probe.onerror = fail;
-  setTimeout(()=>{ if(!settled) fail(); }, 2600);
-  probe.src = 'https://tile.openstreetmap.org' + path;
+  applyBase(baseMode, false);
 }
 
 function numIcon(n, isOut){
@@ -3076,86 +3195,115 @@ function numIcon(n, isOut){
 }
 
 /* 内置矢量兜底底图：无网络时用几何图形示意拉萨与环线主要地物，
-   保证地图不空白、点位相对关系仍然可读 */
+   保证地图不空白、点位相对关系仍然可读。
+   离线矢量按 WGS-84 手绘，与 usingFallback 时的 mapLL(WGS-84) 对齐。 */
 function drawFallbackBase(){
-  if(document.getElementById('fbStyle')) return;
-  const st = document.createElement('style'); st.id='fbStyle';
+  if(fbLayer){ try{ map.removeLayer(fbLayer); }catch(e){} fbLayer = null; }
+  if(!document.getElementById('fbStyle')){
+    const st = document.createElement('style'); st.id='fbStyle';
   st.textContent = `
-    .fb-road{stroke:#dde5ef;stroke-width:5;fill:none;stroke-linecap:round}
-    .fb-road2{stroke:#e8eef7;stroke-width:2.4;fill:none;stroke-linecap:round}
-    .fb-water{fill:#c3d9ec;stroke:none}
-    .fb-blk{fill:#eef3f9;stroke:#dbe4ef;stroke-width:.8}
-    .fb-lbl{font-size:10px;fill:#9aa9ba;font-weight:700;font-family:inherit}
+    .fb-bg{fill:#eef1e6;stroke:none}
+    .fb-park{fill:#dceccb;stroke:#cfe0b8;stroke-width:.8}
+    .fb-water{fill:#a9cfe6;stroke:none}
+    .fb-road{stroke:#ffffff;stroke-width:5.5;fill:none;stroke-linecap:round;stroke-linejoin:round}
+    .fb-road-c{stroke:#bfa877;stroke-width:7.5;fill:none;stroke-linecap:round;stroke-linejoin:round}
+    .fb-road2{stroke:#fbf7ec;stroke-width:3;fill:none;stroke-linecap:round}
+    .fb-road2-c{stroke:#cdbf9c;stroke-width:4.2;fill:none;stroke-linecap:round}
+    .fb-blk{fill:#e7ecd9;stroke:#d3ddc1;stroke-width:.8}
+    .fb-lbl{font-size:10px;fill:#6b6256;font-weight:700;font-family:inherit;paint-order:stroke;stroke:#fff;stroke-width:2.4px;stroke-linejoin:round}
     .fb-label{pointer-events:none!important}
     .leaflet-marker-icon{z-index:auto}
     .mnum{position:relative;z-index:600}
   `;
   document.head.appendChild(st);
+  }
 
-  const fb = L.layerGroup().addTo(map);
-  // 拉萨河谷（沿拉萨市区东西走向的色带）
-  L.polyline([[29.6000,90.9000],[29.6300,91.0500],[29.6500,91.1200],[29.6800,91.2000],[29.7200,91.3200]],
-    {className:'fb-water', weight:11, opacity:.75}).addTo(fb);
+  const fb = L.layerGroup().addTo(map); fbLayer = fb;
+  // 陆地底色（米色），否则白色道路在浅灰容器上会「隐形」
+  L.rectangle([[27.30,84.00],[31.10,93.00]], {className:'fb-bg', weight:0, fillOpacity:1}).addTo(fb);
+  // 拉萨简易街道示意底图（WGS-84 手绘，与 usingFallback 时的 mapLL 对齐）
+  // 道路：先画描边(c) 再画白色路面，形成「白路 + 米色描边」的街道观感
+  const road = (r, minor) => {
+    L.polyline(r, {className: minor ? 'fb-road2-c' : 'fb-road-c', weight: minor ? 4.2 : 7.5}).addTo(fb);
+    L.polyline(r, {className: minor ? 'fb-road2' : 'fb-road', weight: minor ? 3 : 5.5}).addTo(fb);
+  };
+  // 拉萨河（市区北侧的蓝色水带）
+  L.polyline([[29.6400,91.0600],[29.6320,91.0900],[29.6280,91.1200],[29.6320,91.1500],[29.6480,91.2000],[29.6750,91.2800]],
+    {className:'fb-water', weight:10, opacity:.85}).addTo(fb);
   // 雅鲁藏布江（环线南侧大河东流）
   L.polyline([[29.3000,87.0000],[29.1000,88.0000],[29.2000,89.0000],[29.0000,90.0000],[29.2000,91.0000],[29.3500,91.8000]],
     {className:'fb-water', weight:9, opacity:.85}).addTo(fb);
-  // 羊卓雍措 / 普莫雍错 / 佩枯错 示意湖泊
-  L.circle([29.0000,90.7000],{className:'fb-water',radius:14000,weight:0,fillOpacity:.8}).addTo(fb);
-  L.circle([28.5600,90.4000],{className:'fb-water',radius:13000,weight:0,fillOpacity:.8}).addTo(fb);
-  L.circle([28.8500,85.6000],{className:'fb-water',radius:16000,weight:0,fillOpacity:.8}).addTo(fb);
-  // 拉萨市区路网（环绕八廓街 + 主干）
-  L.rectangle([[29.6450,91.1200],[29.6650,91.1420]],{className:'fb-blk', weight:.8}).addTo(fb);
-  // 主要道路：拉萨市区 + 前往日喀则 / 环线方向
-  const roads = [
-    // 拉萨环城与主干
-    [[29.6300,91.1000],[29.6500,91.1100],[29.6600,91.1300],[29.6500,91.1500],[29.6300,91.1600],[29.6150,91.1400],[29.6200,91.1100],[29.6300,91.1000]],
-    // 拉萨 → 机场（东南）
-    [[29.6300,91.1500],[29.5000,91.0000],[29.2978,90.9119]],
-    // 拉萨 → 日喀则（西，318 国道）
-    [[29.6500,91.1100],[29.4500,90.4000],[29.3000,89.6000],[29.2700,88.8800],[29.0000,88.5000]],
-    // 拉萨 → 羊湖 → 普莫雍错 → 康马
-    [[29.3000,90.7000],[29.0000,90.7000],[28.7000,90.5500],[28.5600,90.4000],[28.5700,89.6800]],
-    // 康马 → 定结 → 岗嘎 → 定日（边境线）
-    [[28.5700,89.6800],[28.3000,89.1000],[28.3700,87.7700],[28.5000,87.3000],[28.5700,86.8000],[28.6600,87.1200]],
-    // 佩枯错 / 希夏邦马 支线
-    [[28.5700,86.8000],[28.7500,86.2000],[28.8500,85.6000],[28.3500,85.7800]],
-    // 定日 → 萨迦 → 日喀则
-    [[28.6600,87.1200],[28.9000,88.0200],[29.0000,88.5000]]
-  ];
-  roads.forEach((r,i)=> L.polyline(r,{className:i%2?'fb-road2':'fb-road', weight:i===0?5:4}).addTo(fb));
-  // 文字标注
+  // 羊卓雍措 / 普莫雍错 / 佩枯错 湖泊
+  L.circle([29.0000,90.7000],{className:'fb-water',radius:14000,weight:0,fillOpacity:.85}).addTo(fb);
+  L.circle([28.5600,90.4000],{className:'fb-water',radius:13000,weight:0,fillOpacity:.85}).addTo(fb);
+  L.circle([28.8500,85.6000],{className:'fb-water',radius:16000,weight:0,fillOpacity:.85}).addTo(fb);
+  // 公园 / 街区色块：罗布林卡、八廓街
+  L.rectangle([[29.6520,91.0980],[29.6568,91.1032]],{className:'fb-park', weight:.8}).addTo(fb);
+  L.rectangle([[29.6480,91.1280],[29.6560,91.1370]],{className:'fb-blk', weight:.8}).addTo(fb);
+  // 拉萨市区主干（用真实 POI 坐标串成路网）
+  road([[29.6740,91.0530],[29.6620,91.0900],[29.6560,91.1250],[29.6540,91.1320],[29.6528,91.1320]]); // 北京路—北京中路 东西轴
+  road([[29.6540,91.1000],[29.6560,91.1250],[29.6577,91.1170],[29.6570,91.1360],[29.6528,91.1320]]); // 江苏/民族路 纵向
+  road([[29.6560,91.1250],[29.6800,91.1300],[29.7000,91.1330]]);                                       // 色拉寺 北路
+  road([[29.6540,91.1000],[29.6420,91.1060],[29.6350,91.1200],[29.6300,91.1300]]);                     // 滨河路 南路
+  road([[29.6560,91.1250],[29.6530,91.1310]]);                                                         // 朵森格路
+  // 出城长途路线（细线，不抢戏）
+  road([[29.6500,91.1100],[29.4500,90.4000],[29.3000,89.6000],[29.2700,88.8800],[29.0000,88.5000]], true); // 拉萨→日喀则 318
+  road([[29.3000,90.7000],[29.0000,90.7000],[28.7000,90.5500],[28.5600,90.4000],[28.5700,89.6800]], true); // 羊湖→康马
+  road([[28.5700,89.6800],[28.3000,89.1000],[28.3700,87.7700],[28.5000,87.3000],[28.5700,86.8000],[28.6600,87.1200]], true); // 边境线
+  road([[28.5700,86.8000],[28.7500,86.2000],[28.8500,85.6000],[28.3500,85.7800]], true); // 佩枯错支线
+  road([[28.6600,87.1200],[28.9000,88.0200],[29.0000,88.5000]], true); // 定日→萨迦→日喀则
+  road([[29.6300,91.1500],[29.5000,91.0000],[29.2978,90.9119]], true); // 拉萨→机场
+  // 文字标注（深色 + 白色描边，清晰可读）
   const lbl = (ll,txt) => L.marker(ll,{icon:L.divIcon({
-    html:`<div style="font-size:9.5px;color:#b3a498;font-weight:600;white-space:nowrap;letter-spacing:.02em;text-shadow:0 1px 2px #fff,0 0 2px #fff">${txt}</div>`,
+    html:`<div style="font-size:10px;color:#6b6256;font-weight:700;white-space:nowrap;text-shadow:0 0 2px #fff,0 0 3px #fff">${txt}</div>`,
     className:'fb-label', iconAnchor:[0,7], interactive:false
   })}).addTo(fb);
+  lbl([29.6577,91.1170],'布达拉宫');
+  lbl([29.6528,91.1320],'八廓街·大昭寺');
+  lbl([29.7000,91.1330],'色拉寺');
+  lbl([29.6740,91.0530],'哲蚌寺');
+  lbl([29.6540,91.1000],'罗布林卡');
+  lbl([29.6553,91.1310],'光明甜茶馆');
+  lbl([29.6380,91.1180],'拉萨河');
   lbl([29.6700,91.1300],'拉萨 Lhasa');
   lbl([29.3050,90.9200],'贡嘎机场');
   lbl([29.0100,90.7200],'羊卓雍措');
   lbl([28.5700,90.4200],'普莫雍错');
-  lbl([28.5700,89.6900],'康马');
-  lbl([28.3700,87.7800],'定结');
-  lbl([28.5700,86.8100],'岗嘎');
-  lbl([28.6600,87.1300],'定日');
-  lbl([28.8600,85.6200],'佩枯错');
-  lbl([28.3600,85.8000],'希夏邦马 8027m');
-  lbl([28.2100,86.7200],'珠峰 8848m');
-  lbl([28.9000,88.0300],'萨迦寺');
   lbl([29.2800,88.8900],'日喀则');
+  lbl([28.2100,86.7200],'珠峰 8848m');
+  lbl([28.8600,85.6200],'佩枯错');
 
   const lg = document.getElementById('mapLegend');
   if(lg) lg.insertAdjacentHTML('afterbegin',
     `<span class="chip" style="background:#fdf3d8;color:#8a6412">离线示意底图 · 联网后自动恢复真实地图</span>`);
 }
 
+/* 底部被固定导航栏遮住的高度（像素）：fitBounds 时要把这部分留出来，
+   否则拉萨市内的点位会被压到地图下缘、被底栏挡住 */
+function occludedBottom(){
+  if(!map || !map.getContainer) return 0;
+  const r = map.getContainer().getBoundingClientRect();
+  const navH = 96, margin = 10;
+  const usableBottom = Math.min(r.bottom, window.innerHeight - navH) - margin;
+  return Math.max(0, Math.round(r.bottom - usableBottom));
+}
+/* 视口内可用高度过小时给的兜底内边距 */
+function fitPad(extra){
+  const o = occludedBottom();
+  return {paddingTopLeft:[12, 12], paddingBottomRight:[12, 12 + o + (extra||0)]};
+}
+
 function drawMap(){
   initMap();
+  if(map) map.stop();          // 取消可能还在进行的平移/缩放动画，避免覆盖本次视图
   layerGroup.clearLayers();
   NAV_POPUPS = [];
 
   const pts = [];   // 视野用：全部藏区内的点
-  const addPt = s => { if(inTibet(s)) pts.push([s.lat,s.lng]); };
+  const addPt = s => { if(inTibet(s)) pts.push(mapLL(s)); };
+  const zLL = c => mapLL({lat:c[0], lng:c[1]});
   const addStop = (s, n) => {
-    const m = L.marker([s.lat,s.lng], {icon:numIcon(n, s.zone==='out')}).addTo(layerGroup);
+    const m = L.marker(mapLL(s), {icon:numIcon(n, s.zone==='out')}).addTo(layerGroup);
     NAV_POPUPS.push(s);
     m.bindPopup(
       `<b>${n}. ${s.title}</b><br><span style="color:#7d7666">${s.time}${s.route?' · '+s.route.split('·')[0].trim():''}</span><br>`+
@@ -3188,20 +3336,21 @@ function drawMap(){
           n++;
           if(s === lastStop || LANDMARK.some(x => String(s.title).includes(x))) addStop(s, n);
           else addPt(s);
-          line.push([s.lat,s.lng]);
+          line.push(mapLL(s));
         });
         // 拉萨↔日喀则 等区内段才连线
         const seg = [];
         b.stops.forEach(s=>{
           if(isFarFlight(s)){ if(seg.length>1) L.polyline(seg,{color:'#123c63',weight:2.5,opacity:.45,dashArray:'6 7'}).addTo(layerGroup); seg.length=0; return; }
-          seg.push([s.lat,s.lng]);
+          seg.push(mapLL(s));
         });
         if(seg.length>1) L.polyline(seg, {color:'#123c63', weight:2.5, opacity:.45, dashArray:'6 7'}).addTo(layerGroup);
       });
     });
     // 城中 / 城外圈
     Object.values(ZONES).forEach(z=>{
-      L.circle(z.center,{radius:z.radius,color:z.color,weight:1.6,fillColor:z.color,fillOpacity:.05,dashArray:'5 6'})
+      const c = zLL(z.center);
+      L.circle([c[0],c[1]],{radius:z.radius,color:z.color,weight:1.6,fillColor:z.color,fillOpacity:.05,dashArray:'5 6'})
         .addTo(layerGroup)
         .bindTooltip(z.label,{permanent:true,direction:'center',className:'zone-label'});
     });
@@ -3209,14 +3358,15 @@ function drawMap(){
     // 环线偏南、拉萨偏北，直接用 bounds 会让地图贴底，所以把中心稍微下压再放大一档。
     if(pts.length >= 2){
       const bb = L.latLngBounds(pts);
-      map.fitBounds(bb.pad(.06));
+      map.invalidateSize();
+      map.fitBounds(bb.pad(.06), fitPad());
       setTimeout(()=>{
         // 稍微下压一点，让拉萨与环线一起落在可视区中部
         const c = map.getCenter();
         map.setView([c.lat + (bb.getNorth()-bb.getSouth()) * 0.05, c.lng], map.getZoom(), {animate:false});
       }, 0);
     } else {
-      map.setView([29.30, 89.00], 7);
+      map.setView(vLL(29.30, 89.00), 7);
     }
     renderMapStats(null);
     document.getElementById('mapLegend').innerHTML =
@@ -3228,7 +3378,7 @@ function drawMap(){
       // 只取落在藏区内的点：跨城航班既连线会把视野拉爆，也不该算作「当日路线」
       const seq = b.stops.filter(s => !isFarFlight(s));
       const line = [];
-      seq.forEach(s=>{ n++; addStop(s, n); line.push([s.lat,s.lng]); });
+      seq.forEach(s=>{ n++; addStop(s, n); line.push(mapLL(s)); });
       // 跨城航班单独画个气球（不参与 fitBounds，否则拉萨会被压成一团）
       // 线段 + 距离标签
       for(let i=0;i<line.length-1;i++){
@@ -3242,7 +3392,7 @@ function drawMap(){
       }
       // 航班单独标一个气球，说明「今天从某地飞进来 / 飞出去」
       b.stops.filter(isFarFlight).forEach(s=>{
-        L.marker([s.lat,s.lng],{icon:L.divIcon({
+        L.marker(mapLL(s),{icon:L.divIcon({
           html:`<div style="background:#123c63;color:#f7d98c;border-radius:999px;padding:3px 9px;font-size:10.5px;font-weight:700;white-space:nowrap;box-shadow:0 2px 8px rgba(18,60,99,.3)">✈ ${(s.title.match(/[北京广州重庆]{2}/)||['航班'])[0]}</div>`,
           className:'', iconAnchor:[26,10]
         })}).addTo(layerGroup);
@@ -3251,16 +3401,32 @@ function drawMap(){
     // 圈
     const hasOut = d.blocks.some(b=>b.stops.some(s=>s.zone==='out'));
     const hasCity = d.blocks.some(b=>b.stops.some(s=>s.zone!=='out'));
-    if(hasCity) L.circle(ZONES.city.center,{radius:ZONES.city.radius,color:ZONES.city.color,weight:1.5,fillColor:ZONES.city.color,fillOpacity:.04,dashArray:'5 6'}).addTo(layerGroup);
-    if(hasOut)  L.circle(ZONES.out.center,{radius:ZONES.out.radius,color:ZONES.out.color,weight:1.5,fillColor:ZONES.out.color,fillOpacity:.04,dashArray:'5 6'}).addTo(layerGroup);
+    if(hasCity){ const c=zLL(ZONES.city.center); L.circle([c[0],c[1]],{radius:ZONES.city.radius,color:ZONES.city.color,weight:1.5,fillColor:ZONES.city.color,fillOpacity:.04,dashArray:'5 6'}).addTo(layerGroup); }
+    if(hasOut){ const c=zLL(ZONES.out.center); L.circle([c[0],c[1]],{radius:ZONES.out.radius,color:ZONES.out.color,weight:1.5,fillColor:ZONES.out.color,fillOpacity:.04,dashArray:'5 6'}).addTo(layerGroup); }
 
     // 返程日（10/6）区内只剩机场，甚至可能一个点都没有，得兜底，否则 fitBounds 会拿到 NaN
-    if(pts.length >= 2){
-      map.fitBounds(L.latLngBounds(pts).pad(.15));
-    } else if(pts.length === 1){
-      map.setView(pts[0], 11);
+    // 出城日（真正离拉萨 0.5° 以上的环线点：日喀则/定日/羊湖等）才总览；
+    // 含贡嘎机场(同属拉萨片区)的到达日仍聚焦市区街道，避免大片留白
+    const isOutStop = s => !isFarFlight(s) && (s.zone === 'out' || s.z === 'out') &&
+       (Math.abs(s.lat - 29.6550) > 0.5 || Math.abs(s.lng - 91.1250) > 0.5);
+    const dayOut = d.blocks.some(b => b.stops.some(isOutStop));
+    if(dayOut){
+      if(pts.length >= 2){
+        map.invalidateSize();
+        map.fitBounds(L.latLngBounds(pts).pad(.12), fitPad());
+      } else if(pts.length === 1){
+        map.setView(pts[0], 11);
+      } else {
+        map.setView(vLL(29.05, 88.50), 7);
+      }
     } else {
-      map.setView([29.60, 90.95], 8);
+      // 拉萨日：只框住距拉萨中心 25km 内的点，机场等远点仅作标记不撑开视野
+      const lp = pts.filter(p => Math.abs(p[1] - 91.1250) < 0.25 && Math.abs(p[0] - 29.6550) < 0.22);
+      const bb = lp.length ? L.latLngBounds(lp) : L.latLngBounds([vLL(29.6550, 91.1250)]);
+      map.invalidateSize();
+      map.fitBounds(bb.pad(.18), fitPad());
+      const z = map.getZoom();
+      if(z < 12) map.setZoom(12); else if(z > 15) map.setZoom(15);
     }
     renderMapStats(d);
     document.getElementById('mapLegend').innerHTML =
@@ -4344,26 +4510,47 @@ function cnDate(d){
   return m ? `${+m[1]}月${+m[2]}日` : k;
 }
 
-/* 找出这一天该用哪种交通：市区步行 / 跨城航班 / 包车 / 打车 */
+/* 站点短名：标题里写了「A → B」就取到达地，否则取第一段。
+   不这么处理的话，一串长航班标题会被整段拼进距离描述里，又长又乱。 */
+function routeName(x){
+  let t = String((x && x.title) || '');
+  if(t.indexOf('→') >= 0) t = t.split('→').pop();
+  t = t.trim().split(/[ ·（(]/)[0].trim();
+  return t.slice(0, 12) || '上一站';
+}
+const isAirportStop = x => /机场|航站楼|贡嘎/.test(String((x && x.title) || ''));
+
+/* 找出这一天该用哪种交通：机场接送 / 市区步行 / 跨城航班 / 包车 / 打车 */
 function dayTransit(d, a, b){
-  if((a && a.icon === 'plane') || (b && b.icon === 'plane'))
-    return { kind:'air', name:'飞机', route:(x,y)=>`${x.title} → ${y.title} · 飞机 · ${airKm(y,x)} km / 约 ${Math.round(airKm(y,x)/700*60/5)*5} 分` };
   const direct = haversine(a, b);
+  const hasPlane = (a && a.icon === 'plane') || (b && b.icon === 'plane');
+  /* 机场 ↔ 市区 = 车程，不是航程。
+     以前这里判成「飞机」，45 km 算出「约 5 分」，就是那段错得离谱的文字。 */
+  if((hasPlane || isAirportStop(a) || isAirportStop(b)) && direct < 150)
+    return { kind:'car', name:'车', route:(x,y)=>{
+      const km = Math.round(haversine(x,y) * 1.25);
+      return `${routeName(x)} → ${routeName(y)} · 车 · ${km} km / 约 ${Math.max(10, Math.round(km/55*60/5)*5)} 分`;
+    }};
+  if(hasPlane)
+    return { kind:'air', name:'飞机', route:(x,y)=>{
+      const km = airKm(y, x);
+      return `${routeName(x)} → ${routeName(y)} · 飞机 · ${km} km / 约 ${Math.max(30, Math.round(km/700*60/10)*10)} 分`;
+    }};
   const city = inTibet(a) && inTibet(b) && direct < 45;
   // 市区短距离：默认步行，1.6 km 以内都当腿着走
   if(city && direct * 1.28 <= 1.6)
     return { kind:'walk', name:'步行', route:(x,y)=>{
       const km = Math.max(0.3, Math.round(haversine(x,y) * 1.28 * 10) / 10);
-      return `${x.title.split(/[ ·（(]/)[0]} → ${y.title.split(/[ ·（(]/)[0]} · 步行 · ${km} km / ${Math.max(4, Math.round(km/4.5*60))} 分`;
+      return `${routeName(x)} → ${routeName(y)} · 步行 · ${km} km / ${Math.max(4, Math.round(km/4.5*60))} 分`;
     }};
   if(d.charter && !city)
     return { kind:'charter', name:'包车', route:(x,y)=>{
       const km = Math.round(haversine(x,y) * 1.25);
-      return `${x.title.split(/[ ·（(]/)[0]} → ${y.title.split(/[ ·（(]/)[0]} · 包车 · ${cnDate(d)} · ${km} km / ${Math.max(30, Math.round(km/45*60))} 分`;
+      return `${routeName(x)} → ${routeName(y)} · 包车 · ${cnDate(d)} · ${km} km / ${Math.max(30, Math.round(km/45*60))} 分`;
     }};
   return { kind:'city', name:'打车', route:(x,y)=>{
     const km = Math.round(haversine(x,y) * 1.28);
-    return `${x.title.split(/[ ·（(]/)[0]} → ${y.title.split(/[ ·（(]/)[0]} · 打车 · ${km} km / ${Math.max(8, Math.round(km/18*60))} 分`;
+    return `${routeName(x)} → ${routeName(y)} · 打车 · ${km} km / ${Math.max(8, Math.round(km/18*60))} 分`;
   }};
 }
 
@@ -4415,7 +4602,10 @@ function autoFillDay(di, force){
         if(force){ s.route = ''; s.routeAuto = false; }
         return;
       }
-      if(!force && s.route && !s.routeAuto && !routeMismatch(d, b.stops, si, s)) return;
+      /* 手写的描述永远优先：用户能改，改完就不会被自动算覆盖回去。
+         （以前会用 routeMismatch 判断"你写的前后站对不上"然后强行覆盖，
+          导致「机场 → 亚朵」这种明明写对的也被冲掉） */
+      if(!force && s.route && !s.routeAuto) return;
       const t = dayTransit(d, a, s);
       s.route = t.route(a, s);
       s.routeAuto = true;
@@ -4486,6 +4676,9 @@ wireEditBase();
 
 /* 编辑弹窗里「当前选中的位置」——刻意不给用户看，标题变了就自动重匹配 */
 let edPosBuf = null;
+/* 用户实际选中的地点名。标题后来被改成「机场到亚朵」这种写法时，
+   导航仍然认得出这是哪家酒店（否则会跳错地方）。 */
+let edPNameBuf = '';
 
 function openStopEditor(bi, si){
   const isNew = !(si >= 0);
@@ -4495,13 +4688,14 @@ function openStopEditor(bi, si){
   const baseLat = prevStop ? prevStop.lat : 29.6550;   // 新建点贴着上一站，地图上不会飞走
   const baseLng = prevStop ? prevStop.lng : 91.1300;
   const s = isNew
-    ? { time:'', icon:'pin', title:'', desc:'', hours:'', route:'', alt:0,
+    ? { time:'', icon:'pin', title:'', desc:'', intro:'', hours:'', route:'', alt:0,
         lat:baseLat, lng:baseLng, zone:'city' }
     : d.blocks[bi].stops[si];
   // 支付状态：老数据没这个字段就按「已付」；新填的一站默认「待支付」
   const payInit = (s && (s.pay === 0 || s.pay === 1)) ? s.pay : (isNew ? 0 : 1);
   const cityGuess = curCityGuess();
   edPosBuf = isNew ? null : { lat:s.lat, lng:s.lng, alt:s.alt||0 };
+  edPNameBuf = isNew ? '' : (s.pname || '');
   const UNIT_CAT = {
     flight: { u:'票价（元）', q:'人数' },
     stay:   { u:'每晚（元）', q:'住几晚' },
@@ -4532,6 +4726,7 @@ function openStopEditor(bi, si){
       <label>找地方 · 输关键词出候选</label>
       <div class="poi-bar">
         <select id="edPoiCity">
+          <option value="全部"${cityGuess===''?' selected':''}>全部城市</option>
           ${SIGHT_CITIES.map(c=>`<option value="${c}"${c===cityGuess?' selected':''}>${c}</option>`).join('')}
         </select>
         <input id="edPoiQ" placeholder="如 亚朵 / 藏茶 / 甜茶馆">
@@ -4541,6 +4736,10 @@ function openStopEditor(bi, si){
       地图会按你当前位置从近到远列出来。</p>
     </div>
     <div class="ed-f"><label>说明</label><textarea id="edDesc" placeholder="做什么、注意什么">${escapeHTML(s.desc||'')}</textarea></div>
+    <div class="ed-f"><label>景点特点（≤80字，自动带入、可改）</label>
+      <textarea id="edIntro" maxlength="80" placeholder="一句话介绍，如「格鲁派三大寺，午后辩经最热闹」">${escapeHTML(s.intro||'')}</textarea>
+      <p class="ed-note">已输入 <span id="edIntroCnt">${String(s.intro||'').length}</span>/80 字</p>
+    </div>
     <div class="ed-f"><label>开放 / 门票信息</label><input id="edHours" value="${escapeHTML(s.hours||'')}" placeholder="如 门票 200 元 / 开放 09:00-17:00"></div>
     <div class="ed-row2">
       <div class="ed-f"><label>这一站一共花了多少（元）</label>
@@ -4573,12 +4772,13 @@ function openStopEditor(bi, si){
       </div>
       <p class="ed-note">选哪个都一样会算进<b>当天汇总和总花费</b>；标「已付」只是把它从待支付挪到已付那一格。</p>
     </div>
-    <p class="ed-note">填的是<b>这一站的总价</b>：机票就填两个人加起来实际付的钱，别填单价 —— 页面不会替你乘人数。
-    保存后自动进「记账」，改了跟着改，清空了自动撤掉。吃饭、买东西也能填。</p>
+    <p class="ed-note">填的是<b>这一站实际付的钱</b>：机票填「票价 × 人数」、酒店填「每晚 × 晚数」，总价自动算；
+    只想直接填总价，就把单价 / 数量留空。保存后自动进「记账」，改了跟着改，清空了自动撤掉。</p>
     <div class="ed-f">
-      <label>交通与距离</label>
+      <label>这段路程（自动算，可以改）</label>
       <input id="edRoute" value="${escapeHTML(s.route||'')}" placeholder="留空＝自动算">
-      <p class="ed-note">留空保存后，会按前后两站的距离自动写一段（包车日按包车算、市区按打车算）。</p>
+      <p class="ed-note">留空保存后，按前后两站自动写一段（机场 ↔ 市区算车程、市区按步行、包车日按包车算）。
+      写错了直接改这里，<b>改过就不会再被自动覆盖</b>；想恢复自动算，清空这一格再保存。</p>
     </div>
     <div class="ed-f">
       <label>海拔（自动匹配，不用填）</label>
@@ -4606,7 +4806,7 @@ function openStopEditor(bi, si){
 
   /* 标题变化 → 悄悄匹配位置，并把海拔带出来（位置不显示给用户） */
   t2.addEventListener('input', ()=>{
-    const pos = guessPlace(t2.value);
+    const pos = guessByTitle(t2.value);
     if(!pos) return;
     edPosBuf = { lat:pos.lat, lng:pos.lng, alt:pos.alt||0 };
     if(altEl){ const a = altForTitle(t2.value); altEl.textContent = a.alt ? ('已匹配 ' + (a.src||'地点') + ' ' + a.alt + ' m') : '未匹配到海拔（地名再具体点）'; }
@@ -4625,8 +4825,11 @@ function openStopEditor(bi, si){
     if(!r) return;
     t2.value = r.name;
     edPosBuf = { lat:r.lat, lng:r.lng, alt:r.alt||0 };
+    edPNameBuf = r.name;
     if(altEl){ const a = altForTitle(r.name); altEl.textContent = a.alt ? ('已匹配 ' + (a.src||'地点') + ' ' + a.alt + ' m') : '未匹配到海拔'; }
     if(r.intro && !g('edDesc').value) g('edDesc').value = r.intro;
+    const introEl = g('edIntro');
+    if(r.intro && introEl && !introEl.value){ introEl.value = clip80(r.intro); if(g('edIntroCnt')) g('edIntroCnt').textContent = introEl.value.length; }
     listEl.innerHTML = ''; listEl.__data = [];
     toast('已选择「' + r.name + '」');
     setTimeout(()=>{ if(!g('edRoute').value) recalcPreview(bi, si); }, 60);
@@ -4637,11 +4840,15 @@ function openStopEditor(bi, si){
     if(!node || node === listEl) return;
     pickPoi((listEl.__data || [])[+node.dataset.pick]);
   });
+  /* 景点特点字数计数（≤80） */
+  const introEl2 = g('edIntro');
+  if(introEl2){ introEl2.addEventListener('input', ()=>{ if(g('edIntroCnt')) g('edIntroCnt').textContent = introEl2.value.length; }); }
 
   g('edRematch').onclick = ()=>{
-    const pos = guessPlace(t2.value);
+    const pos = guessByTitle(t2.value);
     if(pos){
       edPosBuf = { lat:pos.lat, lng:pos.lng, alt:pos.alt||0 };
+      edPNameBuf = (pos.n && pos.n[0]) || t2.value;
       if(altEl){ const a = altForTitle(t2.value); altEl.textContent = a.alt ? ('已匹配 ' + (a.src||'地点') + ' ' + a.alt + ' m') : '未匹配到海拔'; }
       toast('已匹配：' + ((pos.city||'') + (pos.kind?(' · ' + pos.kind):'')));
     } else {
@@ -4675,7 +4882,7 @@ function openStopEditor(bi, si){
   g('edSave').onclick = ()=>{
     const title = t2.value.trim();
     if(!title){ toast('请填写标题'); return; }
-    const pos = edPosBuf || guessPlace(title);
+    const pos = edPosBuf || guessByTitle(title);
     const lat = (pos && pos.lat) ? pos.lat : baseLat;
     const lng = (pos && pos.lng) ? pos.lng : baseLng;
     const aInfo = altForTitle(title);
@@ -4698,6 +4905,10 @@ function openStopEditor(bi, si){
       checkin: (g('edCostCat').value==='stay') ? (+g('edCheckin').value) : 0,
       checkout: (g('edCostCat').value==='stay') ? (+g('edCheckout').value) : 0,
       route: g('edRoute').value.trim(),
+      /* 景点特点（≤80字） */
+      intro: (function(){ const v = (g('edIntro') ? g('edIntro').value.trim() : ''); return v ? v.slice(0,80) : ''; })(),
+      /* 存一份「真实地点名」：标题以后改成「机场到亚朵」也还能正确定位 */
+      pname: edPNameBuf || (pos && pos.n && pos.n[0]) || '',
       alt: aInfo.alt || (pos && pos.alt) || 0,
       lat, lng,
       zone: (pos && pos.z) ? pos.z : (lat < 29.2 ? 'out' : 'city')
@@ -5159,6 +5370,17 @@ document.getElementById('segDay').addEventListener('click', function(){
   mapMode='day'; mapTouched = true; this.classList.add('on');
   document.getElementById('segAll').classList.remove('on');
   drawMap();
+});
+
+// 底图切换：高德 / 卫星 / 腾讯 / OSM / 离线矢量
+function syncBaseBar(){
+  const active = usingFallback ? 'offline' : baseMode;
+  const btns = document.querySelectorAll('#baseBar .bb');
+  for(let i=0;i<btns.length;i++) btns[i].classList.toggle('on', btns[i].dataset.base === active);
+}
+document.getElementById('baseBar').addEventListener('click', e=>{
+  const b = e.target.closest('[data-base]'); if(!b) return;
+  applyBase(b.dataset.base, true);
 });
 
 // 探店分类 / 条目操作
@@ -5767,6 +5989,15 @@ function guessPlace(title){
   return placeOf(title);
 }
 
+/* 标题写成「A → B」时，按「到达地 B」来匹配：
+   「贡嘎机场 → 北京中路亚朵」要认得出亚朵这家酒店，不能只认到机场。
+   没写箭头的就照旧按整句匹配。 */
+function guessByTitle(t){
+  const raw = String(t || '');
+  const tail = raw.indexOf('→') >= 0 ? raw.split('→').pop().trim() : '';
+  return (tail ? guessPlace(tail) : null) || guessPlace(raw);
+}
+
 /* 按标题找坐标库条目：取「最长命中」，避免「北京」抢在「北京中路」前面 */
 function placeOf(title){
   const t = String(title||'');
@@ -5787,13 +6018,13 @@ try{
 }catch(e){}
 /* 按标题自动匹配海拔：优先地点自带海拔，其次到达城市默认海拔 */
 function altForTitle(title){
-  const p = placeOf(title);
+  const p = guessByTitle(title);
   if(p && p.alt) return { alt: p.alt, src: '地点' };
   if(p && p.city && CITY_ALT[p.city]) return { alt: CITY_ALT[p.city], src: p.city };
   return { alt: 0, src: '' };
 }
 function cityOfStop(s){
-  const p = placeOf(s && s.title);
+  const p = guessByTitle(s && s.title);
   if(p && p.city) return p.city;
   return '';
 }
@@ -5813,13 +6044,17 @@ function baiduSearchUrl(kw){
 /* 地标类直接用坐标定位（手机上会唤起高德 App）；
    店铺类（酒店 / 餐厅 / 茶馆）坐标是估的，改用名字搜，让高德自己找准确门店 */
 function amapNavUrl(s){
-  const name = encodeURIComponent((s && s.title) || '');
-  const p = placeOf(s && s.title);
-  if(p && p.fuzzy) return amapSearchUrl((s && s.title) || '', p.city || cityOfStop(s));
-  if(s && inTibet(s))
-    return 'https://uri.amap.com/marker?position=' + s.lng + ',' + s.lat +
+  /* 用「真实地点名」而不是整段标题：标题写成「机场到亚朵」也不会搜错 */
+  const disp = navName(s);
+  const name = encodeURIComponent(disp);
+  const p = guessPlace(disp) || placeOf(s && s.title);
+  if(p && p.fuzzy) return amapSearchUrl(disp, p.city || cityOfStop(s));
+  if(s && inTibet(s)){
+    const g = stopGcj(s);   // 高德网页端要 GCJ-02
+    return 'https://uri.amap.com/marker?position=' + g[1] + ',' + g[0] +
            '&name=' + name + '&src=xizang-trip';
-  return amapSearchUrl((s && s.title) || '', cityOfStop(s));
+  }
+  return amapSearchUrl(disp, cityOfStop(s));
 }
 function baiduNavUrl(s){
   const c = cityOfStop(s);
@@ -5838,36 +6073,54 @@ function isIOS(){
 function isAndroid(){ return /Android/i.test(navigator.userAgent); }
 
 /* mode: 'ios' | 'android' | 'web'，不传按当前设备判断 */
+/* 导航用哪个名字：录入时选中的地点名 > 标题里「→」后面的到达地 > 标题首段。
+   这样即便标题被改成「机场到亚朵」，点导航还是去那家酒店。 */
+function navName(s){
+  if(s && s.pname) return s.pname;
+  const t = String((s && s.title) || '');
+  if(t.indexOf('→') >= 0){
+    const tail = t.split('→').pop().split(/[·（(]/)[0].trim();
+    if(tail) return tail;
+  }
+  return t.split(/[·（(]/)[0].trim() || t;
+}
+
 function navOptions(s, mode){
   const m = mode || (isIOS() ? 'ios' : (isAndroid() ? 'android' : 'web'));
   const ios = m === 'ios', andr = m === 'android', mob = ios || andr;
 
   const title = String((s && s.title) || '');
-  const p = placeOf(title) || null;
+  /* 导航目标名优先用录入时选中的地点名，避免标题被改后跳错地方 */
+  const disp = navName(s);
+  const p = guessPlace(disp) || placeOf(title) || null;
   const city = (p && p.city) || cityOfStop(s) || '';
   // 地标走坐标精确定位；酒店餐厅茶馆坐标是估的，走名字搜
   const landmark = !!(s && inTibet(s)) && !(p && p.fuzzy);
   const shop = !!(p && p.fuzzy);            // 酒店 / 餐厅 / 茶馆（坐标是估的）
   const subCoord = '按坐标精确导航';
   const subName = shop ? '按名字搜门店' : '按名字搜';
-  const lat = s ? s.lat : '', lng = s ? s.lng : '';
-  const nm = encodeURIComponent(title);
-  const kw = encodeURIComponent((city && title.indexOf(city) < 0) ? city + ' ' + title : title);
+  const latW = s ? s.lat : '', lngW = s ? s.lng : '';        // 苹果 / Google 用 WGS-84(GPS)
+  const g = s ? stopGcj(s) : ['',''];                        // 高德 / 腾讯 用 GCJ-02(火星坐标)
+  const latG = g[0], lngG = g[1];
+  const b = s ? stopBd(s) : ['',''];                         // 百度 用 BD-09
+  const latB = b[0], lngB = b[1];
+  const nm = encodeURIComponent(disp);
+  const kw = encodeURIComponent((city && disp.indexOf(city) < 0) ? city + ' ' + disp : disp);
   const rgn = encodeURIComponent(city);
   const out = [];
 
   // 1) 苹果地图
   out.push({ n:'苹果地图', c:'#3d6ff0', sub:'系统自带 · iPhone / iPad 上最省事',
-    u: landmark ? 'https://maps.apple.com/?q=' + nm + '&ll=' + lat + ',' + lng + '&z=16'
+    u: landmark ? 'https://maps.apple.com/?q=' + nm + '&ll=' + latW + ',' + lngW + '&z=16'
                 : 'https://maps.apple.com/?q=' + kw, fb:'' });
 
   // 2) 高德
   out.push({ n:'高德地图', c:'#2f7fe0', sub: landmark ? subCoord : subName,
     u: ios
-      ? (landmark ? 'iosamap://navi?sourceApplication=xizang-trip&lat=' + lat + '&lon=' + lng + '&name=' + nm + '&dev=0&style=2'
+      ? (landmark ? 'iosamap://navi?sourceApplication=xizang-trip&lat=' + latG + '&lon=' + lngG + '&name=' + nm + '&dev=0&style=2'
                   : 'iosamap://poi?sourceApplication=xizang-trip&name=' + kw + '&dev=0')
       : andr
-      ? (landmark ? 'androidamap://navi?sourceApplication=xizang-trip&lat=' + lat + '&lon=' + lng + '&dev=0&style=2'
+      ? (landmark ? 'androidamap://navi?sourceApplication=xizang-trip&lat=' + latG + '&lon=' + lngG + '&dev=0&style=2'
                   : 'androidamap://poi?sourceApplication=xizang-trip&keywords=' + kw + '&dev=0')
       : amapNavUrl(s),
     fb: amapNavUrl(s) });
@@ -5875,15 +6128,15 @@ function navOptions(s, mode){
   // 3) 百度
   out.push({ n:'百度地图', c:'#e0452f', sub: landmark ? subCoord : subName,
     u: mob
-      ? (landmark ? 'baidumap://map/direction?destination=latlng:' + lat + ',' + lng + '|name:' + nm + '&mode=driving&coord_type=gcj02&src=xizang-trip'
+      ? (landmark ? 'baidumap://map/direction?destination=latlng:' + latB + ',' + lngB + '|name:' + nm + '&mode=driving&coord_type=bd09ll&src=xizang-trip'
                   : 'baidumap://map/place/search?query=' + kw + '&region=' + rgn + '&src=xizang-trip')
-      : baiduSearchUrl((city ? city + ' ' : '') + title),
+      : baiduSearchUrl((city ? city + ' ' : '') + disp),
     fb: amapNavUrl(s) });
 
   // 4) 腾讯（官方 URI 链接：装了开 App，没装自动落网页）
   out.push({ n:'腾讯地图', c:'#0aa06e', sub: landmark ? '按坐标定位' : subName,
     u: landmark
-      ? 'https://apis.map.qq.com/uri/v1/marker?marker=coord%3A' + lat + ',' + lng + '%3Btitle%3A' + nm + '%3Baddr%3A' + rgn + '&referer=xizang-trip'
+      ? 'https://apis.map.qq.com/uri/v1/marker?marker=coord%3A' + latG + ',' + lngG + '%3Btitle%3A' + nm + '%3Baddr%3A' + rgn + '&referer=xizang-trip'
       : 'https://apis.map.qq.com/uri/v1/search?keyword=' + kw + '&region=' + rgn + '&referer=xizang-trip',
     fb:'' });
 
@@ -5920,11 +6173,14 @@ function navFromPopup(i){ openNavPickerForStop(NAV_POPUPS[i]); }
 function openNavPickerForStop(s){
   if(!s) return;
   const opts = navOptions(s);
-  const p = placeOf(s.title) || null;
+  const disp = navName(s);
+  const p = guessPlace(disp) || placeOf(s.title) || null;
+  const rawTitle = String(s.title || '');
   document.getElementById('edTitle').textContent = '用哪个地图打开';
   document.getElementById('edFields').innerHTML =
-    `<div class="nav-hd">导航到 <b>${escapeHTML(s.title || '')}</b>` +
+    `<div class="nav-hd">导航到 <b>${escapeHTML(disp)}</b>` +
       (p && p.city ? `　<span>${escapeHTML(p.city)}</span>` : '') +
+      (rawTitle && rawTitle !== disp ? `<br>这一站：${escapeHTML(rawTitle)}` : '') +
       `<br>点一下，直接用那个地图打开。</div>` +
     opts.map((o, i)=>`
       <button class="nav-opt" data-navi="${i}">
@@ -5955,8 +6211,9 @@ function amapRouteUrl(dayIdx){
   d.blocks.forEach(b=>b.stops.forEach(s=>{ if(inTibet(s)) stops.push(s); }));
   if(stops.length < 2) return amapSearchUrl('拉萨');
   const f = stops[0], t = stops[stops.length - 1];
-  return 'https://uri.amap.com/navigation?from=' + f.lng + ',' + f.lat + ',' +
-         encodeURIComponent(f.title||'起点') + '&to=' + t.lng + ',' + t.lat + ',' +
+  const fg = stopGcj(f), tg = stopGcj(t);   // 高德导航要 GCJ-02
+  return 'https://uri.amap.com/navigation?from=' + fg[1] + ',' + fg[0] + ',' +
+         encodeURIComponent(f.title||'起点') + '&to=' + tg[1] + ',' + tg[0] + ',' +
          encodeURIComponent(t.title||'终点') + '&mode=car&policy=1&src=xizang-trip';
 }
 
@@ -5985,13 +6242,22 @@ function poiNameScore(q, names){
 }
 /* 「拉萨亚朵」要出亚朵、不能把整个拉萨都倒出来：
    把城市名摘掉，剩下的实词命中才算强信号，城市名本身只是小加成 */
-function poiScore(q, names, city){
+function poiScore(q, names, city, tags){
   let sc = poiNameScore(q, names);
   let rest = q;
   if(city && q.indexOf(city) >= 0) rest = q.split(city).join('');
   if(rest && rest !== q){
     const rsc = poiNameScore(rest, names);
     if(rsc > 0) sc = Math.max(sc, rsc + 30);
+  }
+  /* 类型标签（酒店/茶馆/餐厅…）只认「整词命中」。
+     以前按子串匹配，搜「邦达仓古建酒店」里的「酒店」两字会命中所有酒店，
+     于是不管输什么都先弹一堆亚朵 —— 现在必须整词等于「酒店」才算是找酒店。 */
+  if(tags && tags.length){
+    for(let i = 0; i < tags.length; i++){
+      const tg = tags[i];
+      if(tg && (q === tg || rest === tg)){ sc = Math.max(sc, 92); break; }
+    }
   }
   if(sc > 0 && city && q.indexOf(city) >= 0) sc += 12;
   return sc;
@@ -6019,31 +6285,39 @@ function fmtDist(km){
   if(km == null) return '';
   return km < 1 ? '约 ' + Math.round(km * 1000) + ' m' : '约 ' + km.toFixed(1) + ' km';
 }
-function searchPoi(q){
+/* 景点特点介绍：超出 80 字就截断，保证「少于 80 字」 */
+function clip80(s){ s = String(s||''); return s.length > 80 ? s.slice(0, 80) + '…' : s; }
+function searchPoi(q, cityFilter){
   q = String(q||'').replace(/\s+/g, '').trim();
   if(!q) return [];
   const res = [];
   const cityHit = SIGHT_CITIES.indexOf(q) >= 0;      // 关键词本身就是城市名
   PLACES.forEach(p=>{
     if(/^出发/.test(p.n[0])) return;          // 「出发 · …」是兜底定位，不当搜索候选
-    let sc = poiScore(q, (p.n || []).concat(p.t || []), p.city);
+    let sc = poiScore(q, p.n || [], p.city, p.t);
     if(!sc && cityHit && p.city === q) sc = 30;      // 直接搜城市名 → 把这座城的点都列出来
     if(sc > 0) res.push({ sc, name:p.n[0], city:p.city||'', kind:p.kind||'',
                           lat:p.lat, lng:p.lng, alt:p.alt||0, place:p });
   });
   SIGHTS.forEach(g=>{
-    let sc = poiScore(q, [g.name].concat(g.t || []), g.city);
+    let sc = poiScore(q, [g.name], g.city, g.t);
     if(!sc && cityHit && g.city === q) sc = 30;
     if(sc > 0) res.push({ sc: sc + 3, name:g.name, city:g.city, kind:'景点', icon:g.icon,
                           lat:g.lat, lng:g.lng, alt:g.alt, intro:g.intro, sigth:g });
   });
   res.sort((a,b)=> b.sc - a.sc);
-  const seen = {}, out = [];
+  const seen = {};
+  let out = [];
   res.forEach(r=>{ const k = r.name + '|' + r.city; if(!seen[k]){ seen[k] = 1; out.push(r); } });
+  /* 选了具体城市 → 只留该城的点（该城没有才回退到全部，避免搜不出东西） */
+  if(cityFilter && cityFilter !== '全部'){
+    const inCity = out.filter(r=> r.city === cityFilter);
+    if(inCity.length) out = inCity;
+  }
   /* 有明显强命中时，把「只是蹭到城市名」的弱候选丢掉：
      搜「拉萨亚朵」就该只出亚朵，别把拉萨河、贡嘎机场一起倒出来 */
   const top = out.length ? out[0].sc : 0;
-  const cut = cityHit ? 0 : Math.max(38, Math.round(top * 0.72));
+  const cut = (cityHit || (cityFilter && cityFilter !== '全部')) ? 0 : Math.max(38, Math.round(top * 0.72));
   return out.filter(r=> r.sc >= cut).slice(0, 10);
 }
 /* 当前这一天大概在哪个城市 —— 给搜索一个合理的默认城市 */
@@ -6062,7 +6336,7 @@ function curCityGuess(){
 function renderPoiList(box, q, city){
   q = String(q||'').trim();
   if(!q){ box.innerHTML = ''; box.__data = []; return; }
-  const list = searchPoi(q);
+  const list = searchPoi(q, city);
   /* 有定位就同分内按距离排（近的在前），并显示离你多远 */
   if(USER_GEO){
     list.forEach(r=>{ r.dist = distKm(USER_GEO.lat, USER_GEO.lng, r.lat, r.lng); });
@@ -6076,7 +6350,7 @@ function renderPoiList(box, q, city){
           <b>${escapeHTML(r.name)}</b>
           <span>${escapeHTML([r.city, r.kind, r.alt ? '海拔 ' + r.alt + ' m' : '',
                               r.dist != null ? '距你' + fmtDist(r.dist) : ''].filter(Boolean).join(' · '))}</span>
-          ${r.intro?`<em>${escapeHTML(r.intro)}</em>`:''}
+          ${r.intro?`<em>${escapeHTML(clip80(r.intro))}</em>`:''}
         </div>
         <span class="poi-pick">选择</span>
       </div>`).join('');
