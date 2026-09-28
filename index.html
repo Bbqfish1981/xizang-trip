@@ -942,6 +942,12 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
   border-radius:8px;color:#6b7a8d;cursor:pointer;
 }
 .rcell.rlink .redit svg{width:13px;height:13px}
+.rcell.rlink .rpos{
+  display:block;font-size:12px;color:var(--ink);font-weight:700;text-decoration:none;
+  padding:7px 12px 9px;line-height:1.5;background:rgba(201,100,42,.08);
+}
+.rcell.rlink .rpos:active{background:rgba(201,100,42,.16)}
+.rcell.rlink .rmaplink{color:var(--rust);text-decoration:underline;font-weight:800}
 
 /* ============ 地图页 ============ */
 .seg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
@@ -1367,6 +1373,9 @@ input,select,textarea{font-size:16px}
 }
 .poi-map.baidu{background:#eef3fb;border-color:#d3e0f2}
 .poi-map:active{opacity:.7}
+.poi-loading{font-size:12px;color:var(--rust);padding:9px 2px 2px;line-height:1.6}
+.poi-sep{font-size:11.5px;color:var(--gray-2);font-weight:800;margin:10px 2px 6px;letter-spacing:.04em}
+.poi-online{margin-top:2px}
 
 /* ---- 地点名可点：一键唤起导航（弹出选地图面板） ---- */
 .stitle.navable{cursor:pointer}
@@ -1551,13 +1560,13 @@ body.unlocked #appVer{display:block}
       密码由行程组织者发放 · 输入一次本机记住 7 天
     </div>
     <div id="lockVer" style="margin-top:6px;font-size:10.5px;color:#c0b7ab;letter-spacing:.04em">
-      版本 2026.09.26 · 高德街道图(瓦片修复) · 拉萨聚焦 · 自适应视野 · 离线兜底 · 坐标对齐 · 城市筛选 · 模糊搜 · 景点特点≤80字 · 海拔自动 · 单价×数量
+      版本 2026.09.27 · 联网搜地点(高德Key) · 加提醒可定位 · 高德街道图 · 拉萨聚焦 · 自适应视野 · 离线兜底 · 坐标对齐 · 城市筛选 · 模糊搜 · 景点特点≤80字 · 海拔自动 · 单价×数量
     </div>
   </div>
 </div>
 
 <!-- 进内页后也常驻一个小版本号：一眼判断手机上看的是不是新版 -->
-<div id="appVer">版本 2026.09.26 · 高德街道图(瓦片修复) · 拉萨聚焦 · 自适应视野 · 离线兜底 · 坐标对齐 · 城市筛选 · 模糊搜 · 景点特点≤80字 · 海拔自动 · 单价×数量</div>
+<div id="appVer">版本 2026.09.27 · 联网搜地点(高德Key) · 加提醒可定位 · 高德街道图 · 拉萨聚焦 · 自适应视野 · 离线兜底 · 坐标对齐 · 城市筛选 · 模糊搜 · 景点特点≤80字 · 海拔自动 · 单价×数量</div>
 
 <!-- ================= HERO ================= -->
 <header class="hero">
@@ -1607,6 +1616,10 @@ body.unlocked #appVer{display:block}
       <button class="imp-btn" id="btnCloudSync" style="border-color:#7a8fae;color:#3b6099">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 18a4.5 4.5 0 0 0 .5-8.97A6 6 0 0 0 6.3 9.6A3.75 3.75 0 0 0 7 18"/><path d="M12 13v8"/><path d="M9 16l3-3 3 3"/></svg>
         云同步
+      </button>
+      <button class="imp-btn" id="btnMapSettings" style="border-color:#c79a3a;color:#9a6a12">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        地图设置
       </button>
       <div class="tag" id="tripTag">DAY 1 / THU</div>
     </div>
@@ -1807,7 +1820,7 @@ body.unlocked #appVer{display:block}
 </section>
 
 <!-- ================= 底部导航 ================= -->
-<footer class="verbar">西藏 · 珠峰环线工作台　<b>v3</b> · 2026-09-24 · 真实地图(高德/腾讯) / 拉萨聚焦 / 离线街道图 / 坐标对齐 / 城市筛选 / 模糊搜 / 景点特点≤80字 / 海拔自动 / 单价×数量</footer>
+<footer class="verbar">西藏 · 珠峰环线工作台　<b>v3</b> · 2026-09-27 · 联网搜地点(高德Key) / 加提醒可定位 / 真实地图(高德) / 拉萨聚焦 / 离线街道图 / 坐标对齐 / 城市筛选 / 模糊搜 / 景点特点≤80字 / 海拔自动 / 单价×数量</footer>
 <nav class="nav">
   <button class="on" data-view="overview">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6.2 9.2 4l5.6 2.6L20 4.6v13.2L14.8 20l-5.6-2.6L4 19.4z"/><path d="M9.2 4v13.4M14.8 6.6V20"/></svg>总览</button>
@@ -2076,8 +2089,8 @@ const TRIP_DAYS = [
 },
 {
   date: '10/01', weekday: '周四', tag: '包车首日 · Day 3', label: 'Day 3',
-  charter: { name:'包车 · 司导青峰', perDay:2500, extra:200, extraNote:'司机食宿分摊' },
-  tip: '包车提示：司导青峰（2500/天，含无人机+单反，10/1-10/5）。司机住宿餐费另算。羊湖海拔 4441m，普莫雍错风力大，注意保暖。',
+  charter: { name:'包车 · 领队元宵', perDay:2500, extra:200, extraNote:'司机食宿分摊' },
+  tip: '包车提示：领队元宵（2500/天，含无人机+单反，10/1-10/5）。司机住宿餐费另算。羊湖海拔 4441m，普莫雍错风力大，注意保暖。',
   blocks: [
     {
       day: 1, month: '10月',
@@ -2086,7 +2099,7 @@ const TRIP_DAYS = [
       stops: [
         {
           time: '08:00', icon: 'car',
-          title: '出发 · 司导青峰接驾',
+          title: '出发 · 领队元宵接驾',
           desc: '10/1-10/5 包车，2500/天，含无人机与单反拍摄。司机住宿餐费另算。',
           hours: '包车期：10/1-10/5 共 5 天',
           route: '拉萨 → 羊湖 · 包车 · 110 km / 2.5 小时',
@@ -2120,7 +2133,7 @@ const TRIP_DAYS = [
     }
   ],
   reminders: [
-    { k: '包车', v: '青峰 10/1-10/5，2500/天，食宿另算。' },
+    { k: '包车', v: '元宵 10/1-10/5，2500/天，食宿另算。' },
     { k: '海拔', v: '普莫雍错 5010m，当天别剧烈活动。' },
     { k: '证件', v: '边境地区全程带身份证/边防证。' },
     { k: '保暖', v: '高原风大，帽子手套墨镜都带上。' }
@@ -2128,7 +2141,7 @@ const TRIP_DAYS = [
 },
 {
   date: '10/02', weekday: '周五', tag: '边境线 · Day 4', label: 'Day 4',
-  charter: { name:'包车 · 司导青峰', perDay:2500, extra:200, extraNote:'司机食宿分摊' },
+  charter: { name:'包车 · 领队元宵', perDay:2500, extra:200, extraNote:'司机食宿分摊' },
   tip: '边境提示：全程接近或跨越边境线，务必携带边防证与身份证；部分路段无信号，提前告知家人。',
   blocks: [
     {
@@ -2180,7 +2193,7 @@ const TRIP_DAYS = [
 },
 {
   date: '10/03', weekday: '周六', tag: '遥望珠峰 · Day 5', label: 'Day 5',
-  charter: { name:'包车 · 司导青峰', perDay:2500, extra:200, extraNote:'司机食宿分摊' },
+  charter: { name:'包车 · 领队元宵', perDay:2500, extra:200, extraNote:'司机食宿分摊' },
   tip: '珠峰提示：远观珠峰看天气，清晨概率最高；岗嘎一带风大且冷，羽绒服和帽子必备。',
   blocks: [
     {
@@ -2240,13 +2253,13 @@ const TRIP_DAYS = [
 },
 {
   date: '10/04', weekday: '周日', tag: '希夏邦马 · Day 6', label: 'Day 6',
-  charter: { name:'包车 · 司导青峰', perDay:2500, extra:200, extraNote:'司机食宿分摊' },
-  tip: '转场提示：今天车程长，佩枯错一带风大；希夏邦马是世界 14 座 8000 米级山峰之一，远观为主。',
+  charter: { name:'包车 · 领队元宵', perDay:2500, extra:200, extraNote:'司机食宿分摊' },
+  tip: '转场提示：今天从岗嘎出发逛佩枯错—希夏邦马—拉普村一圈，傍晚返回岗嘎连住望山酒店第二晚；佩枯错一带风大，希夏邦马是世界 14 座 8000 米级山峰之一，远观为主。',
   blocks: [
     {
       day: 4, month: '10月',
-      title: '岗嘎 → 佩枯错 → 希夏邦马 → 拉普村 → 定日',
-      note: '宿定日「珠穆朗玛大酒店」，¥500 内。',
+      title: '岗嘎 → 佩枯错 → 希夏邦马 → 拉普村 → 回岗嘎',
+      note: '晚上回到岗嘎「望山酒店」连住第二晚。',
       stops: [
         {
           time: '08:00', icon: 'car',
@@ -2282,11 +2295,11 @@ const TRIP_DAYS = [
         },
         {
           time: '18:00', icon: 'pin',
-          title: '抵达定日 · 入住珠穆朗玛大酒店',
-          desc: '¥500 内。定日海拔约 4300m。',
-          hours: '入住 10/4',
-          route: '拉普村 → 定日 · 包车 · 90 km / 2 小时',
-          lat: 28.6600, lng: 87.1200, zone: 'out'
+          title: '返回岗嘎 · 望山酒店（第二晚）',
+          desc: '连住第二晚，省去搬行李。岗嘎海拔约 4300m。',
+          hours: '入住 10/4 · 第二晚',
+          route: '拉普村 → 岗嘎 · 包车 · 110 km / 2.5 小时',
+          lat: 28.5700, lng: 86.8000, zone: 'out'
         }
       ]
     }
@@ -2295,17 +2308,17 @@ const TRIP_DAYS = [
     { k: '车程', v: '今天路线最长，早点出发。' },
     { k: '希夏邦马', v: '配佩枯错同框最经典。' },
     { k: '补给', v: '途中补给少，水粮提前备。' },
-    { k: '住宿', v: '定日珠峰大酒店 ¥500 内。' }
+    { k: '住宿', v: '望山酒店第二晚，岗嘎连住。' }
   ]
 },
 {
   date: '10/05', weekday: '周一', tag: '返拉萨 · Day 7', label: 'Day 7',
-  charter: { name:'包车 · 司导青峰', perDay:2500, extra:200, extraNote:'司机食宿分摊' },
+  charter: { name:'包车 · 领队元宵', perDay:2500, extra:200, extraNote:'司机食宿分摊' },
   tip: '返回提示：萨迦寺参观后一路回拉萨，车程很长。今晚是包车最后一天，安排「极地之谜」藏餐收尾（原话是 6 号晚上，但 6 号航班 11:40 就飞了，应为今晚）。',
   blocks: [
     {
       day: 5, month: '10月',
-      title: '定日 → 萨迦寺 → 拉萨',
+      title: '岗嘎 → 萨迦寺 → 拉萨',
       note: '返回拉萨，宿「拉萨西藏大学滨河路亚朵」（10/5-10/6，1 晚 ¥519）。',
       stops: [
         {
@@ -2313,15 +2326,15 @@ const TRIP_DAYS = [
           title: '出发 · 返回拉萨',
           desc: '包车最后一天（10/1-10/5）。今天的主题是赶路 + 萨迦寺。',
           hours: '包车期最后一天',
-          route: '定日 → 萨迦寺 · 包车 · 150 km / 3 小时',
-          lat: 28.6600, lng: 87.1200, zone: 'out'
+          route: '岗嘎 → 萨迦寺 · 包车 · 180 km / 3.5 小时',
+          lat: 28.5700, lng: 86.8000, zone: 'out'
         },
         {
           time: '11:30', icon: 'temple',
           title: '萨迦寺',
           desc: '藏传佛教萨迦派主寺，有「第二敦煌」之称，经书墙极震撼。',
           hours: '营业：约 09:00-17:00',
-          route: '定日 → 萨迦寺 · 包车 · 150 km / 3 小时',
+          route: '岗嘎 → 萨迦寺 · 包车 · 180 km / 3.5 小时',
           lat: 28.9000, lng: 88.0200, zone: 'out'
         },
         {
@@ -2446,7 +2459,7 @@ const SPOTS = [
     desc: '药王山观景台与布宫广场东侧是拍正面全景的经典位置，亮灯约 20:30-23:00。',
     near: '药王山 / 布宫广场', q: '药王山观景台 布达拉宫' },
   { cat: 'shoot', name: '羊湖 / 普莫雍错 无人机点', sub: '拍照 · 10/1',
-    desc: '司导青峰带无人机与单反，湖边是大景片的好机会。风大注意飞行安全。',
+    desc: '领队元宵带无人机与单反，湖边是大景片的好机会。风大注意飞行安全。',
     near: '羊卓雍措 · 普莫雍错', q: '羊卓雍措' },
   { cat: 'shoot', name: '希夏邦马 + 佩枯错 同框', sub: '拍照 · 10/4',
     desc: '唯一完全在中国境内的 8000 米级山峰，配佩枯错同框最经典。',
@@ -2519,9 +2532,9 @@ const PLACES = [
   { n:['萨迦寺','萨迦'], city:'萨迦', kind:'寺庙', lat:28.9000, lng:88.0200, alt:4316, z:'out' },
   { n:['日喀则'], city:'日喀则', kind:'城市', lat:29.2700, lng:88.8800, alt:3840, z:'out' },
   /* 「出发 · 返回拉萨」这类没写地名的点，兜到当天起点，不至于标成待定 */
-  { n:['出发 · 司导青峰接驾','出发 · 沿边境线西行','出发 · 前往珠峰方向'], city:'拉萨', kind:'出发', lat:29.6550, lng:91.1300, alt:3650, z:'city' },
-  { n:['出发 · 沿佩枯错方向'], city:'定日', kind:'出发', lat:28.5700, lng:86.8000, alt:4400, z:'out' },
-  { n:['出发 · 返回拉萨'], city:'定日', kind:'出发', lat:28.6600, lng:87.1200, alt:4300, z:'out' },
+  { n:['出发 · 领队元宵接驾','出发 · 沿边境线西行','出发 · 前往珠峰方向'], city:'拉萨', kind:'出发', lat:29.6550, lng:91.1300, alt:3650, z:'city' },
+  { n:['出发 · 沿佩枯错方向'], city:'岗嘎', kind:'出发', lat:28.5700, lng:86.8000, alt:4400, z:'out' },
+  { n:['出发 · 返回拉萨'], city:'岗嘎', kind:'出发', lat:28.5700, lng:86.8000, alt:4300, z:'out' },
   /* —— 进出藏城市（只用于地图示意） —— */
   { n:['重庆'], city:'重庆', kind:'城市', lat:29.7192, lng:106.6417, alt:244, z:'out' },
   { n:['北京首都','首都T3','北京'], city:'北京', kind:'城市', lat:40.0799, lng:116.6031, alt:44, z:'out' },
@@ -2650,7 +2663,7 @@ const MAP_NODES = [
   { id:'zf',   n:'珠峰',        x:31.44, y:57.84, kind:'peak', lp:'l', d:5, hero:1,
     t:'远观珠穆朗玛峰', p:'加乌拉山口方向，8 座 8000 m 级雪山同框', hq:1 },
   { id:'gg',   n:'岗嘎',        x:26.97, y:49.20, kind:'stay', lp:'r',  d:5,
-    t:'宿岗嘎',   p:'珠峰西侧，看日出不用赶路' },
+    t:'宿岗嘎',   p:'珠峰西侧，连住两晚望山酒店' },
   { id:'pk',   n:'佩枯错',      x:14.10,  y:37.20, kind:'lake', lp:'r',  d:6,
     t:'佩枯错',   p:'希夏邦马倒影，最佳同框机位' },
   { id:'xx',   n:'希夏邦马',    x:16.40,  y:49.20, kind:'peak', lp:'b',  d:6,
@@ -2658,13 +2671,13 @@ const MAP_NODES = [
   { id:'lp',   n:'拉普村',      x:9.60, y:41.80, kind:'stay', lp:'r',  d:6,
     t:'拉普村',   p:'佩枯错边的村子' },
   { id:'dr',   n:'定日',        x:34.42, y:42.00, kind:'stay', lp:'t',  d:6,
-    t:'宿定日',   p:'珠峰北大门，海拔约 4300 m' },
+    t:'定日',   p:'途经，本次不过夜' },
   { id:'sj',   n:'萨迦寺',      x:46.21, y:36.00, kind:'temple', lp:'b', d:7,
     t:'萨迦寺',   p:'花教祖寺，藏经墙出名' }
 ];
 
 /* 环线路径：拉萨出发一路向西，再折返拉萨 */
-const MAP_LOOP = ['lhsa','yl','pm','km','cb','zm','dj','am','zc','zf','gg','pk','xx','lp','dr','sj','lhsa'];
+const MAP_LOOP = ['lhsa','yl','pm','km','cb','zm','dj','am','zc','zf','gg','pk','xx','lp','sj','lhsa'];
 /* 进藏 / 出藏两支（虚线，示意航班） */
 const MAP_DASH  = [['bj','air'],['gz','air'],['lhsa','cqq']];
 
@@ -2684,8 +2697,8 @@ const DAY_SUM_DEFAULT = {
   2:'拉萨 → 羊湖 → 普莫雍错 → 康马',
   3:'康马 → 冲巴雍错 → 桌木拉日 → 定结',
   4:'定结 → 阿马直米 → 宗错湖 → 珠峰 → 岗嘎',
-  5:'岗嘎 → 佩枯错 → 希夏邦马 → 拉普村 → 定日',
-  6:'定日 → 萨迦寺 → 拉萨',
+  5:'岗嘎 → 佩枯错 → 希夏邦马 → 拉普村 → 回岗嘎',
+  6:'岗嘎 → 萨迦寺 → 拉萨',
   7:'拉萨 ✈ 重庆 ✈ 北京 / 广州'
 };
 
@@ -3037,6 +3050,7 @@ function renderTrip(){
                 (r.v?`<span>${escapeHTML(r.v)}</span>`:'')+
                 `<span class="rjump">点击打开原帖 ↗</span>`+
               `</a>`+
+              (r.pname?`<a class="rpos" href="${amapSearchUrl(r.pname,'')}" target="_blank" rel="noopener">📍 ${escapeHTML(r.pname)} · <span class="rmaplink">地图打开 ↗</span></a>`:'')+
               `<button class="redit" data-editref="${ri}" aria-label="编辑这条引用">${ICONS.edit}</button>`+
             `</div>`;
           }
@@ -3102,6 +3116,15 @@ function gcj2bd(lat, lng){
   const z = Math.sqrt(x*x + y*y) + 0.00002*Math.sin(y*Math.PI*3000.0/180.0);
   const theta = Math.atan2(y, x) + 0.000003*Math.cos(x*Math.PI*3000.0/180.0);
   return [z*Math.sin(theta) + 0.006, z*Math.cos(theta) + 0.0065];
+}
+/* GCJ-02 → WGS-84（高德 Web 服务返回的是火星坐标，存库要转回 WGS-84） */
+function gcj2wgs(lat, lng){
+  if(_outChina(lat, lng)) return [lat, lng];
+  const g = wgs2gcj(lat, lng);
+  let wlat = lat - (g[0] - lat), wlng = lng - (g[1] - lng);
+  const g2 = wgs2gcj(wlat, wlng);
+  wlat -= (g2[0] - wlat); wlng -= (g2[1] - wlng);
+  return [wlat, wlng];
 }
 /* 给 stop 对象用：返回 [lat,lng] */
 function stopGcj(s){ return wgs2gcj(s.lat, s.lng); }                 // 高德/腾讯
@@ -5120,6 +5143,26 @@ function pickUrl(txt){
   return m ? 'https://' + m[0].replace(/^https?:\/\//i,'') : '';
 }
 
+/* 地图设置：填高德 Web 服务 Key，搜任意地点（如「才纳乡派出所」）就能直接出坐标。
+   Key 只存在本机 localStorage，不写进页面、不上传。 */
+function openMapSettings(){
+  document.getElementById('edTitle').textContent = '地图设置 · 高德 Key';
+  document.getElementById('edFields').innerHTML = `
+    <div class="ed-f"><label>高德 Web 服务 Key（用于搜任意地点）</label>
+      <input id="edAmapKey" value="${escapeHTML(getAmapKey())}" placeholder="粘贴你的高德 Key（restapi.amap.com 用的那个）"></div>
+    <p class="ed-note">在 <b>console.amap.com</b> 免费申请「Web 服务」类型 Key，粘贴进来后，
+      在「加地点 / 加攻略引用」里搜名称（如「才纳乡派出所」）就能直接出坐标，不必再去地图 App 里搜。
+      若不填，地点搜索仍可用「内置库 + 跳地图 App 搜」兜底。</p>`;
+  document.getElementById('edAct').innerHTML =
+    `<button class="no" id="edCancel">取消</button><button class="ok" id="edSave">保存</button>`;
+  wireEditBase();
+  document.getElementById('edSave').onclick = ()=>{
+    setAmapKey(document.getElementById('edAmapKey').value.trim());
+    closeEdit(); toast('已保存高德 Key');
+  };
+  openEdit();
+}
+
 function openRefEditor(ri){
   const isNew = !(ri >= 0);
   const d = TRIP_DAYS[curDay];
@@ -5133,11 +5176,46 @@ function openRefEditor(ri){
       <input id="edRefK" value="${escapeHTML(r.k)}" placeholder="如：布宫夜拍机位"></div>
     <div class="ed-f"><label>大概内容 / 备注</label>
       <textarea id="edRefV" placeholder="这篇讲了什么，为什么留着它">${escapeHTML(r.v)}</textarea></div>
+    <div class="ed-f"><label>定位地点（搜名称出坐标，可选）</label>
+      <div class="poi-bar">
+        <select id="edRefCity">
+          <option value="全部">全部城市</option>
+          ${SIGHT_CITIES.map(c=>`<option value="${c}">${c}</option>`).join('')}
+        </select>
+        <input id="edRefQ" placeholder="如 才纳乡派出所 / 亚朵">
+      </div>
+      <div id="edRefPoi" class="poi-list"></div>
+      <p class="ed-note" id="edRefPosTip">${r.lat&&r.lng?('已定位：'+(r.pname||'地点')+'（'+r.lat.toFixed(4)+', '+r.lng.toFixed(4)+'）'):'留空＝不加地点；输入名称可联网搜索并定位。'}</p>
+    </div>
     <div id="edRefTip" style="font-size:12.5px;color:#8a8377;line-height:1.6;margin-top:-4px"></div>
     ${isNew?'':`<button class="ed-danger" id="edRefDel">${ICONS.trash}<span>删除这条</span></button>`}`;
   document.getElementById('edAct').innerHTML =
     `<button class="no" id="edCancel">取消</button><button class="ok" id="edSave">保存</button>`;
   wireEditBase();
+
+  // 地点搜索：搜名称 → 出候选（内置库 + 高德联网），点中即定位
+  const g = id => document.getElementById(id);
+  let edRefPos = (r.lat && r.lng) ? { lat:r.lat, lng:r.lng, alt:r.alt||0 } : null;
+  let edRefPname = r.pname || '';
+  const qR = g('edRefQ'), listR = g('edRefPoi'), cityR = g('edRefCity');
+  let refTimer = null;
+  const runRefPoi = ()=> renderPoiList(listR, qR.value, cityR.value);
+  qR.addEventListener('input', ()=>{ clearTimeout(refTimer); refTimer = setTimeout(runRefPoi, 220); });
+  cityR.addEventListener('change', runRefPoi);
+  ensureGeo(()=>{ if(qR.value) runRefPoi(); });
+  listR.addEventListener('click', (ev)=>{
+    let node = ev.target;
+    while(node && node !== listR && !(node.dataset && node.dataset.pick !== undefined)) node = node.parentNode;
+    if(!node || node === listR) return;
+    const rr = (listR.__data || [])[+node.dataset.pick];
+    if(!rr) return;
+    edRefPos = { lat:rr.lat, lng:rr.lng, alt:rr.alt||0 };
+    edRefPname = rr.name;
+    const tip = g('edRefPosTip');
+    if(tip) tip.textContent = '已定位：' + rr.name + '（' + rr.lat.toFixed(4) + ', ' + rr.lng.toFixed(4) + '）';
+    listR.innerHTML = ''; listR.__data = [];
+    toast('已定位「' + rr.name + '」');
+  });
 
   // 边填边提示识别到什么平台，让用户心里有数
   function refreshTip(){
@@ -5167,8 +5245,8 @@ function openRefEditor(ri){
     if(!u){ toast('请粘贴一个有效链接'); return; }
     const k = document.getElementById('edRefK').value.trim() || (platOf(u).name + '攻略');
     const v = document.getElementById('edRefV').value.trim();
-    if(isNew) d.reminders.push({ k, v, u });
-    else d.reminders[ri] = { k, v, u };
+    if(isNew) d.reminders.push({ k, v, u, lat: edRefPos?edRefPos.lat:0, lng: edRefPos?edRefPos.lng:0, pname: edRefPname });
+    else { const o = d.reminders[ri]; o.k=k; o.v=v; o.u=u; o.lat = edRefPos?edRefPos.lat:0; o.lng = edRefPos?edRefPos.lng:0; o.pname = edRefPname; }
     saveTrip(); closeEdit(); afterTripChange(); toast('已保存，点卡片可打开原帖');
   };
   openEdit();
@@ -5760,8 +5838,8 @@ function renderGen(){
         只是参考额度，不会自动记账。你已经在行程里填过钱的站点，这里不再重复估算。
       </p>
       ${row('机票', '去程 CA4125 / CZ3463 · 返程 CZ2366 + 重庆分流', e.flight)}
-      ${row('包车', '青峰 10/1-10/5 整日包干 2500×5 + 市内打车', e.traffic)}
-      ${row('住宿', '7 晚：亚朵×3 · 康马 · 定结 · 岗嘎 · 定日', e.stay)}
+      ${row('包车', '元宵 10/1-10/5 整日包干 2500×5 + 市内打车', e.traffic)}
+      ${row('住宿', '7 晚：亚朵×3 · 康马 · 定结 · 岗嘎×2', e.stay)}
       ${row('门票', '布宫 / 色拉寺 / 羊湖 / 萨迦寺', e.ticket)}
       ${row('约拍', '阿漫 八廓街 1 小时打包', e.shoot)}
       ${row('其他', '司机食宿分摊 5 天', e.other)}
@@ -6033,8 +6111,7 @@ function cityOfStop(s){
    地图跳转：国内用高德 / 百度（Google Maps 在国内打不开）
    ============================================================ */
 function amapSearchUrl(kw, city){
-  let u = 'https://uri.amap.com/search?keyword=' + encodeURIComponent(String(kw||'')) +
-          '&view=map&src=xizang-trip';
+  let u = 'https://www.amap.com/search?query=' + encodeURIComponent(String(kw||''));
   if(city) u += '&city=' + encodeURIComponent(city);
   return u;
 }
@@ -6333,7 +6410,46 @@ function curCityGuess(){
   }
   return '拉萨';
 }
-function renderPoiList(box, q, city){
+function poiItemHtml(r, idx){
+  return `<div class="poi-item" data-pick="${idx}" role="button" tabindex="0" title="点这一行就选中它">
+    <div class="poi-main">
+      <b>${escapeHTML(r.name)}</b>
+      <span>${escapeHTML([r.city, r.kind, r.alt ? '海拔 ' + r.alt + ' m' : '',
+                          r.addr ? '地址 ' + r.addr : '',
+                          r.dist != null ? '距你' + fmtDist(r.dist) : ''].filter(Boolean).join(' · '))}</span>
+      ${r.intro ? `<em>${escapeHTML(clip80(r.intro))}</em>` : ''}
+    </div>
+    <span class="poi-pick">选择</span>
+  </div>`;
+}
+function externalLinksHtml(q, city){
+  const kw = (city && q.indexOf(city) < 0) ? city + ' ' + q : q;
+  return `<a class="poi-map" target="_blank" rel="noopener" href="${amapSearchUrl(kw, city)}">高德搜「${escapeHTML(kw)}」</a>`
+       + `<a class="poi-map baidu" target="_blank" rel="noopener" href="${baiduSearchUrl(kw)}">百度地图</a>`;
+}
+/* 高德 Web 服务 POI 检索（浏览器可直接 fetch，CORS 放行）。
+   返回的 location 是 GCJ-02，转回 WGS-84 再存。 */
+async function searchPoiOnline(q, city){
+  const key = getAmapKey();
+  if(!key) return [];
+  const u = 'https://restapi.amap.com/v3/place/text?key=' + encodeURIComponent(key)
+    + '&keywords=' + encodeURIComponent(q)
+    + (city && city !== '全部' ? '&city=' + encodeURIComponent(city) : '')
+    + '&offset=15&extensions=all';
+  const res = await fetch(u, { cache:'no-store' });
+  const j = await res.json();
+  if(!j || j.status !== '1' || !j.pois) return [];
+  return j.pois.map(function(p){
+    const ll = (p.location || '').split(',');
+    if(ll.length !== 2) return null;
+    const w = gcj2wgs(parseFloat(ll[1]), parseFloat(ll[0]));
+    return { name:p.name, addr:(p.address||''), city:(p.cityname||''), adname:(p.adname||''),
+             tel:(p.tel||''), lat:w[0], lng:w[1], online:true };
+  }).filter(Boolean);
+}
+function getAmapKey(){ try{ return (store.getItem('lxa_amap_key_v1')||'').trim(); }catch(e){ return ''; } }
+function setAmapKey(k){ try{ store.setItem('lxa_amap_key_v1', k||''); }catch(e){} }
+async function renderPoiList(box, q, city){
   q = String(q||'').trim();
   if(!q){ box.innerHTML = ''; box.__data = []; return; }
   const list = searchPoi(q, city);
@@ -6342,29 +6458,34 @@ function renderPoiList(box, q, city){
     list.forEach(r=>{ r.dist = distKm(USER_GEO.lat, USER_GEO.lng, r.lat, r.lng); });
     list.sort((a,b)=> (b.sc - a.sc) || (a.dist - b.dist));
   }
-  let html = '';
-  if(list.length){
-    html += list.map((r,i)=>`
-      <div class="poi-item" data-pick="${i}" role="button" tabindex="0" title="点这一行就选中它">
-        <div class="poi-main">
-          <b>${escapeHTML(r.name)}</b>
-          <span>${escapeHTML([r.city, r.kind, r.alt ? '海拔 ' + r.alt + ' m' : '',
-                              r.dist != null ? '距你' + fmtDist(r.dist) : ''].filter(Boolean).join(' · '))}</span>
-          ${r.intro?`<em>${escapeHTML(clip80(r.intro))}</em>`:''}
-        </div>
-        <span class="poi-pick">选择</span>
-      </div>`).join('');
-  } else {
-    html += `<div class="poi-none">内置库里没收录这个词，直接在地图 App 里搜最准 ↓</div>`;
-  }
-  // 查询里已经写了城市名就别再加一遍，免得搜「拉萨 拉萨亚朵」
   const kw = (city && q.indexOf(city) < 0) ? city + ' ' + q : q;
-  html += `
-    <div class="poi-acts">
-      <a class="poi-map" target="_blank" rel="noopener" href="${amapSearchUrl(kw, city)}">高德搜「${escapeHTML(kw)}」</a>
-      <a class="poi-map baidu" target="_blank" rel="noopener" href="${baiduSearchUrl(kw)}">百度地图</a>
-    </div>`;
-  box.innerHTML = html;
+  box.innerHTML = list.map((r,i)=> poiItemHtml(r, i)).join('')
+    + (list.length ? '' : `<div class="poi-none">内置库没收录，联网或去地图 App 里搜最准 ↓</div>`)
+    + `<div class="poi-acts">${externalLinksHtml(kw, city)}</div>`
+    + `<div class="poi-loading">联网检索高德中…</div>`;
+  box.__data = list;
+  const key = getAmapKey();
+  if(!key){
+    const le = box.querySelector('.poi-loading');
+    if(le) le.outerHTML = '<div class="poi-none">未配置高德 Key：搜不到的地点可点上方按钮去地图 App 搜；'
+      + '在「地图设置」填入免费 Key 后，这里能直接搜任意地点（如「才纳乡派出所」）。</div>';
+    return;
+  }
+  let online;
+  try{ online = await searchPoiOnline(q, city); }catch(e){ online = []; }
+  if(box.__data !== list) return;                 // 用户已重新输入，丢弃旧结果
+  const le = box.querySelector('.poi-loading');
+  if(!online || !online.length){
+    if(le) le.outerHTML = '<div class="poi-none">联网没搜到相关地点，换个词或在地图 App 里搜。</div>';
+    return;
+  }
+  const seen = new Set(list.map(r=> r.name + '|' + r.lat.toFixed(4) + '|' + r.lng.toFixed(4)));
+  const add = online.filter(r=> !seen.has(r.name + '|' + r.lat.toFixed(4) + '|' + r.lng.toFixed(4)));
+  if(!add.length){ if(le) le.outerHTML = ''; return; }
+  const start = list.length;
+  add.forEach(r=> list.push(r));
+  if(le) le.outerHTML = '<div class="poi-sep">— 联网结果（高德）—</div>'
+    + add.map((r,i)=> poiItemHtml(r, start + i)).join('');
   box.__data = list;
 }
 function guessIcon(title){
@@ -7145,6 +7266,8 @@ function renderSync(msg){
   if(cb) cb.addEventListener('click', syncShut);
   var sm = document.getElementById('syncModal');
   if(sm) sm.addEventListener('click', function(e){ if(e.target.id === 'syncModal') syncShut(); });
+  var mb = document.getElementById('btnMapSettings');
+  if(mb) mb.addEventListener('click', openMapSettings);
 })();
 
 document.getElementById('fileInput').addEventListener('change', async function(){
