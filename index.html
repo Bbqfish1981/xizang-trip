@@ -1371,8 +1371,13 @@ input,select,textarea{font-size:16px}
   background:var(--cream-2);border:1.2px solid var(--line-2);color:var(--ink);
   font-size:12.5px;font-weight:800;
 }
-.poi-map.baidu{background:#eef3fb;border-color:#d3e0f2}
 .poi-map:active{opacity:.7}
+.poi-setkey{
+  display:block;width:100%;margin-top:10px;padding:11px 8px;border-radius:11px;
+  background:var(--rust);border:1.2px solid var(--rust);color:#fff;
+  font-size:13px;font-weight:800;cursor:pointer;
+}
+.poi-setkey:active{opacity:.82}
 .poi-loading{font-size:12px;color:var(--rust);padding:9px 2px 2px;line-height:1.6}
 .poi-sep{font-size:11.5px;color:var(--gray-2);font-weight:800;margin:10px 2px 6px;letter-spacing:.04em}
 .poi-online{margin-top:2px}
@@ -1560,13 +1565,13 @@ body.unlocked #appVer{display:block}
       密码由行程组织者发放 · 输入一次本机记住 7 天
     </div>
     <div id="lockVer" style="margin-top:6px;font-size:10.5px;color:#c0b7ab;letter-spacing:.04em">
-      版本 2026.09.27 · 联网搜地点(高德Key) · 加提醒可定位 · 高德街道图 · 拉萨聚焦 · 自适应视野 · 离线兜底 · 坐标对齐 · 城市筛选 · 模糊搜 · 景点特点≤80字 · 海拔自动 · 单价×数量
+      版本 2026.09.28 · 完整地址地理编码 · 撤百度 · 联网搜地点(高德Key) · 加提醒可定位 · 高德街道图 · 拉萨聚焦 · 自适应视野 · 离线兜底 · 坐标对齐 · 城市筛选 · 模糊搜 · 景点特点≤80字 · 海拔自动 · 单价×数量
     </div>
   </div>
 </div>
 
 <!-- 进内页后也常驻一个小版本号：一眼判断手机上看的是不是新版 -->
-<div id="appVer">版本 2026.09.27 · 联网搜地点(高德Key) · 加提醒可定位 · 高德街道图 · 拉萨聚焦 · 自适应视野 · 离线兜底 · 坐标对齐 · 城市筛选 · 模糊搜 · 景点特点≤80字 · 海拔自动 · 单价×数量</div>
+<div id="appVer">版本 2026.09.28 · 完整地址地理编码 · 撤百度 · 联网搜地点(高德Key) · 加提醒可定位 · 高德街道图 · 拉萨聚焦 · 自适应视野 · 离线兜底 · 坐标对齐 · 城市筛选 · 模糊搜 · 景点特点≤80字 · 海拔自动 · 单价×数量</div>
 
 <!-- ================= HERO ================= -->
 <header class="hero">
@@ -1672,7 +1677,7 @@ body.unlocked #appVer{display:block}
         <div class="rcell" data-txt="mapTip1"><b>城中圈</b><span>八廓街、布达拉宫、色拉寺与市区酒店在红色「拉萨市内」范围内。</span></div>
         <div class="rcell" data-txt="mapTip2"><b>城外圈</b><span>羊湖、普莫雍错、珠峰、佩枯错等在橙色「珠峰环线」范围内，全程包车。</span></div>
         <div class="rcell" data-txt="mapTip3"><b>路线标签</b><span>虚线旁显示「距离 · 预计通勤」；实际受雨天和堵车影响。</span></div>
-        <div class="rcell" data-txt="mapTip4"><b>导航</b><span>点开标记可导航，苹果 / 高德 / 百度 / 腾讯地图任选；出发前复核营业状态。</span></div>
+        <div class="rcell" data-txt="mapTip4"><b>导航</b><span>点开标记可导航，苹果 / 高德 / 腾讯地图任选；出发前复核营业状态。</span></div>
       </div>
     </div>
   </div>
@@ -3869,7 +3874,7 @@ const TEXT_DEFAULT = {
   mapTip1:'城中圈||八廓街、布达拉宫、色拉寺与市区酒店在红色「拉萨市内」范围内。',
   mapTip2:'城外圈||羊湖、普莫雍错、珠峰、佩枯错等在橙色「珠峰环线」范围内，全程包车。',
   mapTip3:'路线标签||虚线旁显示「距离 · 预计通勤」；实际受雨天和堵车影响。',
-  mapTip4:'导航||点开标记可导航，苹果 / 高德 / 百度 / 腾讯地图任选；出发前复核营业状态。'
+  mapTip4:'导航||点开标记可导航，苹果 / 高德 / 腾讯地图任选；出发前复核营业状态。'
 };
 const TEXT_LABEL = {
   heroCity:'左上角代号', heroRange:'日期区间', heroBadge:'右上角徽章',
@@ -4755,7 +4760,7 @@ function openStopEditor(bi, si){
         <input id="edPoiQ" placeholder="如 亚朵 / 藏茶 / 甜茶馆">
       </div>
       <div id="edPoiList" class="poi-list"></div>
-      <p class="ed-note">内置库能直接出候选（带海拔）；库里没有的词，点下面的按钮跳到高德 / 百度，
+      <p class="ed-note">内置库能直接出候选（带海拔）；库里没有的词，点下面的按钮跳到高德地图搜，
       地图会按你当前位置从近到远列出来。</p>
     </div>
     <div class="ed-f"><label>说明</label><textarea id="edDesc" placeholder="做什么、注意什么">${escapeHTML(s.desc||'')}</textarea></div>
@@ -5150,9 +5155,10 @@ function openMapSettings(){
   document.getElementById('edFields').innerHTML = `
     <div class="ed-f"><label>高德 Web 服务 Key（用于搜任意地点）</label>
       <input id="edAmapKey" value="${escapeHTML(getAmapKey())}" placeholder="粘贴你的高德 Key（restapi.amap.com 用的那个）"></div>
-    <p class="ed-note">在 <b>console.amap.com</b> 免费申请「Web 服务」类型 Key，粘贴进来后，
-      在「加地点 / 加攻略引用」里搜名称（如「才纳乡派出所」）就能直接出坐标，不必再去地图 App 里搜。
-      若不填，地点搜索仍可用「内置库 + 跳地图 App 搜」兜底。</p>`;
+    <p class="ed-note">在 <b>console.amap.com</b> 免费申请「Web 服务」类型 Key（注意不是 JS API Key），粘贴进来后，
+      在「加地点 / 加攻略引用」里搜<b>名称或整段地址</b>都能直接出坐标：
+      搜「才纳乡派出所」这类地点名走关键词检索，搜「西藏自治区拉萨市城关区八廓南街绕赛1巷7号…」这类完整地址走地理编码。
+      若不填，地点搜索仍可用「内置库 + 跳高德地图手动搜」兜底。</p>`;
   document.getElementById('edAct').innerHTML =
     `<button class="no" id="edCancel">取消</button><button class="ok" id="edSave">保存</button>`;
   wireEditBase();
@@ -6202,15 +6208,7 @@ function navOptions(s, mode){
       : amapNavUrl(s),
     fb: amapNavUrl(s) });
 
-  // 3) 百度
-  out.push({ n:'百度地图', c:'#e0452f', sub: landmark ? subCoord : subName,
-    u: mob
-      ? (landmark ? 'baidumap://map/direction?destination=latlng:' + latB + ',' + lngB + '|name:' + nm + '&mode=driving&coord_type=bd09ll&src=xizang-trip'
-                  : 'baidumap://map/place/search?query=' + kw + '&region=' + rgn + '&src=xizang-trip')
-      : baiduSearchUrl((city ? city + ' ' : '') + disp),
-    fb: amapNavUrl(s) });
-
-  // 4) 腾讯（官方 URI 链接：装了开 App，没装自动落网页）
+  // 3) 腾讯（官方 URI 链接：装了开 App，没装自动落网页）
   out.push({ n:'腾讯地图', c:'#0aa06e', sub: landmark ? '按坐标定位' : subName,
     u: landmark
       ? 'https://apis.map.qq.com/uri/v1/marker?marker=coord%3A' + latG + ',' + lngG + '%3Btitle%3A' + nm + '%3Baddr%3A' + rgn + '&referer=xizang-trip'
@@ -6424,28 +6422,53 @@ function poiItemHtml(r, idx){
 }
 function externalLinksHtml(q, city){
   const kw = (city && q.indexOf(city) < 0) ? city + ' ' + q : q;
-  return `<a class="poi-map" target="_blank" rel="noopener" href="${amapSearchUrl(kw, city)}">高德搜「${escapeHTML(kw)}」</a>`
-       + `<a class="poi-map baidu" target="_blank" rel="noopener" href="${baiduSearchUrl(kw)}">百度地图</a>`;
+  return `<a class="poi-map" target="_blank" rel="noopener" href="${amapSearchUrl(kw, city)}">在高德地图搜「${escapeHTML(kw)}」↗</a>`;
 }
-/* 高德 Web 服务 POI 检索（浏览器可直接 fetch，CORS 放行）。
-   返回的 location 是 GCJ-02，转回 WGS-84 再存。 */
-async function searchPoiOnline(q, city){
-  const key = getAmapKey();
-  if(!key) return [];
+/* 高德 Web 服务（浏览器可直接 fetch，CORS 放行，返回 GCJ-02 转 WGS-84 再存）。
+   两类查询分开放：
+   - geocodeAmap：地理编码，专门把「西藏自治区拉萨市城关区…7号」这种完整地址解析成坐标。
+   - poiTextAmap：POI 关键词搜，专门搜「才纳乡派出所」这种地点名。 */
+async function geocodeAmap(q, city, key){
+  const u = 'https://restapi.amap.com/v3/geocode/geo?key=' + encodeURIComponent(key)
+    + '&address=' + encodeURIComponent(q)
+    + (city && city !== '全部' ? '&city=' + encodeURIComponent(city) : '');
+  try{
+    const res = await fetch(u, { cache:'no-store' });
+    const j = await res.json();
+    if(!j || j.status !== '1' || !j.geocodes) return [];
+    return j.geocodes.map(function(g){
+      const ll = (g.location || '').split(',');
+      if(ll.length !== 2) return null;
+      const w = gcj2wgs(parseFloat(ll[1]), parseFloat(ll[0]));
+      return { name:(g.formatted_address || q), addr:(g.district || ''), city:(g.city || ''),
+               adname:(g.district || ''), tel:'', lat:w[0], lng:w[1], online:true, geo:true };
+    }).filter(Boolean);
+  }catch(e){ return []; }
+}
+async function poiTextAmap(q, city, key){
   const u = 'https://restapi.amap.com/v3/place/text?key=' + encodeURIComponent(key)
     + '&keywords=' + encodeURIComponent(q)
     + (city && city !== '全部' ? '&city=' + encodeURIComponent(city) : '')
     + '&offset=15&extensions=all';
-  const res = await fetch(u, { cache:'no-store' });
-  const j = await res.json();
-  if(!j || j.status !== '1' || !j.pois) return [];
-  return j.pois.map(function(p){
-    const ll = (p.location || '').split(',');
-    if(ll.length !== 2) return null;
-    const w = gcj2wgs(parseFloat(ll[1]), parseFloat(ll[0]));
-    return { name:p.name, addr:(p.address||''), city:(p.cityname||''), adname:(p.adname||''),
-             tel:(p.tel||''), lat:w[0], lng:w[1], online:true };
-  }).filter(Boolean);
+  try{
+    const res = await fetch(u, { cache:'no-store' });
+    const j = await res.json();
+    if(!j || j.status !== '1' || !j.pois) return [];
+    return j.pois.map(function(p){
+      const ll = (p.location || '').split(',');
+      if(ll.length !== 2) return null;
+      const w = gcj2wgs(parseFloat(ll[1]), parseFloat(ll[0]));
+      return { name:p.name, addr:(p.address||''), city:(p.cityname||''), adname:(p.adname||''),
+               tel:(p.tel||''), lat:w[0], lng:w[1], online:true };
+    }).filter(Boolean);
+  }catch(e){ return []; }
+}
+async function searchPoiOnline(q, city){
+  const key = getAmapKey();
+  if(!key) return [];
+  const geo = await geocodeAmap(q, city, key);   // 先试完整地址
+  const poi = await poiTextAmap(q, city, key);   // 再试地点名
+  return geo.concat(poi);
 }
 function getAmapKey(){ try{ return (store.getItem('lxa_amap_key_v1')||'').trim(); }catch(e){ return ''; } }
 function setAmapKey(k){ try{ store.setItem('lxa_amap_key_v1', k||''); }catch(e){} }
@@ -6467,8 +6490,9 @@ async function renderPoiList(box, q, city){
   const key = getAmapKey();
   if(!key){
     const le = box.querySelector('.poi-loading');
-    if(le) le.outerHTML = '<div class="poi-none">未配置高德 Key：搜不到的地点可点上方按钮去地图 App 搜；'
-      + '在「地图设置」填入免费 Key 后，这里能直接搜任意地点（如「才纳乡派出所」）。</div>';
+    if(le) le.outerHTML = '<div class="poi-none">想直接在这儿搜任意地点，填一个免费高德 Key 即可（1 分钟，仅存你本机）。'
+      + '没填也能用：点上方「在高德地图搜」按钮手动定位。</div>'
+      + '<button class="poi-setkey" onclick="openMapSettings()">去填高德 Key（免费）</button>';
     return;
   }
   let online;
