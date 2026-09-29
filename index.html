@@ -1606,13 +1606,13 @@ body.unlocked #appVer{display:block}
       密码由行程组织者发放 · 输入一次本机记住 7 天
     </div>
     <div id="lockVer" style="margin-top:6px;font-size:10.5px;color:#c0b7ab;letter-spacing:.04em">
-      版本 2026.09.29 · 高德App深链搜(微信可用) · 地图点选(免Key) · 贴图/贴链接 · 一键导航 · 定位链接自动落点 · 完整地址地理编码 · 撤百度 · 联网搜地点(高德Key) · 加提醒可定位 · 高德街道图 · 拉萨聚焦 · 自适应视野 · 离线兜底 · 坐标对齐 · 城市筛选 · 模糊搜 · 景点特点≤80字 · 海拔自动 · 单价×数量
+      版本 2026.09.30 · 缺文件自检提示 · 高德App深链搜(微信可用) · 地图点选(免Key) · 贴图/贴链接 · 一键导航 · 定位链接自动落点 · 完整地址地理编码 · 撤百度 · 联网搜地点(高德Key) · 加提醒可定位 · 高德街道图 · 拉萨聚焦 · 自适应视野 · 离线兜底 · 坐标对齐 · 城市筛选 · 模糊搜 · 景点特点≤80字 · 海拔自动 · 单价×数量
     </div>
   </div>
 </div>
 
 <!-- 进内页后也常驻一个小版本号：一眼判断手机上看的是不是新版 -->
-<div id="appVer">版本 2026.09.29 · 高德App深链搜(微信可用) · 地图点选(免Key) · 贴图/贴链接 · 一键导航 · 定位链接自动落点 · 完整地址地理编码 · 撤百度 · 联网搜地点(高德Key) · 加提醒可定位 · 高德街道图 · 拉萨聚焦 · 自适应视野 · 离线兜底 · 坐标对齐 · 城市筛选 · 模糊搜 · 景点特点≤80字 · 海拔自动 · 单价×数量</div>
+<div id="appVer">版本 2026.09.30 · 缺文件自检提示 · 高德App深链搜(微信可用) · 地图点选(免Key) · 贴图/贴链接 · 一键导航 · 定位链接自动落点 · 完整地址地理编码 · 撤百度 · 联网搜地点(高德Key) · 加提醒可定位 · 高德街道图 · 拉萨聚焦 · 自适应视野 · 离线兜底 · 坐标对齐 · 城市筛选 · 模糊搜 · 景点特点≤80字 · 海拔自动 · 单价×数量</div>
 
 <!-- ================= HERO ================= -->
 <header class="hero">
@@ -2801,6 +2801,69 @@ const BUDGET_CFG = {
 
 </script>
 <script>
+/* ============================================================
+   依赖自检（缺文件时给人话，而不是甩一句看不懂的英文报错）
+   常见事故：把「源版 index.html」单独传上服务器，却没带上
+   trip-data.js —— 于是页面能打开、但一加载就抛
+   ReferenceError: Can't find variable: BUDGET_CFG，地图/搜索全点不动。
+   这里先探一下关键数据在不在；不在就给最小占位（避免整页中断），
+   并在页面顶部挂一条大红提示，直接告诉你该传哪个文件。
+   ============================================================ */
+(function(){
+  /* 用 typeof 探测（未声明时返回 'undefined'，不会抛错） */
+  var probe = [
+    ['TRIP_META',       typeof TRIP_META       === 'undefined'],
+    ['TRIP_DAYS',       typeof TRIP_DAYS       === 'undefined'],
+    ['SPOTS',           typeof SPOTS           === 'undefined'],
+    ['ZONES',           typeof ZONES           === 'undefined'],
+    ['RAIN_KIT',        typeof RAIN_KIT        === 'undefined'],
+    ['PLACES',          typeof PLACES          === 'undefined'],
+    ['SIGHT_CITIES',    typeof SIGHT_CITIES    === 'undefined'],
+    ['SIGHTS',          typeof SIGHTS          === 'undefined'],
+    ['MAP_NODES',       typeof MAP_NODES       === 'undefined'],
+    ['MAP_LOOP',        typeof MAP_LOOP        === 'undefined'],
+    ['MAP_DASH',        typeof MAP_DASH        === 'undefined'],
+    ['MAP_KINDS',       typeof MAP_KINDS       === 'undefined'],
+    ['DAY_SUM_DEFAULT', typeof DAY_SUM_DEFAULT === 'undefined'],
+    ['BUDGET_CFG',      typeof BUDGET_CFG      === 'undefined']
+  ];
+  var DEF = {
+    TRIP_META:{}, TRIP_DAYS:[], SPOTS:[], ZONES:{}, RAIN_KIT:[], PLACES:[],
+    SIGHT_CITIES:[], SIGHTS:[], MAP_NODES:[], MAP_LOOP:[], MAP_DASH:[], MAP_KINDS:{},
+    DAY_SUM_DEFAULT:{},
+    BUDGET_CFG:{ people:2, cap:0, currency:'¥', cats:[], transport:[],
+                 fallbackTransport:{ name:'', base:0, perKm:0 }, ticketDefault:0,
+                 mealPerDay:0, shopPerDay:0 }
+  };
+  var miss = [];
+  for(var i=0;i<probe.length;i++){
+    if(probe[i][1]){
+      miss.push(probe[i][0]);
+      try{ window[probe[i][0]] = DEF[probe[i][0]]; }catch(e){}   /* 最小占位，防止整页中断 */
+    }
+  }
+  if(!miss.length) return;            /* 一切正常 —— 本段完全惰性，不影响任何逻辑 */
+  window.__DATA_MISSING__ = miss;
+
+  function show(){
+    try{
+      if(document.getElementById('__dataMiss')) return;
+      var d = document.createElement('div');
+      d.id = '__dataMiss';
+      d.style.cssText = 'position:fixed;left:0;right:0;top:0;z-index:99998;background:#b3261e;' +
+        'color:#fff;font-size:13px;line-height:1.7;padding:12px 14px;font-weight:700;' +
+        'box-shadow:0 4px 16px rgba(0,0,0,.28)';
+      d.innerHTML = '⚠️ 数据文件没加载：缺 ' + miss.join('、') + '<br>'
+        + '原因：你上传的是「源版 index.html」，但它旁边的 trip-data.js / leaflet.js / jszip.min.js 不在。'
+        + '<br>解决：改用「单文件版 index.html」覆盖，它把数据都打包在同一个文件里，只需删掉旧的、传这一个文件即可。';
+      (document.body || document.documentElement).appendChild(d);
+    }catch(e){}
+  }
+  if(document.body) show();
+  else document.addEventListener('DOMContentLoaded', show);
+})();
+</script>
+<script>
 /* 兜底：万一某个浏览器不支持个别写法，至少让用户看见原因，
    而不是「页面能打开但完全点不动」这种黑盒状态 */
 (function(){
@@ -2827,6 +2890,7 @@ const BUDGET_CFG = {
       try{ console.warn('[忽略] 跨域脚本错误（非本站代码，页面功能不受影响）'); }catch(_){}
       return;
     }
+    if(window.__DATA_MISSING__) return;   /* 根因已由「依赖自检」条说明，不必再叠一条英文报错 */
     banner(msg || '未知错误');
   });
   // 资源加载失败（比如某个图片/脚本 404）也会触发 error，但不带 message。
